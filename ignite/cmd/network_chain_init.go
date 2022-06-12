@@ -169,7 +169,7 @@ func askValidatorInfo(cmd *cobra.Command, session cliui.Session, stakeDenom stri
 	questions := append([]cliquiz.Question{},
 		cliquiz.NewQuestion("Staking amount",
 			&v.StakingAmount,
-			cliquiz.DefaultAnswer("95000000stake"),
+			cliquiz.DefaultAnswer("95000000bnkt"),
 			cliquiz.Required(),
 		),
 		cliquiz.NewQuestion("Commission rate",

@@ -42,12 +42,12 @@ const (
 	defaultSourceRPCAddress = "http://localhost:26657"
 	defaultTargetRPCAddress = "https://rpc.cosmos.network:443"
 
-	defautSourceGasPrice      = "0.00025stake"
-	defautTargetGasPrice      = "0.025uatom"
+	defautSourceGasPrice      = "0.00025bnkt"
+	defautTargetGasPrice      = "0.025ubnkt"
 	defautSourceGasLimit      = 300000
 	defautTargetGasLimit      = 300000
-	defautSourceAddressPrefix = "cosmos"
-	defautTargetAddressPrefix = "cosmos"
+	defautSourceAddressPrefix = "bnkt"
+	defautTargetAddressPrefix = "bnkt"
 )
 
 // NewRelayerConfigure returns a new relayer configure command.

@@ -418,12 +418,12 @@ func (c *Chain) start(ctx context.Context, config chainconfig.Config) error {
 	apiAddr, _ := xurl.HTTP(config.Host.API)
 
 	// print the server addresses.
-	fmt.Fprintf(c.stdLog().out, "🌍 Tendermint node: %s\n", rpcAddr)
-	fmt.Fprintf(c.stdLog().out, "🌍 Blockchain API: %s\n", apiAddr)
+	fmt.Fprintf(c.stdLog().out, "🌍 熊網鏈 節點: %s\n", rpcAddr)
+	fmt.Fprintf(c.stdLog().out, "🌍 熊網鏈 API: %s\n", apiAddr)
 
 	if isFaucetEnabled {
 		faucetAddr, _ := xurl.HTTP(chainconfig.FaucetHost(config))
-		fmt.Fprintf(c.stdLog().out, "🌍 Token faucet: %s\n", faucetAddr)
+		fmt.Fprintf(c.stdLog().out, "🌍 熊幣水龍頭: %s\n", faucetAddr)
 	}
 
 	return g.Wait()

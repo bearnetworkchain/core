@@ -48,7 +48,7 @@
         "validator_address": "cosmosvaloper1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
         "value": {
           "amount": "95000000",
-          "denom": "stake"
+          "denom": "bnkt"
         }
       }
     ],

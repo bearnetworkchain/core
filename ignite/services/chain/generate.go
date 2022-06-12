@@ -100,7 +100,7 @@ func (c *Chain) Generate(
 		return err
 	}
 
-	fmt.Fprintln(c.stdLog().out, "🛠️  Building proto...")
+	fmt.Fprintln(c.stdLog().out, "🛠️  構建原型...")
 
 	options := []cosmosgen.Option{
 		cosmosgen.IncludeDirs(conf.Build.Proto.ThirdPartyPaths),

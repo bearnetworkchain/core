@@ -15,7 +15,7 @@ const (
 	DefaultAccountName = "faucet"
 
 	// DefaultDenom is the default denomination to distribute.
-	DefaultDenom = "uatom"
+	DefaultDenom = "ubnkt"
 
 	// DefaultAmount specifies the default amount to transfer to an account
 	// on each request.

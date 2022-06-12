@@ -42,13 +42,13 @@ func TestAll(t *testing.T) {
 			require.NoError(t, cf.Load(&d))
 			require.Equal(t, "world", d.Hello)
 
-			d.Hello = "cosmos"
+			d.Hello = "bnkt"
 			require.NoError(t, cf.Save(d))
 
 			cf2 := New(tt.ec, file.Name())
 			var d2 data
 			require.NoError(t, cf2.Load(&d2))
-			require.Equal(t, "cosmos", d2.Hello)
+			require.Equal(t, "bnkt", d2.Hello)
 		})
 	}
 

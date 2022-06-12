@@ -16,7 +16,7 @@ import (
 )
 
 const (
-	TestDenom                     = "stake"
+	TestDenom                     = "bnkt"
 	TestAmountString              = "95000000"
 	TestAmountInt                 = int64(95000000)
 	TestAccountRequestID          = uint64(1)

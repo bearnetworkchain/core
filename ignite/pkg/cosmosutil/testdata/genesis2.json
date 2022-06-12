@@ -26,7 +26,7 @@
           "coins": [
             {
               "amount": "95000000",
-              "denom": "stake"
+              "denom": "bnkt"
             }
           ]
         }
@@ -45,7 +45,7 @@
     "crisis": {
       "constant_fee": {
         "amount": "1000",
-        "denom": "stake"
+        "denom": "bnkt"
       }
     },
     "distribution": {
@@ -84,7 +84,7 @@
               "amount": [
                 {
                   "amount": "5000",
-                  "denom": "stake"
+                  "denom": "bnkt"
                 }
               ],
               "gas_limit": "200000",
@@ -133,7 +133,7 @@
                 "validator_address": "cosmosvaloper1mmlqwyqk7neqegffp99q86eckpm4pjah5sl2dw",
                 "value": {
                   "amount": "95000000",
-                  "denom": "stake"
+                  "denom": "bnkt"
                 }
               }
             ],
@@ -152,7 +152,7 @@
         "min_deposit": [
           {
             "amount": "10000000",
-            "denom": "stake"
+            "denom": "bnkt"
           }
         ]
       },
@@ -213,7 +213,7 @@
         "inflation_max": "0.200000000000000000",
         "inflation_min": "0.070000000000000000",
         "inflation_rate_change": "0.130000000000000000",
-        "mint_denom": "stake"
+        "mint_denom": "bnkt"
       }
     },
     "params": null,
@@ -234,7 +234,7 @@
       "last_total_power": "0",
       "last_validator_powers": [],
       "params": {
-        "bond_denom": "stake",
+        "bond_denom": "bnkt",
         "historical_entries": 10000,
         "max_entries": 7,
         "max_validators": 100,

@@ -26,7 +26,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
         "validator_address": "cosmosvaloper1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
         "value": {
           "amount": "95000000",
-          "denom": "stake"
+          "denom": "bnkt"
         }
       }
     ]
@@ -47,7 +47,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
 					Address:        "spn1dd246yq6z5vzjz9gh8cff46pll75yyl8c5tt7g",
 					GenTx:          gentx,
 					ConsPubKey:     ed25519.PubKey(pk),
-					SelfDelegation: sdk.NewCoin("stake", sdk.NewInt(95000000)),
+					SelfDelegation: sdk.NewCoin("bnkt", sdk.NewInt(95000000)),
 					Peer:           launchtypes.NewPeerConn("nodeid", "127.163.0.1:2446"),
 				},
 			},
@@ -59,7 +59,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
 					Address:        "spn1dd246yq6z5vzjz9gh8cff46pll75yyl8c5tt7g",
 					GenTx:          gentx,
 					ConsPubKey:     ed25519.PubKey(pk),
-					SelfDelegation: sdk.NewCoin("stake", sdk.NewInt(95000000)),
+					SelfDelegation: sdk.NewCoin("bnkt", sdk.NewInt(95000000)),
 					Peer:           launchtypes.NewPeerConn("nodeid", "122.114.800.11"),
 				},
 			},
@@ -72,7 +72,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
 					Address:        "spn1dd246yq6z5vzjz9gh8cff46pll75yyl8c5tt7g",
 					GenTx:          []byte(`{}`),
 					ConsPubKey:     ed25519.PubKey(pk),
-					SelfDelegation: sdk.NewCoin("stake", sdk.NewInt(95000000)),
+					SelfDelegation: sdk.NewCoin("bnkt", sdk.NewInt(95000000)),
 					Peer:           launchtypes.NewPeerConn("nodeid", "127.163.0.1:2446"),
 				},
 			},
@@ -98,7 +98,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
 					Address:        "spn1dd246yq6z5vzjz9gh8cff46pll75yyl8c5tt7g",
 					GenTx:          gentx,
 					ConsPubKey:     ed25519.PubKey(pk),
-					SelfDelegation: sdk.NewCoin("stake", sdk.NewInt(3)),
+					SelfDelegation: sdk.NewCoin("bnkt", sdk.NewInt(3)),
 					Peer:           launchtypes.NewPeerConn("nodeid", "127.163.0.1:2446"),
 				},
 			},
@@ -111,7 +111,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
 					Address:        "spn1dd246yq6z5vzjz9gh8cff46pll75yyl8c5tt7g",
 					GenTx:          gentx,
 					ConsPubKey:     ed25519.PubKey("cosmos1gkheudhhjsvq0s8fxt7p6pwe0k3k30kepcnz9p="),
-					SelfDelegation: sdk.NewCoin("stake", sdk.NewInt(95000000)),
+					SelfDelegation: sdk.NewCoin("bnkt", sdk.NewInt(95000000)),
 					Peer:           launchtypes.NewPeerConn("nodeid", "127.163.0.1:2446"),
 				},
 			},
@@ -124,7 +124,7 @@ func TestVerifyAddValidatorRequest(t *testing.T) {
 					Address:        "spn1gkheudhhjsvq0s8fxt7p6pwe0k3k30keaytytm",
 					GenTx:          gentx,
 					ConsPubKey:     ed25519.PubKey(pk),
-					SelfDelegation: sdk.NewCoin("stake", sdk.NewInt(95000000)),
+					SelfDelegation: sdk.NewCoin("bnkt", sdk.NewInt(95000000)),
 					Peer:           launchtypes.NewPeerConn("nodeid", "127.163.0.1:2446"),
 				},
 			},

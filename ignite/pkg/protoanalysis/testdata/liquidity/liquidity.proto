@@ -89,7 +89,7 @@ message Params {
         (gogoproto.nullable)   = false,
         (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
         (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-            example: "[{\"denom\": \"uatom\", \"amount\": \"100000000\"}]",
+            example: "[{\"denom\": \"ubnkt\", \"amount\": \"100000000\"}]",
             format: "sdk.Coins"
         }
     ];
@@ -138,7 +138,7 @@ message Params {
     //        (gogoproto.nullable)   = false,
     //        (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
     //        (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-    //            example: "[{\"denom\": \"uatom\", \"amount\": \"50000\"}]",
+    //            example: "[{\"denom\": \"ubnkt\", \"amount\": \"50000\"}]",
     //            format: "sdk.Coins"
     //        }];
 }
@@ -170,7 +170,7 @@ message Pool {
     // reserve account address of the pool
     string reserve_account_address = 4 [(gogoproto.moretags) = "yaml:\"reserve_account_address\"",
         (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-            example: "\"cosmos16ddqestwukv0jzcyfn3fdfq9h2wrs83cr4rfm3\"",
+            example: "\"bnkt16ddqestwukv0jzcyfn3fdfq9h2wrs83cr4rfm3\"",
             format: "sdk.AccAddress"
         }];
 

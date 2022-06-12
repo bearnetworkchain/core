@@ -4,7 +4,7 @@
       "amount": [
         {
           "amount": "5000",
-          "denom": "stake"
+          "denom": "bnkt"
         }
       ],
       "gas_limit": "200000",
@@ -53,7 +53,7 @@
         "validator_address": "cosmosvaloper1mmlqwyqk7neqegffp99q86eckpm4pjah5sl2dw",
         "value": {
           "amount": "95000000",
-          "denom": "stake"
+          "denom": "bnkt"
         }
       }
     ],

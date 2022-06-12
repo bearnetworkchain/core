@@ -57,13 +57,13 @@ func TestParseChainGenesis(t *testing.T) {
 	genesis1.AppState.Auth.Accounts = []struct {
 		Address string `json:"address"`
 	}{{Address: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"}}
-	genesis1.AppState.Staking.Params.BondDenom = "stake"
+	genesis1.AppState.Staking.Params.BondDenom = "bnkt"
 
 	genesis2 := cosmosutil.ChainGenesis{ChainID: "earth-1"}
 	genesis2.AppState.Auth.Accounts = []struct {
 		Address string `json:"address"`
 	}{{Address: "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"}}
-	genesis2.AppState.Staking.Params.BondDenom = "stake"
+	genesis2.AppState.Staking.Params.BondDenom = "bnkt"
 
 	tests := []struct {
 		name        string
@@ -113,14 +113,14 @@ func TestParseGenesis(t *testing.T) {
 			genesisPath: "testdata/genesis1.json",
 			want: cosmosutil.Genesis{
 				Accounts:   []string{"cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"},
-				StakeDenom: "stake",
+				StakeDenom: "bnkt",
 			},
 		}, {
 			name:        "parse genesis file 2",
 			genesisPath: "testdata/genesis2.json",
 			want: cosmosutil.Genesis{
 				Accounts:   []string{"cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"},
-				StakeDenom: "stake",
+				StakeDenom: "bnkt",
 			},
 		}, {
 			name:        "parse not found file",
@@ -157,14 +157,14 @@ func TestParseGenesisFromPath(t *testing.T) {
 			genesisPath: "testdata/genesis1.json",
 			want: cosmosutil.Genesis{
 				Accounts:   []string{"cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"},
-				StakeDenom: "stake",
+				StakeDenom: "bnkt",
 			},
 		}, {
 			name:        "parse genesis file 2",
 			genesisPath: "testdata/genesis2.json",
 			want: cosmosutil.Genesis{
 				Accounts:   []string{"cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"},
-				StakeDenom: "stake",
+				StakeDenom: "bnkt",
 			},
 		}, {
 			name:        "parse not found file",

@@ -191,7 +191,7 @@ func (c *Chain) preBuild(ctx context.Context, cacheStorage cache.Storage) (build
 		gocmd.FlagLdflags, gocmd.Ldflags(ldFlags...),
 	}
 
-	fmt.Fprintln(c.stdLog().out, "📦 Installing dependencies...")
+	fmt.Fprintln(c.stdLog().out, "📦 安裝熊網鏈依賴項...")
 
 	// We do mod tidy before checking for checksum changes, because go.mod gets modified often
 	// and the mod verify command is the expensive one anyway
@@ -215,7 +215,7 @@ func (c *Chain) preBuild(ctx context.Context, cacheStorage cache.Storage) (build
 		}
 	}
 
-	fmt.Fprintln(c.stdLog().out, "🛠️  Building the blockchain...")
+	fmt.Fprintln(c.stdLog().out, "🛠️  構建熊網鏈...")
 
 	return buildFlags, nil
 }
@@ -232,7 +232,7 @@ func (c *Chain) discoverMain(path string) (pkgPath string, err error) {
 
 	path, err = goanalysis.DiscoverOneMain(path)
 	if err == goanalysis.ErrMultipleMainPackagesFound {
-		return "", errors.Wrap(err, "specify the path to your chain's main package in your config.yml>build.main")
+		return "", errors.Wrap(err, "請在config.yml檔案中的build.main部份指定鏈主包的路徑")
 	}
 	return path, err
 }

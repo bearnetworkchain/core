@@ -30,7 +30,7 @@ func TestParseGentx(t *testing.T) {
 				DelegatorAddress: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
 				PubKey:           ed25519.PubKey(pk1),
 				SelfDelegation: sdk.Coin{
-					Denom:  "stake",
+					Denom:  "bnkt",
 					Amount: sdk.NewInt(95000000),
 				},
 				Memo: "9b1f4adbfb0c0b513040d914bfb717303c0eaa71@192.168.0.148:26656",
@@ -42,7 +42,7 @@ func TestParseGentx(t *testing.T) {
 				DelegatorAddress: "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
 				PubKey:           ed25519.PubKey(pk2),
 				SelfDelegation: sdk.Coin{
-					Denom:  "stake",
+					Denom:  "bnkt",
 					Amount: sdk.NewInt(95000000),
 				},
 				Memo: "a412c917cb29f73cc3ad0592bbd0152fe0e690bd@192.168.0.148:26656",

@@ -32,8 +32,8 @@ func TestOverwriteSDKConfigsAndChainID(t *testing.T) {
 	cf := confile.New(confile.DefaultYAMLEncodingCreator, filepath.Join(path, "config.yml"))
 	require.NoError(t, cf.Load(&c))
 
-	c.Genesis = map[string]interface{}{"chain_id": "cosmos"}
-	c.Init.App = map[string]interface{}{"hello": "cosmos"}
+	c.Genesis = map[string]interface{}{"chain_id": "bearnetwork"}
+	c.Init.App = map[string]interface{}{"hello": "BearNetwork"}
 	c.Init.Config = map[string]interface{}{"fast_sync": false}
 
 	require.NoError(t, cf.Save(c))
@@ -51,8 +51,8 @@ func TestOverwriteSDKConfigsAndChainID(t *testing.T) {
 		key         string
 		expectedVal interface{}
 	}{
-		{confile.DefaultJSONEncodingCreator, "config/genesis.json", "chain_id", "cosmos"},
-		{confile.DefaultTOMLEncodingCreator, "config/app.toml", "hello", "cosmos"},
+		{confile.DefaultJSONEncodingCreator, "config/genesis.json", "chain_id", "bearnetwork"},
+		{confile.DefaultTOMLEncodingCreator, "config/app.toml", "hello", "BearNetwork"},
 		{confile.DefaultTOMLEncodingCreator, "config/config.toml", "fast_sync", false},
 	}
 

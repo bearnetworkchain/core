@@ -148,7 +148,7 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 					if c.served {
 						c.served = false
 
-						fmt.Fprintln(c.stdLog().out, "💿 Saving genesis state...")
+						fmt.Fprintln(c.stdLog().out, "💿 保存熊網鏈創世狀態...")
 
 						// If serve has been stopped, save the genesis state
 						if err := c.saveChainState(context.TODO(), commands); err != nil {
@@ -161,7 +161,7 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 							fmt.Fprintln(c.stdLog().err, err.Error())
 							return err
 						}
-						fmt.Fprintf(c.stdLog().out, "💿 Genesis state saved in %s\n", genesisPath)
+						fmt.Fprintf(c.stdLog().out, "💿 熊網鏈創世狀態保存在 %s\n", genesisPath)
 					}
 				case errors.As(err, &buildErr):
 					fmt.Fprintf(c.stdLog().err, "%s\n", errorColor(err.Error()))
@@ -171,7 +171,7 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 						fmt.Fprintln(c.stdLog().out, "see: https://github.com/ignite-hq/cli#configure")
 					}
 
-					fmt.Fprintf(c.stdLog().out, "%s\n", infoColor("Waiting for a fix before retrying..."))
+					fmt.Fprintf(c.stdLog().out, "%s\n", infoColor("在重試之前等待修復..."))
 
 				case errors.As(err, &startErr):
 					// Parse returned error logs
@@ -181,8 +181,7 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 					// Therefore, the error may be caused by a new logic that is not compatible with the old app state
 					// We suggest the user to eventually reset the app state
 					if parsedErr == "" {
-						fmt.Fprintf(c.stdLog().out, "%s %s\n", infoColor(`Blockchain failed to start.
-If the new code is no longer compatible with the saved state, you can reset the database by launching:`), "ignite chain serve --reset-once")
+						fmt.Fprintf(c.stdLog().out, "%s %s\n", infoColor(`區塊鏈無法啟動。如果新代碼不再與保存的狀態兼容，您可以通過啟動來重置數據庫:`), "ignite chain serve --reset-once")
 
 						return fmt.Errorf("cannot run %s", startErr.AppName)
 					}
@@ -205,7 +204,7 @@ If the new code is no longer compatible with the saved state, you can reset the 
 }
 
 func (c *Chain) setup() error {
-	fmt.Fprintf(c.stdLog().out, "Cosmos SDK's version is: %s\n\n", infoColor(c.Version))
+	fmt.Fprintf(c.stdLog().out, "熊網鏈版本是: %s\n\n", infoColor(c.Version))
 
 	return c.checkSystem()
 }
@@ -215,7 +214,7 @@ func (c *Chain) setup() error {
 func (c *Chain) checkSystem() error {
 	// check if Go has installed.
 	if !xexec.IsCommandAvailable("go") {
-		return errors.New("Please, check that Go language is installed correctly in $PATH. See https://golang.org/doc/install")
+		return errors.New("請檢查是否正確安裝了Go語言 $PATH. See https://golang.org/doc/install")
 	}
 	return nil
 }
@@ -280,7 +279,7 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 
 		if forceReset || configModified {
 			// if forceReset is set, we consider the app as being not initialized
-			fmt.Fprintln(c.stdLog().out, "🔄 Resetting the app state...")
+			fmt.Fprintln(c.stdLog().out, "🔄 重置熊網鏈應用狀態...")
 			isInit = false
 		}
 	}
@@ -336,7 +335,7 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 	// init phase
 	// nolint:gocritic
 	if !isInit || (appModified && !exportGenesisExists) {
-		fmt.Fprintln(c.stdLog().out, "💿 Initializing the app...")
+		fmt.Fprintln(c.stdLog().out, "💿 初始化熊網鏈應用程序...")
 
 		if err := c.Init(ctx, true); err != nil {
 			return err
@@ -344,7 +343,7 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 	} else if appModified {
 		// if the chain is already initialized but the source has been modified
 		// we reset the chain database and import the genesis state
-		fmt.Fprintln(c.stdLog().out, "💿 Existent genesis detected, restoring the database...")
+		fmt.Fprintln(c.stdLog().out, "💿 檢測到存在的創世起源，正在恢復數據庫...")
 
 		if err := commands.UnsafeReset(ctx); err != nil {
 			return err
@@ -354,7 +353,7 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 			return err
 		}
 	} else {
-		fmt.Fprintln(c.stdLog().out, "▶️  Restarting existing app...")
+		fmt.Fprintln(c.stdLog().out, "▶️  重啟熊網鏈現有應用...")
 	}
 
 	// save checksums
@@ -395,7 +394,7 @@ func (c *Chain) start(ctx context.Context, config chainconfig.Config) error {
 
 	if isFaucetEnabled {
 		if err == ErrFaucetAccountDoesNotExist {
-			return &CannotBuildAppError{errors.Wrap(err, "faucet account doesn't exist")}
+			return &CannotBuildAppError{errors.Wrap(err, "水龍頭帳戶不存在")}
 		}
 		if err != nil {
 			return err
@@ -502,7 +501,7 @@ type CannotBuildAppError struct {
 }
 
 func (e *CannotBuildAppError) Error() string {
-	return fmt.Sprintf("cannot build app:\n\n\t%s", e.Err)
+	return fmt.Sprintf("無法構建熊網鏈應用程序:\n\n\t%s", e.Err)
 }
 
 func (e *CannotBuildAppError) Unwrap() error {

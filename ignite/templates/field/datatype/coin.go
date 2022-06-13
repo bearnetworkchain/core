@@ -25,8 +25,10 @@ var (
 		ValueIndex:        "",
 		ValueInvalidIndex: "",
 		ToBytes: func(name string) string {
+			return ""
 		},
 		ToString: func(name string) string {
+			return ""
 		},
 		CLIArgs: func(name multiformatname.Name, _, prefix string, argIndex int) string {
 			return fmt.Sprintf(`%s%s, err := sdk.ParseCoinNormalized(args[%d])

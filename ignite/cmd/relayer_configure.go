@@ -50,38 +50,38 @@ const (
 	defautTargetAddressPrefix = "bnkt"
 )
 
-// NewRelayerConfigure returns a new relayer configure command.
-// faucet addresses are optional and connect command will try to guess the address
-// when not provided. even if auto retrieving coins fails, connect command will complete with success.
+// NewRelayerConfigure 返回一個新的中繼器配置命令。
+// 水龍頭地址是可選的，連接命令將嘗試猜測地址
+// 未提供時。即使自動檢索硬幣失敗，連接命令也會成功完成。
 func NewRelayerConfigure() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "configure",
-		Short:   "Configure source and target chains for relaying",
+		Short:   "配置源鏈和目標鏈以進行中繼",
 		Aliases: []string{"conf"},
 		RunE:    relayerConfigureHandler,
 	}
 
-	c.Flags().BoolP(flagAdvanced, "a", false, "Advanced configuration options for custom IBC modules")
-	c.Flags().String(flagSourceRPC, "", "RPC address of the source chain")
-	c.Flags().String(flagTargetRPC, "", "RPC address of the target chain")
-	c.Flags().String(flagSourceFaucet, "", "Faucet address of the source chain")
-	c.Flags().String(flagTargetFaucet, "", "Faucet address of the target chain")
-	c.Flags().String(flagSourcePort, "", "IBC port ID on the source chain")
-	c.Flags().String(flagSourceVersion, "", "Module version on the source chain")
-	c.Flags().String(flagTargetPort, "", "IBC port ID on the target chain")
-	c.Flags().String(flagTargetVersion, "", "Module version on the target chain")
-	c.Flags().String(flagSourceGasPrice, "", "Gas price used for transactions on source chain")
-	c.Flags().String(flagTargetGasPrice, "", "Gas price used for transactions on target chain")
-	c.Flags().Int64(flagSourceGasLimit, 0, "Gas limit used for transactions on source chain")
-	c.Flags().Int64(flagTargetGasLimit, 0, "Gas limit used for transactions on target chain")
-	c.Flags().String(flagSourceAddressPrefix, "", "Address prefix of the source chain")
-	c.Flags().String(flagTargetAddressPrefix, "", "Address prefix of the target chain")
-	c.Flags().String(flagSourceAccount, "", "Source Account")
-	c.Flags().String(flagTargetAccount, "", "Target Account")
-	c.Flags().Bool(flagOrdered, false, "Set the channel as ordered")
-	c.Flags().BoolP(flagReset, "r", false, "Reset the relayer config")
-	c.Flags().String(flagSourceClientID, "", "use a custom client id for source")
-	c.Flags().String(flagTargetClientID, "", "use a custom client id for target")
+	c.Flags().BoolP(flagAdvanced, "a", false, "自定義 IBC 模塊的高級配置選項")
+	c.Flags().String(flagSourceRPC, "", "源鏈的RPC地址")
+	c.Flags().String(flagTargetRPC, "", "目標鏈的RPC地址")
+	c.Flags().String(flagSourceFaucet, "", "源鏈的水龍頭地址")
+	c.Flags().String(flagTargetFaucet, "", "目標鏈的水龍頭地址")
+	c.Flags().String(flagSourcePort, "", "源鏈上的 IBC 端口 ID")
+	c.Flags().String(flagSourceVersion, "", "源鏈上的模塊版本")
+	c.Flags().String(flagTargetPort, "", "目標鏈上的 IBC 端口 ID")
+	c.Flags().String(flagTargetVersion, "", "目標鏈上的模塊版本")
+	c.Flags().String(flagSourceGasPrice, "", "用於源鏈交易的 Gas 價格")
+	c.Flags().String(flagTargetGasPrice, "", "用於目標鏈上交易的 Gas 價格")
+	c.Flags().Int64(flagSourceGasLimit, 0, "用於源鏈上交易的氣體限制")
+	c.Flags().Int64(flagTargetGasLimit, 0, "用於目標鏈上交易的氣體限制")
+	c.Flags().String(flagSourceAddressPrefix, "", "源鏈地址前綴")
+	c.Flags().String(flagTargetAddressPrefix, "", "目標鏈的地址前綴")
+	c.Flags().String(flagSourceAccount, "", "來源賬戶")
+	c.Flags().String(flagTargetAccount, "", "目標賬戶")
+	c.Flags().Bool(flagOrdered, false, "按順序設置頻道")
+	c.Flags().BoolP(flagReset, "r", false, "重置中繼器配置")
+	c.Flags().String(flagSourceClientID, "", "使用自定義客戶端 ID 作為源")
+	c.Flags().String(flagTargetClientID, "", "為目標使用自定義客戶端 ID")
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 
 	return c
@@ -126,7 +126,7 @@ func relayerConfigureHandler(cmd *cobra.Command, args []string) (err error) {
 		targetAddressPrefix string
 	)
 
-	// advanced configuration for the channel
+	// 通道的高級配置
 	var (
 		sourcePort    string
 		sourceVersion string
@@ -134,96 +134,96 @@ func relayerConfigureHandler(cmd *cobra.Command, args []string) (err error) {
 		targetVersion string
 	)
 
-	// questions
+	// 問題
 	var (
 		questionSourceAccount = cliquiz.NewQuestion(
-			"Source Account",
+			"來源賬戶",
 			&sourceAccount,
 			cliquiz.DefaultAnswer(cosmosaccount.DefaultAccount),
 			cliquiz.Required(),
 		)
 		questionTargetAccount = cliquiz.NewQuestion(
-			"Target Account",
+			"目標賬戶",
 			&targetAccount,
 			cliquiz.DefaultAnswer(cosmosaccount.DefaultAccount),
 			cliquiz.Required(),
 		)
 		questionSourceRPCAddress = cliquiz.NewQuestion(
-			"Source RPC",
+			"源 RPC",
 			&sourceRPCAddress,
 			cliquiz.DefaultAnswer(defaultSourceRPCAddress),
 			cliquiz.Required(),
 		)
 		questionSourceFaucet = cliquiz.NewQuestion(
-			"Source Faucet",
+			"源頭水龍頭",
 			&sourceFaucetAddress,
 		)
 		questionTargetRPCAddress = cliquiz.NewQuestion(
-			"Target RPC",
+			"目標 RPC",
 			&targetRPCAddress,
 			cliquiz.DefaultAnswer(defaultTargetRPCAddress),
 			cliquiz.Required(),
 		)
 		questionTargetFaucet = cliquiz.NewQuestion(
-			"Target Faucet",
+			"目標水龍頭",
 			&targetFaucetAddress,
 		)
 		questionSourcePort = cliquiz.NewQuestion(
-			"Source Port",
+			"源端口",
 			&sourcePort,
 			cliquiz.DefaultAnswer(relayer.TransferPort),
 			cliquiz.Required(),
 		)
 		questionSourceVersion = cliquiz.NewQuestion(
-			"Source Version",
+			"源版本",
 			&sourceVersion,
 			cliquiz.DefaultAnswer(relayer.TransferVersion),
 			cliquiz.Required(),
 		)
 		questionTargetPort = cliquiz.NewQuestion(
-			"Target Port",
+			"目標端口",
 			&targetPort,
 			cliquiz.DefaultAnswer(relayer.TransferPort),
 			cliquiz.Required(),
 		)
 		questionTargetVersion = cliquiz.NewQuestion(
-			"Target Version",
+			"目標版本",
 			&targetVersion,
 			cliquiz.DefaultAnswer(relayer.TransferVersion),
 			cliquiz.Required(),
 		)
 		questionSourceGasPrice = cliquiz.NewQuestion(
-			"Source Gas Price",
+			"源Gas價格",
 			&sourceGasPrice,
 			cliquiz.DefaultAnswer(defautSourceGasPrice),
 			cliquiz.Required(),
 		)
 		questionTargetGasPrice = cliquiz.NewQuestion(
-			"Target Gas Price",
+			"目標Gas價格",
 			&targetGasPrice,
 			cliquiz.DefaultAnswer(defautTargetGasPrice),
 			cliquiz.Required(),
 		)
 		questionSourceGasLimit = cliquiz.NewQuestion(
-			"Source Gas Limit",
+			"源氣體限制 Gas Limit",
 			&sourceGasLimit,
 			cliquiz.DefaultAnswer(defautSourceGasLimit),
 			cliquiz.Required(),
 		)
 		questionTargetGasLimit = cliquiz.NewQuestion(
-			"Target Gas Limit",
+			"目標氣體限制 Gas Limit",
 			&targetGasLimit,
 			cliquiz.DefaultAnswer(defautTargetGasLimit),
 			cliquiz.Required(),
 		)
 		questionSourceAddressPrefix = cliquiz.NewQuestion(
-			"Source Address Prefix",
+			"源地址前綴",
 			&sourceAddressPrefix,
 			cliquiz.DefaultAnswer(defautSourceAddressPrefix),
 			cliquiz.Required(),
 		)
 		questionTargetAddressPrefix = cliquiz.NewQuestion(
-			"Target Address Prefix",
+			"目標地址前綴",
 			&targetAddressPrefix,
 			cliquiz.DefaultAnswer(defautTargetAddressPrefix),
 			cliquiz.Required(),
@@ -311,7 +311,7 @@ func relayerConfigureHandler(cmd *cobra.Command, args []string) (err error) {
 		questions []cliquiz.Question
 	)
 
-	// get information from prompt if flag not provided
+	// 如果未提供標誌，則從提示中獲取信息
 	if sourceAccount == "" {
 		questions = append(questions, questionSourceAccount)
 	}
@@ -377,12 +377,12 @@ func relayerConfigureHandler(cmd *cobra.Command, args []string) (err error) {
 		}
 	}
 
-	session.StartSpinner("Fetching chain info...")
+	session.StartSpinner("獲取鏈信息...")
 
 	session.Println()
 	r := relayer.New(ca)
 
-	// initialize the chains
+	// 初始化鏈
 	sourceChain, err := initChain(
 		cmd,
 		r,
@@ -417,9 +417,9 @@ func relayerConfigureHandler(cmd *cobra.Command, args []string) (err error) {
 		return err
 	}
 
-	session.StartSpinner("Configuring...")
+	session.StartSpinner("配置中...")
 
-	// sets advanced channel options
+	// 設置高級頻道選項
 	var channelOptions []relayer.ChannelOption
 	if advanced {
 		channelOptions = append(channelOptions,
@@ -434,19 +434,19 @@ func relayerConfigureHandler(cmd *cobra.Command, args []string) (err error) {
 		}
 	}
 
-	// create the connection configuration
+	// 創建連接配置
 	id, err := sourceChain.Connect(targetChain, channelOptions...)
 	if err != nil {
 		return err
 	}
 
 	session.StopSpinner()
-	session.Printf("⛓  Configured chains: %s\n\n", color.Green.Sprint(id))
+	session.Printf("⛓  配置的鏈: %s\n\n", color.Green.Sprint(id))
 
 	return nil
 }
 
-// initChain initializes chain information for the relayer connection
+// initChain 初始化中繼連接的鏈信息
 func initChain(
 	cmd *cobra.Command,
 	r relayer.Relayer,
@@ -461,7 +461,7 @@ func initChain(
 	clientID string,
 ) (*relayer.Chain, error) {
 	defer session.StopSpinner()
-	session.StartSpinner("Initializing chain...")
+	session.StartSpinner("初始化鏈...")
 
 	c, account, err := r.NewChain(
 		cmd.Context(),
@@ -474,15 +474,15 @@ func initChain(
 		relayer.WithClientID(clientID),
 	)
 	if err != nil {
-		return nil, errors.Wrapf(err, "cannot resolve %s", name)
+		return nil, errors.Wrapf(err, "無法解決 %s", name)
 	}
 
 	session.StopSpinner()
 
 	accountAddr := account.Address(addressPrefix)
 
-	session.Printf("🔐  Account on %q is %s(%s)\n \n", name, accountName, accountAddr)
-	session.StartSpinner(color.Yellow.Sprintf("trying to receive tokens from a faucet..."))
+	session.Printf("🔐  帳戶 %q 是 %s(%s)\n \n", name, accountName, accountAddr)
+	session.StartSpinner(color.Yellow.Sprintf("試圖從水龍頭接收令牌..."))
 
 	coins, err := c.TryRetrieve(cmd.Context())
 	session.StopSpinner()
@@ -491,14 +491,14 @@ func initChain(
 	if err != nil {
 		session.Println(color.Yellow.Sprintf(err.Error()))
 	} else {
-		session.Println(color.Green.Sprintf("received coins from a faucet"))
+		session.Println(color.Green.Sprintf("從水龍頭收到硬幣"))
 	}
 
 	balance := coins.String()
 	if balance == "" {
 		balance = entrywriter.None
 	}
-	session.Printf(" |· (balance: %s)\n\n", balance)
+	session.Printf(" |· (平衡: %s)\n\n", balance)
 
 	return c, nil
 }

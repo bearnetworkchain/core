@@ -9,7 +9,7 @@ import (
 func NewNetworkCampaign() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "campaign",
-		Short: "Handle campaigns",
+		Short: "處理活動",
 	}
 	c.AddCommand(
 		NewNetworkCampaignPublish(),

@@ -14,19 +14,19 @@ const (
 	flagNoVerification = "no-verification"
 )
 
-// NewNetworkRequestApprove creates a new request approve
-// command to approve requests for a chain.
+// NewNetworkRequestApprove 創建一個新的請求批准
+// 批准鏈請求的命令.
 func NewNetworkRequestApprove() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "approve [launch-id] [number<,...>]",
 		Aliases: []string{"accept"},
-		Short:   "Approve requests",
+		Short:   "批准請求",
 		RunE:    networkRequestApproveHandler,
 		Args:    cobra.ExactArgs(2),
 	}
 
 	flagSetClearCache(c)
-	c.Flags().Bool(flagNoVerification, false, "approve the requests without verifying them")
+	c.Flags().Bool(flagNoVerification, false, "批准請求而不驗證它們")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetHome())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
@@ -48,13 +48,13 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// Get the list of request ids
+	// 獲取請求ID列表
 	ids, err := numbers.ParseList(args[1])
 	if err != nil {
 		return err
 	}
 
-	// Verify the requests are valid
+	// 驗證請求是否有效
 	noVerification, err := cmd.Flags().GetBool(flagNoVerification)
 	if err != nil {
 		return err
@@ -70,12 +70,12 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// if requests must be verified, we simulate the chain in a temporary directory with the requests
+	// 如果必須驗證請求，我們將在臨時目錄中使用請求模擬鏈
 	if !noVerification {
 		if err := verifyRequest(cmd.Context(), cacheStorage, nb, launchID, ids...); err != nil {
 			return errors.Wrap(err, "request(s) not valid")
 		}
-		session.Printf("%s Request(s) %s verified\n", icons.OK, numbers.List(ids, "#"))
+		session.Printf("%s 要求(s) %s 已驗證\n", icons.OK, numbers.List(ids, "#"))
 	}
 
 	// Submit the approved requests
@@ -89,5 +89,5 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s Request(s) %s approved\n", icons.OK, numbers.List(ids, "#"))
+	return session.Printf("%s 要求(s) %s 得到正式認可的\n", icons.OK, numbers.List(ids, "#"))
 }

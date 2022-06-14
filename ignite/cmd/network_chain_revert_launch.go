@@ -13,7 +13,7 @@ import (
 func NewNetworkChainRevertLaunch() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "revert-launch [launch-id]",
-		Short: "Revert launch a network as a coordinator",
+		Short: "恢復以協調者身份啟動網絡",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainRevertLaunchHandler,
 	}
@@ -33,7 +33,7 @@ func networkChainRevertLaunchHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err

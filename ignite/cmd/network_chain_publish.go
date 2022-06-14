@@ -30,30 +30,30 @@ const (
 	flagRewardHeight = "reward.height"
 )
 
-// NewNetworkChainPublish returns a new command to publish a new chain to start a new network.
+// NewNetworkChainPublish 返回一個新命令來發布一條新鏈以啟動一個新網絡。
 func NewNetworkChainPublish() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "publish [source-url]",
-		Short: "Publish a new chain to start a new network",
+		Short: "發布新鏈啟動新網絡",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainPublishHandler,
 	}
 
 	flagSetClearCache(c)
-	c.Flags().String(flagBranch, "", "Git branch to use for the repo")
-	c.Flags().String(flagTag, "", "Git tag to use for the repo")
-	c.Flags().String(flagHash, "", "Git hash to use for the repo")
-	c.Flags().String(flagGenesis, "", "URL to a custom Genesis")
-	c.Flags().String(flagChainID, "", "Chain ID to use for this network")
-	c.Flags().Uint64(flagCampaign, 0, "Campaign ID to use for this network")
-	c.Flags().Bool(flagNoCheck, false, "Skip verifying chain's integrity")
-	c.Flags().String(flagCampaignMetadata, "", "Add a campaign metadata")
-	c.Flags().String(flagCampaignTotalSupply, "", "Add a total of the mainnet of a campaign")
-	c.Flags().String(flagShares, "", "Add shares for the campaign")
-	c.Flags().Bool(flagMainnet, false, "Initialize a mainnet campaign")
-	c.Flags().String(flagRewardCoins, "", "Reward coins")
-	c.Flags().Int64(flagRewardHeight, 0, "Last reward height")
-	c.Flags().String(flagAmount, "", "Amount of coins for account request")
+	c.Flags().String(flagBranch, "", "用於 repo 的 Git 分支")
+	c.Flags().String(flagTag, "", "用於 repo 的 Git 標記")
+	c.Flags().String(flagHash, "", "用於存儲庫的 Git 哈希")
+	c.Flags().String(flagGenesis, "", "自定義創世紀的 URL")
+	c.Flags().String(flagChainID, "", "用於此網絡的Chain ID")
+	c.Flags().Uint64(flagCampaign, 0, "用於此網絡的活動 ID")
+	c.Flags().Bool(flagNoCheck, false, "跳過驗證鏈的完整性")
+	c.Flags().String(flagCampaignMetadata, "", "添加活動元數據")
+	c.Flags().String(flagCampaignTotalSupply, "", "添加一個活動的總主網")
+	c.Flags().String(flagShares, "", "為活動添加分享")
+	c.Flags().Bool(flagMainnet, false, "初始化主網活動")
+	c.Flags().String(flagRewardCoins, "", "獎勵金幣")
+	c.Flags().Int64(flagRewardHeight, 0, "最後獎勵高度")
+	c.Flags().String(flagAmount, "", "帳戶請求的熊網幣數量")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 	c.Flags().AddFlagSet(flagSetHome())
@@ -86,12 +86,12 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 	// parse the amount.
 	amountCoins, err := sdk.ParseCoinsNormalized(amount)
 	if err != nil {
-		return errors.Wrap(err, "error parsing amount")
+		return errors.Wrap(err, "金額解析錯誤")
 	}
 
 	source, err := xurl.MightHTTPS(args[0])
 	if err != nil {
-		return fmt.Errorf("invalid source url format: %w", err)
+		return fmt.Errorf("無效的URL格式: %w", err)
 	}
 
 	cacheStorage, err := newCache(cmd)
@@ -100,29 +100,29 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	if campaign != 0 && campaignTotalSupplyStr != "" {
-		return fmt.Errorf("%s and %s flags cannot be set together", flagCampaign, flagCampaignTotalSupply)
+		return fmt.Errorf("%s 和 %s flags 不能一起設置", flagCampaign, flagCampaignTotalSupply)
 	}
 	if isMainnet {
 		if campaign == 0 && campaignTotalSupplyStr == "" {
 			return fmt.Errorf(
-				"%s flag requires one of the %s or %s flags to be set",
+				"%s flag 需要其中之一 %s or %s flags 要設置",
 				flagMainnet,
 				flagCampaign,
 				flagCampaignTotalSupply,
 			)
 		}
 		if chainID == "" {
-			return fmt.Errorf("%s flag requires the %s flag", flagMainnet, flagChainID)
+			return fmt.Errorf("%s flag 需要 %s flag", flagMainnet, flagChainID)
 		}
 	}
 
 	if chainID != "" {
 		chainName, _, err := chainid.ParseGenesisChainID(chainID)
 		if err != nil {
-			return errors.Wrapf(err, "invalid chain id: %s", chainID)
+			return errors.Wrapf(err, "無效的 chain id: %s", chainID)
 		}
 		if err := chainid.CheckChainName(chainName); err != nil {
-			return errors.Wrapf(err, "invalid chain id name: %s", chainName)
+			return errors.Wrapf(err, "無效的 chain id 名稱: %s", chainName)
 		}
 	}
 
@@ -138,7 +138,7 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 
 	if (!rewardCoins.Empty() && rewardDuration == 0) ||
 		(rewardCoins.Empty() && rewardDuration > 0) {
-		return fmt.Errorf("%s and %s flags must be provided together", flagRewardCoins, flagRewardHeight)
+		return fmt.Errorf("%s 和 %s flags 必須一起提供", flagRewardCoins, flagRewardHeight)
 	}
 
 	nb, err := newNetworkBuilder(cmd, CollectEvents(session.EventBus()))
@@ -146,7 +146,7 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// use source from chosen target.
+	// 使用來自所選目標的源。
 	var sourceOption networkchain.SourceOption
 
 	switch {
@@ -162,12 +162,12 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 
 	var initOptions []networkchain.Option
 
-	// use custom genesis from url if given.
+	// 如果給定，則使用來自 url 的自定義起源。
 	if genesisURL != "" {
 		initOptions = append(initOptions, networkchain.WithGenesisFromURL(genesisURL))
 	}
 
-	// init in a temp dir.
+	// 在臨時目錄中初始化。
 	homeDir, err := os.MkdirTemp("", "")
 	if err != nil {
 		return err
@@ -176,7 +176,7 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 
 	initOptions = append(initOptions, networkchain.WithHome(homeDir))
 
-	// prepare publish options
+	// 準備發布選項
 	publishOptions := []network.PublishOption{network.WithMetadata(campaignMetadata)}
 
 	if genesisURL != "" {
@@ -195,7 +195,7 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 		}
 	}
 
-	// use custom chain id if given.
+	// 如果給定，則使用自定義Chain ID。
 	if chainID != "" {
 		publishOptions = append(publishOptions, network.WithChainID(chainID))
 	}
@@ -217,7 +217,7 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 		publishOptions = append(publishOptions, network.WithPercentageShares(sharePercentages))
 	}
 
-	// init the chain.
+	// 初始化鏈.
 	c, err := nb.Chain(sourceOption, initOptions...)
 	if err != nil {
 		return err
@@ -225,11 +225,11 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 
 	if noCheck {
 		publishOptions = append(publishOptions, network.WithNoCheck())
-	} else if err := c.Init(cmd.Context(), cacheStorage); err != nil { // initialize the chain for checking.
+	} else if err := c.Init(cmd.Context(), cacheStorage); err != nil { // 初始化鏈以進行檢查。
 		return err
 	}
 
-	session.StartSpinner("Publishing...")
+	session.StartSpinner("發佈中...")
 
 	n, err := nb.Network()
 	if err != nil {
@@ -254,13 +254,13 @@ func networkChainPublishHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	session.StopSpinner()
-	session.Printf("%s Network published \n", icons.OK)
+	session.Printf("%s 網絡發佈 \n", icons.OK)
 	if isMainnet {
-		session.Printf("%s Mainnet ID: %d \n", icons.Bullet, launchID)
+		session.Printf("%s 主網 ID: %d \n", icons.Bullet, launchID)
 	} else {
-		session.Printf("%s Launch ID: %d \n", icons.Bullet, launchID)
+		session.Printf("%s 啟動 ID: %d \n", icons.Bullet, launchID)
 	}
-	session.Printf("%s Campaign ID: %d \n", icons.Bullet, campaignID)
+	session.Printf("%s 活動 ID: %d \n", icons.Bullet, campaignID)
 
 	return nil
 }

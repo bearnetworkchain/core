@@ -21,7 +21,7 @@ var CampaignSummaryHeader = []string{
 func NewNetworkCampaignList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list",
-		Short: "List published campaigns",
+		Short: "列出已發布的活動",
 		Args:  cobra.NoArgs,
 		RunE:  networkCampaignListHandler,
 	}

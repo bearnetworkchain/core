@@ -30,20 +30,20 @@ const (
 func NewNetworkChainInit() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "init [launch-id]",
-		Short: "Initialize a chain from a published chain ID",
+		Short: "初始化已經發佈的chain-id",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainInitHandler,
 	}
 
 	flagSetClearCache(c)
-	c.Flags().String(flagValidatorAccount, cosmosaccount.DefaultAccount, "Account for the chain validator")
-	c.Flags().String(flagValidatorWebsite, "", "Associate a website with the validator")
-	c.Flags().String(flagValidatorDetails, "", "Details about the validator")
-	c.Flags().String(flagValidatorSecurityContact, "", "Validator security contact email")
-	c.Flags().String(flagValidatorMoniker, "", "Custom validator moniker")
-	c.Flags().String(flagValidatorIdentity, "", "Validator identity signature (ex. UPort or Keybase)")
-	c.Flags().String(flagValidatorSelfDelegation, "", "Validator minimum self delegation")
-	c.Flags().String(flagValidatorGasPrice, "", "Validator gas price")
+	c.Flags().String(flagValidatorAccount, cosmosaccount.DefaultAccount, "熊網鏈鏈驗證者帳戶")
+	c.Flags().String(flagValidatorWebsite, "", "將網站與驗證器關聯")
+	c.Flags().String(flagValidatorDetails, "", "有關驗證器的詳細信息")
+	c.Flags().String(flagValidatorSecurityContact, "", "驗證者安全聯繫人電子郵件")
+	c.Flags().String(flagValidatorMoniker, "", "自定義驗證器對象名字")
+	c.Flags().String(flagValidatorIdentity, "", "驗證者身份簽名（例如端口UPort或密鑰庫Keybase)")
+	c.Flags().String(flagValidatorSelfDelegation, "", "驗證者最小自我委託")
+	c.Flags().String(flagValidatorGasPrice, "", "驗證者 gas 價格")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetHome())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
@@ -81,7 +81,7 @@ func networkChainInitHandler(cmd *cobra.Command, args []string) error {
 
 	if !getYes(cmd) && exist {
 		question := fmt.Sprintf(
-			"The chain has already been initialized under: %s. Would you like to overwrite the home directory",
+			"網鏈已經在下面初始化: %s. 是否要覆蓋主目錄",
 			chainHome,
 		)
 		if err := session.AskConfirm(question); err != nil {
@@ -128,7 +128,7 @@ func networkChainInitHandler(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		return err
 	}
-	session.StartSpinner("Generating your Gentx")
+	session.StartSpinner("生成您的Gentx")
 
 	gentxPath, err := c.InitAccount(cmd.Context(), v, validatorAccount)
 	if err != nil {
@@ -137,7 +137,7 @@ func networkChainInitHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s Gentx generated: %s\n", icons.Bullet, gentxPath)
+	return session.Printf("%s Gentx 生成: %s\n", icons.Bullet, gentxPath)
 }
 
 // askValidatorInfo prompts to the user questions to query validator information
@@ -167,22 +167,22 @@ func askValidatorInfo(cmd *cobra.Command, session cliui.Session, stakeDenom stri
 	}
 
 	questions := append([]cliquiz.Question{},
-		cliquiz.NewQuestion("Staking amount",
+		cliquiz.NewQuestion("質押金額",
 			&v.StakingAmount,
-			cliquiz.DefaultAnswer("95000000bnkt"),
+			cliquiz.DefaultAnswer("168888bnkt"),
 			cliquiz.Required(),
 		),
-		cliquiz.NewQuestion("Commission rate",
+		cliquiz.NewQuestion("佣金率",
 			&v.CommissionRate,
 			cliquiz.DefaultAnswer("0.10"),
 			cliquiz.Required(),
 		),
-		cliquiz.NewQuestion("Commission max rate",
+		cliquiz.NewQuestion("佣金最高費率",
 			&v.CommissionMaxRate,
 			cliquiz.DefaultAnswer("0.20"),
 			cliquiz.Required(),
 		),
-		cliquiz.NewQuestion("Commission max change rate",
+		cliquiz.NewQuestion("佣金最大變化率",
 			&v.CommissionMaxChangeRate,
 			cliquiz.DefaultAnswer("0.01"),
 			cliquiz.Required(),

@@ -8,11 +8,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/version"
 )
 
-// NewVersion creates a new version command to show the Ignite CLI version.
+// NewVersion 創建一個新版本命令來顯示 Ignite CLI 版本。
 func NewVersion() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "version",
-		Short: "Print the current build information",
+		Short: "打印當前構建信息",
 		Run: func(cmd *cobra.Command, _ []string) {
 			fmt.Println(version.Long(cmd.Context()))
 		},

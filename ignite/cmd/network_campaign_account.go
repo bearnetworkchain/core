@@ -23,7 +23,7 @@ var (
 func NewNetworkCampaignAccount() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "account",
-		Short: "Handle campaign accounts",
+		Short: "處理活動帳戶",
 	}
 	c.AddCommand(
 		newNetworkCampaignAccountList(),
@@ -34,7 +34,7 @@ func NewNetworkCampaignAccount() *cobra.Command {
 func newNetworkCampaignAccountList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list [campaign-id]",
-		Short: "Show all mainnet and mainnet vesting of the campaign",
+		Short: "顯示活動的所有主網和主網歸屬",
 		Args:  cobra.ExactArgs(1),
 		RunE:  newNetworkCampaignAccountListHandler,
 	}
@@ -62,7 +62,7 @@ func newNetworkCampaignAccountListHandler(cmd *cobra.Command, args []string) err
 
 	if len(mainnetAccs)+len(vestingAccs) == 0 {
 		session.StopSpinner()
-		return session.Printf("%s %s\n", icons.Info, "no campaign account found")
+		return session.Printf("%s %s\n", icons.Info, "未找到活動中帳戶")
 	}
 
 	mainnetAccEntries := make([][]string, 0)

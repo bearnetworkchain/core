@@ -11,20 +11,20 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// NewScaffoldBandchain creates a new BandChain oracle in the module
+// NewScaffoldBandchain 在模塊中創建一個新的 BandChain 預言機
 func NewScaffoldBandchain() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "band [queryName] --module [moduleName]",
-		Short: "Scaffold an IBC BandChain query oracle to request real-time data",
-		Long:  "Scaffold an IBC BandChain query oracle to request real-time data from BandChain scripts in a specific IBC-enabled Cosmos SDK module",
+		Short: "搭建 IBC BandChain 查詢預言機以請求實時數據",
+		Long:  "在特定的啟用 IBC 的 Cosmos SDK 模塊中搭建 IBC BandChain 查詢預言機以從 BandChain 腳本請求實時數據e",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  createBandchainHandler,
 	}
 
 	flagSetPath(c)
 	flagSetClearCache(c)
-	c.Flags().String(flagModule, "", "IBC Module to add the packet into")
-	c.Flags().String(flagSigner, "", "Label for the message signer (default: creator)")
+	c.Flags().String(flagModule, "", "IBC 模塊將數據包添加到")
+	c.Flags().String(flagSigner, "", "消息簽名者的標籤（默認值：creator)")
 
 	return c
 }
@@ -36,7 +36,7 @@ func createBandchainHandler(cmd *cobra.Command, args []string) error {
 		signer  = flagGetSigner(cmd)
 	)
 
-	s := clispinner.New().SetText("Scaffolding...")
+	s := clispinner.New().SetText("安裝腳手架...")
 	defer s.Stop()
 
 	module, err := cmd.Flags().GetString(flagModule)
@@ -44,7 +44,7 @@ func createBandchainHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if module == "" {
-		return errors.New("please specify a module to create the BandChain oracle into: --module <module_name>")
+		return errors.New("請指定一個模塊來創建 BandChain 預言機: --module <模塊名稱>")
 	}
 
 	cacheStorage, err := newCache(cmd)
@@ -77,13 +77,13 @@ func createBandchainHandler(cmd *cobra.Command, args []string) error {
 	fmt.Println(modificationsStr)
 
 	fmt.Printf(`
-🎉 Created a Band oracle query "%[1]v".
+🎉 創建了一個Band預言機查詢 "%[1]v".
 
-Note: BandChain module uses version "bandchain-1".
-Make sure to update the keys.go file accordingly.
+注意：BandChain 模塊使用版本“bandchain-1”。
+確保相應地更新 keys.go 文件。
 
 // x/%[2]v/types/keys.go
-const Version = "bandchain-1"
+常量版本 = "bandchain-1"
 
 `, oracle, module)
 

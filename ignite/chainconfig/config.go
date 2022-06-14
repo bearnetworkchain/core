@@ -31,13 +31,13 @@ var (
 // DefaultConf holds default configuration.
 var DefaultConf = Config{
 	Host: Host{
-		// when in Docker on MacOS, it only works with 0.0.0.0.
-		RPC:     "0.0.0.0:26657",
-		P2P:     "0.0.0.0:26656",
-		Prof:    "0.0.0.0:6060",
-		GRPC:    "0.0.0.0:9090",
-		GRPCWeb: "0.0.0.0:9091",
-		API:     "0.0.0.0:1317",
+		// when in Docker on MacOS, it only works with 192.168.1.188.
+		RPC:     "192.168.1.188:26657",
+		P2P:     "192.168.1.188:26656",
+		Prof:    "192.168.1.188:6060",
+		GRPC:    "192.168.1.188:9090",
+		GRPCWeb: "192.168.1.188:9091",
+		API:     "192.168.1.188:1317",
 	},
 	Build: Build{
 		Proto: Proto{
@@ -49,7 +49,7 @@ var DefaultConf = Config{
 		},
 	},
 	Faucet: Faucet{
-		Host: "0.0.0.0:4500",
+		Host: "192.168.1.188:4500",
 	},
 }
 

@@ -11,7 +11,7 @@ import (
 func NewAccountDelete() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "delete [name]",
-		Short: "Delete an account by name",
+		Short: "按名稱刪除帳戶",
 		Args:  cobra.ExactArgs(1),
 		RunE:  accountDeleteHandler,
 	}
@@ -35,6 +35,6 @@ func accountDeleteHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("Account %s deleted.\n", name)
+	fmt.Printf("帳戶 %s 已刪除.\n", name)
 	return nil
 }

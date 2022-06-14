@@ -14,7 +14,7 @@ import (
 func NewChainFaucet() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "faucet [address] [coin<,...>]",
-		Short: "Send coins to an account",
+		Short: "將硬幣發送到帳戶",
 		Args:  cobra.ExactArgs(2),
 		RunE:  chainFaucetHandler,
 	}

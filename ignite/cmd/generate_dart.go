@@ -12,7 +12,7 @@ import (
 func NewGenerateDart() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "dart",
-		Short: "Generate a Dart client",
+		Short: "生成Dart客戶端",
 		RunE:  generateDartHandler,
 	}
 	return c
@@ -37,7 +37,7 @@ func generateDartHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	s.Stop()
-	fmt.Println("⛏️  Generated Dart client.")
+	fmt.Println("⛏️  生成Dart客戶端.")
 
 	return nil
 }

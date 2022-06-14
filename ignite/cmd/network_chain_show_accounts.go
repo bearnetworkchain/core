@@ -18,7 +18,7 @@ var (
 func newNetworkChainShowAccounts() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "accounts [launch-id]",
-		Short: "Show all vesting and genesis accounts of the chain",
+		Short: "顯示鏈上的所有歸屬和創世賬戶",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainShowAccountsHandler,
 	}
@@ -53,7 +53,7 @@ func networkChainShowAccountsHandler(cmd *cobra.Command, args []string) error {
 	}
 	if len(genesisAccs)+len(vestingAccs) == 0 {
 		session.StopSpinner()
-		return session.Printf("%s %s\n", icons.Info, "empty chain account list")
+		return session.Printf("%s %s\n", icons.Info, "空鏈賬戶列表")
 	}
 
 	genesisAccEntries := make([][]string, 0)

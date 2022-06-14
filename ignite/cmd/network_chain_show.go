@@ -14,7 +14,7 @@ const flagOut = "out"
 func NewNetworkChainShow() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "show",
-		Short: "Show details of a chain",
+		Short: "顯示熊網鏈的詳細信息",
 	}
 	c.AddCommand(
 		newNetworkChainShowInfo(),

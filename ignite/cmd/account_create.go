@@ -11,7 +11,7 @@ import (
 func NewAccountCreate() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "create [name]",
-		Short: "Create a new account",
+		Short: "創建一個新賬戶",
 		Args:  cobra.ExactArgs(1),
 		RunE:  accountCreateHandler,
 	}
@@ -36,6 +36,6 @@ func accountCreateHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("Account %q created, keep your mnemonic in a secret place:\n\n%s\n", name, mnemonic)
+	fmt.Printf("帳戶 %q 已創建，請將您的助記符保存在一個秘密的地方:\n\n%s\n", name, mnemonic)
 	return nil
 }

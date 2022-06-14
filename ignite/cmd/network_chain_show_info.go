@@ -13,7 +13,7 @@ import (
 func newNetworkChainShowInfo() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "info [launch-id]",
-		Short: "Show info details of the chain",
+		Short: "顯示熊網鏈的詳細信息",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainShowInfoHandler,
 	}

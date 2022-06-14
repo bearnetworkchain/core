@@ -9,7 +9,7 @@ import (
 func NewNetworkChain() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "chain",
-		Short: "Build networks",
+		Short: "建立網絡",
 	}
 
 	c.AddCommand(

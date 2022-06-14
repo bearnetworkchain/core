@@ -10,11 +10,11 @@ const (
 	FlagIndexes = "index"
 )
 
-// NewScaffoldMap returns a new command to scaffold a map.
+// NewScaffoldMap 返回一個新命令來構建地圖。
 func NewScaffoldMap() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "map NAME [field]...",
-		Short: "CRUD for data stored as key-value pairs",
+		Short: "以鍵值對形式存儲的數據的CRUD",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  scaffoldMapHandler,
 	}
@@ -22,7 +22,7 @@ func NewScaffoldMap() *cobra.Command {
 	flagSetPath(c)
 	flagSetClearCache(c)
 	c.Flags().AddFlagSet(flagSetScaffoldType())
-	c.Flags().StringSlice(FlagIndexes, []string{"index"}, "fields that index the value")
+	c.Flags().StringSlice(FlagIndexes, []string{"index"}, "索引值的字段")
 
 	return c
 }

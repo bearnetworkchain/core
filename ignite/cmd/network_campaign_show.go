@@ -12,7 +12,7 @@ import (
 func NewNetworkCampaignShow() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "show [campaign-id]",
-		Short: "Show published campaign",
+		Short: "顯示已發布的活動",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkCampaignShowHandler,
 	}

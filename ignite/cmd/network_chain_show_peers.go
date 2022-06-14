@@ -17,7 +17,7 @@ import (
 func newNetworkChainShowPeers() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "peers [launch-id]",
-		Short: "Show peers list of the chain",
+		Short: "顯示鏈的對等列表",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainShowPeersHandler,
 	}
@@ -57,7 +57,7 @@ func networkChainShowPeersHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(peers) == 0 {
-		session.Printf("%s %s\n", icons.Info, "no peers found")
+		session.Printf("%s %s\n", icons.Info, "找不到對等")
 		return nil
 
 	}
@@ -75,5 +75,5 @@ func networkChainShowPeersHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s Peer list generated: %s\n", icons.Bullet, out)
+	return session.Printf("%s 已生成對等列表: %s\n", icons.Bullet, out)
 }

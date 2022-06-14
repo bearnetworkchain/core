@@ -13,14 +13,14 @@ import (
 func NewAccountExport() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "export [name]",
-		Short: "Export an account as a private key",
+		Short: "導出帳戶私鑰",
 		Args:  cobra.ExactArgs(1),
 		RunE:  accountExportHandler,
 	}
 
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 	c.Flags().AddFlagSet(flagSetAccountImportExport())
-	c.Flags().String(flagPath, "", "path to export private key. default: ./key_[name]")
+	c.Flags().String(flagPath, "", "導出私鑰的路徑。 默認 : ./key_[name]")
 
 	return c
 }
@@ -60,6 +60,6 @@ func accountExportHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("Account %q exported to file: %s\n", name, path)
+	fmt.Printf("帳戶 %q 導出到文件: %s\n", name, path)
 	return nil
 }

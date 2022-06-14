@@ -2,7 +2,7 @@ package ignitecmd
 
 import "github.com/spf13/cobra"
 
-// NewGenerate returns a command that groups code generation related sub commands.
+// NewGenerate 返回一個將代碼生成相關子命令分組的命令。
 func NewGenerate() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "generate [command]",

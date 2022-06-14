@@ -73,7 +73,7 @@ func networkChainShowGenesisHandler(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		// create the chain in a temp dir
+		// 在臨時目錄中創建鏈
 		tmpHome, err := os.MkdirTemp("", "*-spn")
 		if err != nil {
 			return err

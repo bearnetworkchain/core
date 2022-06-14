@@ -42,7 +42,7 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
@@ -78,7 +78,7 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 		session.Printf("%s 要求(s) %s 已驗證\n", icons.OK, numbers.List(ids, "#"))
 	}
 
-	// Submit the approved requests
+	// 提交批准的請求
 	reviewals := make([]network.Reviewal, 0)
 	for _, id := range ids {
 		reviewals = append(reviewals, network.ApproveRequest(id))

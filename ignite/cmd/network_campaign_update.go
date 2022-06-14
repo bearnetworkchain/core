@@ -52,7 +52,7 @@ func networkCampaignUpdateHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse campaign ID
+	// 解析活動 ID
 	campaignID, err := network.ParseID(args[0])
 	if err != nil {
 		return err

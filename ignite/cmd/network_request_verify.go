@@ -40,13 +40,13 @@ func networkRequestVerifyHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// get the list of request ids
+	// 獲取請求ID列表
 	ids, err := numbers.ParseList(args[1])
 	if err != nil {
 		return err

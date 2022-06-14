@@ -12,7 +12,7 @@ const (
 	flagConfig     = "config"
 )
 
-// NewChainServe creates a new serve command to serve a blockchain.
+// NewChainServe 創建一個新的服務命令來服務於區塊鏈。
 func NewChainServe() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "serve",
@@ -43,7 +43,7 @@ func chainServeHandler(cmd *cobra.Command, args []string) error {
 		chainOption = append(chainOption, chain.EnableThirdPartyModuleCodegen())
 	}
 
-	// check if custom config is defined
+	// 檢查是否定義了自定義配置
 	config, err := cmd.Flags().GetString(flagConfig)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func chainServeHandler(cmd *cobra.Command, args []string) error {
 		chainOption = append(chainOption, chain.ConfigFile(config))
 	}
 
-	// create the chain
+	// 創建鏈
 	c, err := newChainWithHomeFlags(cmd, chainOption...)
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func chainServeHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// serve the chain
+	// 服務於鏈條
 	var serveOptions []chain.ServeOption
 	forceUpdate, err := cmd.Flags().GetBool(flagForceReset)
 	if err != nil {

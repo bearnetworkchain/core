@@ -26,7 +26,7 @@ const (
 	flagValidatorGasPrice        = "validator-gas-price"
 )
 
-// NewNetworkChainInit returns a new command to initialize a chain from a published chain ID
+// 新網絡鏈初始化返回一個新命令以從已發布的鏈 ID 初始化鏈
 func NewNetworkChainInit() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "init [launch-id]",
@@ -60,20 +60,20 @@ func networkChainInitHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// check if the provided account for the validator exists.
+	// 檢查為驗證者提供的帳戶是否存在。
 	validatorAccount, _ := cmd.Flags().GetString(flagValidatorAccount)
 	if _, err = nb.AccountRegistry.GetByName(validatorAccount); err != nil {
 		return err
 	}
 
-	// if a chain has already been initialized with this launch ID, we ask for confirmation
-	// before erasing the directory.
+	// 如果一個鏈已經用這個啟動 ID 初始化，我們請求確認
+	// 在刪除目錄之前。
 	chainHome, exist, err := networkchain.IsChainHomeExist(launchID)
 	if err != nil {
 		return err
@@ -123,7 +123,7 @@ func networkChainInitHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// ask validator information.
+	// 詢問驗證者信息。
 	v, err := askValidatorInfo(cmd, session, genesis.StakeDenom)
 	if err != nil {
 		return err
@@ -140,7 +140,7 @@ func networkChainInitHandler(cmd *cobra.Command, args []string) error {
 	return session.Printf("%s Gentx 生成: %s\n", icons.Bullet, gentxPath)
 }
 
-// askValidatorInfo prompts to the user questions to query validator information
+// askValidatorInfo 提示用戶問題以查詢驗證器信息
 func askValidatorInfo(cmd *cobra.Command, session cliui.Session, stakeDenom string) (chain.Validator, error) {
 	var (
 		account, _         = cmd.Flags().GetString(flagValidatorAccount)

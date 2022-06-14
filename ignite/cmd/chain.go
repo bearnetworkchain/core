@@ -2,8 +2,8 @@ package ignitecmd
 
 import "github.com/spf13/cobra"
 
-// NewChain returns a command that groups sub commands related to compiling, serving
-// blockchains and so on.
+// NewChain 返回一個命令，該命令將與編譯、服務相關的子命令分組
+// 區塊鍊等等。
 func NewChain() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "chain [command]",

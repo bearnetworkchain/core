@@ -52,7 +52,7 @@ func networkChainPrepareHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
@@ -63,7 +63,7 @@ func networkChainPrepareHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// fetch chain information
+	// 獲取鏈信息
 	chainLaunch, err := n.ChainLaunch(cmd.Context(), launchID)
 	if err != nil {
 		return err

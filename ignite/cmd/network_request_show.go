@@ -32,13 +32,13 @@ func networkRequestShowHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// parse request ID
+	// 解析請求ID
 	requestID, err := strconv.ParseUint(args[1], 10, 64)
 	if err != nil {
 		return errors.Wrap(err, "error parsing requestID")

@@ -40,7 +40,7 @@ func networkRequestListHandler(cmd *cobra.Command, args []string) error {
 
 	addressPrefix := getAddressPrefix(cmd)
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
@@ -111,7 +111,7 @@ func renderRequestSummaries(
 		case *launchtypes.RequestContent_VestingAccount:
 			requestType = "添加歸屬賬戶"
 
-			// parse vesting options
+			// 解析歸屬選項
 			var vestingCoins string
 			dv := req.VestingAccount.VestingOptions.GetDelayedVesting()
 			if dv == nil {

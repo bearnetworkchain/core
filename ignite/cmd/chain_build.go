@@ -18,7 +18,7 @@ const (
 	flagReleasePrefix  = "release.prefix"
 )
 
-// NewChainBuild returns a new build command to build a blockchain app.
+// NewChainBuild 返回一個新的構建命令來構建區塊鏈應用程序。
 func NewChainBuild() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "build",

@@ -4,8 +4,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewNetworkCampaign creates a new campaign command that holds other
-// subcommands related to launching a network for a campaign.
+// NewNetworkCampaign 創建一個新的活動命令，該命令包含其他
+// 與為活動啟動網絡相關的子命令。
 func NewNetworkCampaign() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "campaign",

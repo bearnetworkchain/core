@@ -12,7 +12,7 @@ const (
 	flagMetadata = "metadata"
 )
 
-// NewNetworkCampaignPublish returns a new command to publish a new campaigns on Ignite.
+// NewNetworkCampaignPublish 返回一個用於在 Ignite 上發布新活動的新命令。
 func NewNetworkCampaignPublish() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "create [name] [total-supply]",

@@ -28,7 +28,7 @@ const (
 	flagSimappGenesisTime            = "genesisTime"
 )
 
-// NewChainSimulate creates a new simulation command to run the blockchain simulation.
+//NewChainSimulate 創建一個新的模擬命令來運行區塊鏈模擬。
 func NewChainSimulate() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "simulate",
@@ -49,7 +49,7 @@ func chainSimulationHandler(cmd *cobra.Command, args []string) error {
 		config         = newConfigFromFlags(cmd)
 		appPath        = flagGetPath(cmd)
 	)
-	// create the chain with path
+	// 用路徑創建鏈
 	absPath, err := filepath.Abs(appPath)
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func chainSimulationHandler(cmd *cobra.Command, args []string) error {
 	)
 }
 
-// newConfigFromFlags creates a simulation from the retrieved values of the flags.
+// newConfigFromFlags 根據檢索到的標誌值創建模擬。
 func newConfigFromFlags(cmd *cobra.Command) simulation.Config {
 	var (
 		genesis, _                = cmd.Flags().GetString(flagSimappGenesis)

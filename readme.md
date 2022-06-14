@@ -1,8 +1,9 @@
-# Ignite CLI
+# 熊網鏈 - Bear Network Chain
 
-![Ignite CLI](./assets/ignite-cli.png)
+![Ignite CLI](./assets/BearNetwork-01.png)
 
-[Ignite CLI](https://ignite.com/cli) is the all-in-one platform to build, launch, and maintain any crypto application on a sovereign and secured blockchain. It is a developer-friendly interface to the [Cosmos SDK](https://github.com/cosmos/cosmos-sdk), the world's most widely-used blockchain application framework. Ignite CLI generates boilerplate code for you, so you can focus on writing business logic.
+[Bear Network](https://bearmetwork.net). 是一個一體化平台，可在主權和安全的區塊鏈上構建、啟動和維護任何加密應用程序。 
+它是世界上使用最廣泛的區塊鏈應用程序框架 Cosmos SDK 的開發者友好界面。
 
 ## Quick start
 

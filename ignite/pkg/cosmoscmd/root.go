@@ -142,7 +142,7 @@ func NewRootCmd(
 
 	rootCmd := &cobra.Command{
 		Use:   appName + "d",
-		Short: "Stargate CosmosHub App",
+		Short: "Stargate BearNetwork App",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
@@ -183,7 +183,7 @@ func NewRootCmd(
 	)
 	overwriteFlagDefaults(rootCmd, map[string]string{
 		flags.FlagChainID:        defaultChainID,
-		flags.FlagKeyringBackend: "test",
+		flags.FlagKeyringBackend: "bnk",
 	})
 
 	return rootCmd, encodingConfig
@@ -451,7 +451,7 @@ func initAppConfig() (string, interface{}) {
 	//   own app.toml to override, or use this default value.
 	//
 	// In simapp, we set the min gas prices to 0.
-	srvCfg.MinGasPrices = "0bnkt"
+	srvCfg.MinGasPrices = "0ubnkt"
 
 	customAppConfig := CustomAppConfig{
 		Config: *srvCfg,

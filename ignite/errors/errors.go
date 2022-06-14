@@ -1,9 +1,9 @@
-// Package sperrors holds starport spesific errors.
+// 包 sperrors 包含 starport 特定錯誤。
 package sperrors
 
 import "errors"
 
 var (
-	// ErrOnlyStargateSupported is returned when underlying chain is not a stargate chain.
-	ErrOnlyStargateSupported = errors.New("this version of Cosmos SDK is no longer supported")
+	// ErrOnlyStargateSupported 當底層鏈不是星門鏈時返回。
+	ErrOnlyStargateSupported = errors.New("不再支持此版本的 Cosmos SDK")
 )

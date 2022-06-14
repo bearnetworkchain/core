@@ -13,23 +13,23 @@ import (
 )
 
 var (
-	// ErrAccountAlreadyExists returned when an already exists account attempted to be imported.
-	ErrAccountAlreadyExists = errors.New("account already exists")
+	// ErrAccountAlreadyExists 在嘗試導入已存在的帳戶時返回。
+	ErrAccountAlreadyExists = errors.New("賬戶已存在")
 
-	// ErrAccountDoesNotExist returned when account does not exit.
-	ErrAccountDoesNotExist = errors.New("account does not exit")
+	// 賬戶未退出時返回 ErrAccountDoesNotExist.
+	ErrAccountDoesNotExist = errors.New("賬戶無法退出")
 )
 
-// Account represents a user account.
+// Account 代表一個用戶帳戶.
 type Account struct {
 	Name     string `json:"name"`
 	Address  string `json:"address"`
 	Mnemonic string `json:"mnemonic,omitempty"`
 }
 
-// AddAccount creates a new account or imports an account when mnemonic is provided.
-// returns with an error if the operation went unsuccessful or an account with the provided name
-// already exists.
+// AddAccount 在提供助記詞時創建一個新帳戶或導入一個帳戶。
+// 如果操作失敗或具有提供的名稱的帳戶返回錯誤
+// 已經存在.
 func (r Runner) AddAccount(ctx context.Context, name, mnemonic, coinType string) (Account, error) {
 	if err := r.CheckAccountExist(ctx, name); err != nil {
 		return Account{}, err
@@ -41,7 +41,7 @@ func (r Runner) AddAccount(ctx context.Context, name, mnemonic, coinType string)
 		Mnemonic: mnemonic,
 	}
 
-	// import the account when mnemonic is provided, otherwise create a new one.
+	// 提供助記詞時導入賬戶，否則創建新賬戶。
 	if mnemonic != "" {
 		input := &bytes.Buffer{}
 		fmt.Fprintln(input, mnemonic)
@@ -77,7 +77,7 @@ func (r Runner) AddAccount(ctx context.Context, name, mnemonic, coinType string)
 		}
 	}
 
-	// get the address of the account.
+	// 獲取賬戶地址。
 	retrieved, err := r.ShowAccount(ctx, name)
 	if err != nil {
 		return Account{}, err
@@ -87,14 +87,14 @@ func (r Runner) AddAccount(ctx context.Context, name, mnemonic, coinType string)
 	return account, nil
 }
 
-// ImportAccount import an account from a key file
+// ImportAccount 從密鑰文件中導入帳戶
 func (r Runner) ImportAccount(ctx context.Context, name, keyFile, passphrase string) (Account, error) {
 	if err := r.CheckAccountExist(ctx, name); err != nil {
 		return Account{}, err
 	}
 
-	// write the passphrase as input
-	// TODO: manage keyring backend other than test
+// 將密碼寫為輸入
+// TODO: 管理密鑰環後端而不是測試
 	input := &bytes.Buffer{}
 	fmt.Fprintln(input, passphrase)
 
@@ -110,11 +110,11 @@ func (r Runner) ImportAccount(ctx context.Context, name, keyFile, passphrase str
 	return r.ShowAccount(ctx, name)
 }
 
-// CheckAccountExist returns an error if the account already exists in the chain keyring
+// 如果帳戶已存在於鏈密鑰環中，則 CheckAccountExist 返回錯誤
 func (r Runner) CheckAccountExist(ctx context.Context, name string) error {
 	b := newBuffer()
 
-	// get and decodes all accounts of the chains
+	// 獲取並解碼鏈上的所有賬戶
 	var accounts []Account
 	if err := r.run(ctx, runOptions{stdout: b}, r.chainCmd.ListKeysCommand()); err != nil {
 		return err
@@ -128,7 +128,7 @@ func (r Runner) CheckAccountExist(ctx context.Context, name string) error {
 		return err
 	}
 
-	// search for the account name
+	// 搜索帳戶名稱
 	for _, account := range accounts {
 		if account.Name == name {
 			return ErrAccountAlreadyExists
@@ -137,7 +137,7 @@ func (r Runner) CheckAccountExist(ctx context.Context, name string) error {
 	return nil
 }
 
-// ShowAccount shows details of an account.
+//ShowAccount 顯示帳戶的詳細信息。
 func (r Runner) ShowAccount(ctx context.Context, name string) (Account, error) {
 	b := &bytes.Buffer{}
 
@@ -152,8 +152,8 @@ func (r Runner) ShowAccount(ctx context.Context, name string) (Account, error) {
 	}
 
 	if err := r.run(ctx, runOptions{stdout: b}, opt...); err != nil {
-		if strings.Contains(err.Error(), "item could not be found") ||
-			strings.Contains(err.Error(), "not a valid name or address") {
+		if strings.Contains(err.Error(), "找不到項目") ||
+			strings.Contains(err.Error(), "不是有效的名稱或地址") {
 			return Account{}, ErrAccountDoesNotExist
 		}
 		return Account{}, err
@@ -165,12 +165,12 @@ func (r Runner) ShowAccount(ctx context.Context, name string) (Account, error) {
 	}, nil
 }
 
-// AddGenesisAccount adds account to genesis by its address.
+// AddGenesisAccount 通過其地址將帳戶添加到創世紀。
 func (r Runner) AddGenesisAccount(ctx context.Context, address, coins string) error {
 	return r.run(ctx, runOptions{}, r.chainCmd.AddGenesisAccountCommand(address, coins))
 }
 
-// AddVestingAccount adds vesting account to genesis by its address.
+// AddVestingAccount 通過其地址將歸屬賬戶添加到創世紀。
 func (r Runner) AddVestingAccount(
 	ctx context.Context,
 	address,

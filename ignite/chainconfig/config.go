@@ -14,24 +14,24 @@ import (
 )
 
 var (
-	// ConfigDirPath returns the path of configuration directory of Ignite.
+	// ConfigDirPath 返回 Ignite 的配置目錄路徑。
 	ConfigDirPath = xfilepath.JoinFromHome(xfilepath.Path(".ignite"))
 
-	// ConfigFileNames is a list of recognized names as for Ignite's config file.
+	// ConfigFileNames 是 Ignite 配置文件的公認名稱列表。
 	ConfigFileNames = []string{"config.yml", "config.yaml"}
 )
 
 var (
-	// ErrCouldntLocateConfig returned when config.yml cannot be found in the source code.
+	// ErrCouldntLocateConfig 在源代碼中找不到 config.yml 時返回。
 	ErrCouldntLocateConfig = errors.New(
-		"could not locate a config.yml in your chain. please follow the link for" +
+		"找不到config.yml在你的鏈條中。請點擊鏈接" +
 			"how-to: https://github.com/ignite-hq/cli/blob/develop/docs/configure/index.md")
 )
 
-// DefaultConf holds default configuration.
+// DefaultConf 保存默認配置。
 var DefaultConf = Config{
 	Host: Host{
-		// when in Docker on MacOS, it only works with 192.168.1.188.
+		// 在 MacOS 上的 Docker 中時，它僅適用於 192.168.1.188.
 		RPC:     "192.168.1.188:26657",
 		P2P:     "192.168.1.188:26656",
 		Prof:    "192.168.1.188:6060",
@@ -53,8 +53,8 @@ var DefaultConf = Config{
 	},
 }
 
-// Config is the user given configuration to do additional setup
-// during serve.
+//Config 是用戶給定的配置以進行額外的設置
+// 發球期間。
 type Config struct {
 	Accounts  []Account              `yaml:"accounts"`
 	Validator Validator              `yaml:"validator"`
@@ -66,7 +66,7 @@ type Config struct {
 	Host      Host                   `yaml:"host"`
 }
 
-// AccountByName finds account by name.
+// AccountByName 按名稱查找帳戶。
 func (c Config) AccountByName(name string) (acc Account, found bool) {
 	for _, acc := range c.Accounts {
 		if acc.Name == name {
@@ -76,7 +76,7 @@ func (c Config) AccountByName(name string) (acc Account, found bool) {
 	return Account{}, false
 }
 
-// Account holds the options related to setting up Cosmos wallets.
+// Account 擁有與設置 Cosmos 錢包相關的選項。
 type Account struct {
 	Name     string   `yaml:"name"`
 	Coins    []string `yaml:"coins,omitempty"`
@@ -84,17 +84,17 @@ type Account struct {
 	Address  string   `yaml:"address,omitempty"`
 	CoinType string   `yaml:"cointype,omitempty"`
 
-	// The RPCAddress off the chain that account is issued at.
+	// 發行帳戶的鏈外的 RPCAddress。
 	RPCAddress string `yaml:"rpc_address,omitempty"`
 }
 
-// Validator holds info related to validator settings.
+//驗證器保存與驗證器設置相關的信息。
 type Validator struct {
 	Name   string `yaml:"name"`
 	Staked string `yaml:"staked"`
 }
 
-// Build holds build configs.
+//Build 包含構建配置。
 type Build struct {
 	Main    string   `yaml:"main"`
 	Binary  string   `yaml:"binary"`
@@ -102,86 +102,86 @@ type Build struct {
 	Proto   Proto    `yaml:"proto"`
 }
 
-// Proto holds proto build configs.
+// Proto 包含 proto 構建配置。
 type Proto struct {
-	// Path is the relative path of where app's proto files are located at.
+	// Path 是應用程序的 proto 文件所在的相對路徑。
 	Path string `yaml:"path"`
 
-	// ThirdPartyPath is the relative path of where the third party proto files are
-	// located that used by the app.
+	// ThirdPartyPath 是第三方 proto 文件所在的相對路徑
+	// 位於應用程序使用的位置。
 	ThirdPartyPaths []string `yaml:"third_party_paths"`
 }
 
-// Client configures code generation for clients.
+// 客戶端為客戶端配置代碼生成。
 type Client struct {
-	// Vuex configures code generation for Vuex.
+	// Vuex 為 Vuex 配置代碼生成。
 	Vuex Vuex `yaml:"vuex"`
 
-	// Dart configures client code generation for Dart.
+	// Dart 為 Dart 配置客戶端代碼生成。
 	Dart Dart `yaml:"dart"`
 
-	// OpenAPI configures OpenAPI spec generation for API.
+	// OpenAPI 為 API 配置 OpenAPI 規範生成。
 	OpenAPI OpenAPI `yaml:"openapi"`
 }
 
-// Vuex configures code generation for Vuex.
+// Vuex 為 Vuex 配置代碼生成。
 type Vuex struct {
-	// Path configures out location for generated Vuex code.
+	// Path 為生成的 Vuex 代碼配置出位置。
 	Path string `yaml:"path"`
 }
 
-// Dart configures client code generation for Dart.
+// Dart 為 Dart 配置客戶端代碼生成。
 type Dart struct {
-	// Path configures out location for generated Dart code.
+	// Path 配置生成的 Dart 代碼的位置。
 	Path string `yaml:"path"`
 }
 
-// OpenAPI configures OpenAPI spec generation for API.
+// OpenAPI 為 API 配置 OpenAPI 規範生成。
 type OpenAPI struct {
 	Path string `yaml:"path"`
 }
 
-// Faucet configuration.
+// 水龍頭配置。
 type Faucet struct {
-	// Name is faucet account's name.
+	// 名稱是水龍頭帳戶的名稱。
 	Name *string `yaml:"name"`
 
-	// Coins holds type of coin denoms and amounts to distribute.
+	// 硬幣持有硬幣面額的類型和分發的數量。
 	Coins []string `yaml:"coins"`
 
-	// CoinsMax holds of chain denoms and their max amounts that can be transferred
-	// to single user.
+	// CoinsMax 持有鏈上的面額及其可以轉移的最大數量
+	// 給單個用戶。
 	CoinsMax []string `yaml:"coins_max"`
 
-	// LimitRefreshTime sets the timeframe at the end of which the limit will be refreshed
+	// LimitRefreshTime 設置在結束時刷新限制的時間範圍
 	RateLimitWindow string `yaml:"rate_limit_window"`
 
-	// Host is the host of the faucet server
+	// Host 是水龍頭服務器的主機
 	Host string `yaml:"host"`
 
-	// Port number for faucet server to listen at.
+	// 水龍頭服務器要監聽的端口號。
 	Port int `yaml:"port"`
 }
 
-// Init overwrites sdk configurations with given values.
+// Init 用給定的值覆蓋 sdk 配置。
 type Init struct {
-	// App overwrites appd's config/app.toml configs.
+	// 應用程序覆蓋 appd 的 config/app.toml 配置。
 	App map[string]interface{} `yaml:"app"`
 
-	// Client overwrites appd's config/client.toml configs.
+	// 客戶端覆蓋 appd 的 config/client.toml 配置.
 	Client map[string]interface{} `yaml:"client"`
 
-	// Config overwrites appd's config/config.toml configs.
+	// 配置覆蓋 appd 的 config/config.toml 配置。
 	Config map[string]interface{} `yaml:"config"`
 
-	// Home overwrites default home directory used for the app
+	// Home覆蓋默認值home應用程序使用的目錄
 	Home string `yaml:"home"`
 
-	// KeyringBackend is the default keyring backend to use for blockchain initialization
+	// KeyringBackend 是用於區塊鏈初始化的默認密鑰環後端
 	KeyringBackend string `yaml:"keyring-backend"`
 }
 
-// Host keeps configuration related to started servers.
+// 主機保留與已啟動服務器相關的配置。
 type Host struct {
 	RPC     string `yaml:"rpc"`
 	P2P     string `yaml:"p2p"`
@@ -191,7 +191,7 @@ type Host struct {
 	API     string `yaml:"api"`
 }
 
-// Parse parses config.yml into UserConfig.
+// Parse 將 config.yml 解析為 UserConfig。
 func Parse(r io.Reader) (Config, error) {
 	var conf Config
 	if err := yaml.NewDecoder(r).Decode(&conf); err != nil {
@@ -203,7 +203,7 @@ func Parse(r io.Reader) (Config, error) {
 	return conf, validate(conf)
 }
 
-// ParseFile parses config.yml from the path.
+// ParseFile 從路徑中解析 config.yml。
 func ParseFile(path string) (Config, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -213,7 +213,7 @@ func ParseFile(path string) (Config, error) {
 	return Parse(file)
 }
 
-// validate validates user config.
+// validate 驗證用戶配置。
 func validate(conf Config) error {
 	if len(conf.Accounts) == 0 {
 		return &ValidationError{"at least 1 account is needed"}
@@ -224,7 +224,7 @@ func validate(conf Config) error {
 	return nil
 }
 
-// ValidationError is returned when a configuration is invalid.
+// 當配置無效時返回 ValidationError。
 type ValidationError struct {
 	Message string
 }
@@ -233,7 +233,7 @@ func (e *ValidationError) Error() string {
 	return fmt.Sprintf("config is not valid: %s", e.Message)
 }
 
-// LocateDefault locates the default path for the config file, if no file found returns ErrCouldntLocateConfig.
+// LocateDefault 定位配置文件的默認路徑，如果沒有找到文件返回 ErrCouldntLocateConfig。
 func LocateDefault(root string) (path string, err error) {
 	for _, name := range ConfigFileNames {
 		path = filepath.Join(root, name)
@@ -246,10 +246,10 @@ func LocateDefault(root string) (path string, err error) {
 	return "", ErrCouldntLocateConfig
 }
 
-// FaucetHost returns the faucet host to use
+// FaucetHost 返回要使用的水龍頭主機
 func FaucetHost(conf Config) string {
-	// We keep supporting Port option for backward compatibility
-	// TODO: drop this option in the future
+	// 我們繼續支持端口選項以實現向後兼容性
+	// TODO：以後放棄這個選項
 	host := conf.Faucet.Host
 	if conf.Faucet.Port != 0 {
 		host = fmt.Sprintf(":%d", conf.Faucet.Port)
@@ -258,7 +258,7 @@ func FaucetHost(conf Config) string {
 	return host
 }
 
-// CreateConfigDir creates config directory if it is not created yet.
+// 如果尚未創建，則 CreateConfigDir 創建配置目錄。
 func CreateConfigDir() error {
 	confPath, err := ConfigDirPath()
 	if err != nil {

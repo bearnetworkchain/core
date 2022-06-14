@@ -8,35 +8,35 @@ import (
 	"github.com/pelletier/go-toml"
 )
 
-// EncodingCreator defines a constructor to create an EncodingCreator from
-// an io.ReadWriter.
+// EncodingCreator 定義了一個構造函數來創建一個編碼創造者
+// 一個 io.讀寫器。
 type EncodingCreator interface {
 	Create(io.ReadWriter) EncodeDecoder
 }
 
-// EncodeDecoder combines Encoder and Decoder.
+// EncodeDecoder 結合了編碼器和解碼器。
 type EncodeDecoder interface {
 	Encoder
 	Decoder
 }
 
-// Encoder should encode a v into io.Writer given to EncodingCreator.
+// Encoder 應該將 v 編碼為 io.作家 給編碼創造者。
 type Encoder interface {
 	Encode(v interface{}) error
 }
 
-// Decoder should decode a v from io.Reader given to EncodingCreator.
+// Decoder 應該解碼來自 io.讀者的 v 給編碼創造者。
 type Decoder interface {
 	Decode(v interface{}) error
 }
 
-// Encoding implements EncodeDecoder
+// Encoding 實現編碼解碼器
 type Encoding struct {
 	Encoder
 	Decoder
 }
 
-// NewEncoding returns a new EncodeDecoder implementation from e end d.
+// NewEncoding 從 e end d 返回一個新的編碼解碼器實現。
 func NewEncoding(e Encoder, d Decoder) EncodeDecoder {
 	return &Encoding{
 		Encoder: e,
@@ -44,30 +44,30 @@ func NewEncoding(e Encoder, d Decoder) EncodeDecoder {
 	}
 }
 
-// DefaultJSONEncodingCreator implements EncodingCreator for JSON encoding.
+// DefaultJSONEncodingCreator 為 JSON 編碼實現編碼創造者。
 var DefaultJSONEncodingCreator = &JSONEncodingCreator{}
 
-// DefaultYAMLEncodingCreator implements EncodingCreator for YAML encoding.
+// DefaultYAMLEncodingCreator 為 YAML 編碼實現編碼創造者。
 var DefaultYAMLEncodingCreator = &YAMLEncodingCreator{}
 
-// DefaultTOMLEncodingCreator implements EncodingCreator for TOML encoding.
+// DefaultTOMLEncodingCreator 為 TOML 編碼實現編碼創造者。
 var DefaultTOMLEncodingCreator = &TOMLEncodingCreator{}
 
-// JSONEncodingCreator implements EncodingCreator for JSON encoding.
+// JSONEncodingCreator 為 JSON 編碼實現編碼創造者。
 type JSONEncodingCreator struct{}
 
 func (e *JSONEncodingCreator) Create(rw io.ReadWriter) EncodeDecoder {
 	return NewEncoding(json.NewEncoder(rw), json.NewDecoder(rw))
 }
 
-// YAMLEncodingCreator implements EncodingCreator for JSON encoding.
+// YAMLEncodingCreator 為 JSON 編碼實現編碼創造者。
 type YAMLEncodingCreator struct{}
 
 func (e *YAMLEncodingCreator) Create(rw io.ReadWriter) EncodeDecoder {
 	return NewEncoding(yaml.NewEncoder(rw), yaml.NewDecoder(rw))
 }
 
-// TOMLEncodingCreator implements EncodingCreator for JSON encoding.
+// TOMLEncodingCreator 為 JSON 編碼實現編碼創造者。
 type TOMLEncodingCreator struct{}
 
 func (e *TOMLEncodingCreator) Create(rw io.ReadWriter) EncodeDecoder {

@@ -19,7 +19,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
 )
 
-// Start starts the blockchain.
+// Start 啟動區塊鏈。
 func (r Runner) Start(ctx context.Context, args ...string) error {
 	return r.run(
 		ctx,
@@ -28,7 +28,7 @@ func (r Runner) Start(ctx context.Context, args ...string) error {
 	)
 }
 
-// LaunchpadStartRestServer start launchpad rest server.
+// LaunchpadStartRestServer 重啟服務器。
 func (r Runner) LaunchpadStartRestServer(ctx context.Context, apiAddress, rpcAddress string) error {
 	return r.run(
 		ctx,
@@ -37,23 +37,23 @@ func (r Runner) LaunchpadStartRestServer(ctx context.Context, apiAddress, rpcAdd
 	)
 }
 
-// Init inits the blockchain.
+// Init 初始化區塊鏈。
 func (r Runner) Init(ctx context.Context, moniker string) error {
 	return r.run(ctx, runOptions{}, r.chainCmd.InitCommand(moniker))
 }
 
-// KV holds a key, value pair.
+// KV 持有一個鍵值對。
 type KV struct {
 	key   string
 	value string
 }
 
-// NewKV returns a new key, value pair.
+// NewKV 返回一個新的鍵值對。
 func NewKV(key, value string) KV {
 	return KV{key, value}
 }
 
-// LaunchpadSetConfigs updates configurations for a launchpad app.
+// LaunchpadSetConfigs 更新啟動板應用程序的配置。
 func (r Runner) LaunchpadSetConfigs(ctx context.Context, kvs ...KV) error {
 	for _, kv := range kvs {
 		if err := r.run(
@@ -69,7 +69,7 @@ func (r Runner) LaunchpadSetConfigs(ctx context.Context, kvs ...KV) error {
 
 var gentxRe = regexp.MustCompile(`(?m)"(.+?)"`)
 
-// Gentx generates a genesis tx carrying a self delegation.
+// Gentx 生成一個帶有自我委託的創世紀 tx。
 func (r Runner) Gentx(
 	ctx context.Context,
 	validatorName,
@@ -89,22 +89,22 @@ func (r Runner) Gentx(
 	return gentxRe.FindStringSubmatch(b.String())[1], nil
 }
 
-// CollectGentxs collects gentxs.
+// CollectGentxs 收集gentxs。
 func (r Runner) CollectGentxs(ctx context.Context) error {
 	return r.run(ctx, runOptions{}, r.chainCmd.CollectGentxsCommand())
 }
 
-// ValidateGenesis validates genesis.
+// ValidateGenesis 驗證創世紀.
 func (r Runner) ValidateGenesis(ctx context.Context) error {
 	return r.run(ctx, runOptions{}, r.chainCmd.ValidateGenesisCommand())
 }
 
-// UnsafeReset resets the blockchain database.
+// UnsafeReset 重置區塊鏈數據庫.
 func (r Runner) UnsafeReset(ctx context.Context) error {
 	return r.run(ctx, runOptions{}, r.chainCmd.UnsafeResetCommand())
 }
 
-// ShowNodeID shows node id.
+// ShowNodeID 顯示節點ID.
 func (r Runner) ShowNodeID(ctx context.Context) (nodeID string, err error) {
 	b := &bytes.Buffer{}
 	err = r.run(ctx, runOptions{stdout: b}, r.chainCmd.ShowNodeIDCommand())
@@ -112,12 +112,12 @@ func (r Runner) ShowNodeID(ctx context.Context) (nodeID string, err error) {
 	return
 }
 
-// NodeStatus keeps info about node's status.
+// NodeStatus 保存有關節點狀態的信息.
 type NodeStatus struct {
 	ChainID string
 }
 
-// Status returns the node's status.
+// 狀態返回節點的狀態.
 func (r Runner) Status(ctx context.Context) (NodeStatus, error) {
 	b := newBuffer()
 
@@ -165,7 +165,7 @@ func (r Runner) Status(ctx context.Context) (NodeStatus, error) {
 	}, nil
 }
 
-// BankSend sends amount from fromAccount to toAccount.
+// 銀行發送金額從 from Account 發送到 to Account.
 func (r Runner) BankSend(ctx context.Context, fromAccount, toAccount, amount string) (string, error) {
 	b := newBuffer()
 	opt := []step.Option{
@@ -181,10 +181,10 @@ func (r Runner) BankSend(ctx context.Context, fromAccount, toAccount, amount str
 	}
 
 	if err := r.run(ctx, runOptions{stdout: b}, opt...); err != nil {
-		if strings.Contains(err.Error(), "key not found") || // stargate
-			strings.Contains(err.Error(), "unknown address") || // launchpad
-			strings.Contains(b.String(), "item could not be found") { // launchpad
-			return "", errors.New("account doesn't have any balances")
+		if strings.Contains(err.Error(), "未找到密鑰") || // 星門
+			strings.Contains(err.Error(), "未知地址") || // launchpad
+			strings.Contains(b.String(), "找不到項目") { // launchpad
+			return "", errors.New("帳戶沒有任何餘額")
 		}
 
 		return "", err
@@ -196,27 +196,27 @@ func (r Runner) BankSend(ctx context.Context, fromAccount, toAccount, amount str
 	}
 
 	if txResult.Code > 0 {
-		return "", fmt.Errorf("cannot send tokens (SDK code %d): %s", txResult.Code, txResult.RawLog)
+		return "", fmt.Errorf("無法發送令牌 (開發工具包代碼 %d): %s", txResult.Code, txResult.RawLog)
 	}
 
 	return txResult.TxHash, nil
 }
 
-// WaitTx waits until a tx is successfully added to a block and can be queried
+// WaitTx 等到一個 tx 成功添加到一個塊並且可以被查詢
 func (r Runner) WaitTx(ctx context.Context, txHash string, retryDelay time.Duration, maxRetry int) error {
 	retry := 0
 
-	// retry querying the request
+	// 重試查詢請求
 	checkTx := func() error {
 		b := newBuffer()
 		if err := r.run(ctx, runOptions{stdout: b}, r.chainCmd.QueryTxCommand(txHash)); err != nil {
-			// filter not found error and check for max retry
-			if !strings.Contains(err.Error(), "not found") {
+			// 過濾未找到錯誤並檢查最大重試次數
+			if !strings.Contains(err.Error(), "未找到") {
 				return backoff.Permanent(err)
 			}
 			retry++
 			if retry == maxRetry {
-				return backoff.Permanent(fmt.Errorf("can't retrieve tx %s", txHash))
+				return backoff.Permanent(fmt.Errorf("無法檢索 tx %s", txHash))
 			}
 			return err
 		}
@@ -227,7 +227,7 @@ func (r Runner) WaitTx(ctx context.Context, txHash string, retryDelay time.Durat
 			return backoff.Permanent(err)
 		}
 		if txResult.Code != 0 {
-			return backoff.Permanent(fmt.Errorf("tx %s failed: %s", txHash, txResult.RawLog))
+			return backoff.Permanent(fmt.Errorf("tx %s 失敗的: %s", txHash, txResult.RawLog))
 		}
 
 		return nil
@@ -235,9 +235,9 @@ func (r Runner) WaitTx(ctx context.Context, txHash string, retryDelay time.Durat
 	return backoff.Retry(checkTx, backoff.WithContext(backoff.NewConstantBackOff(retryDelay), ctx))
 }
 
-// Export exports the state of the chain into the specified file
+// Export 將鏈的狀態導出到指定的文件中
 func (r Runner) Export(ctx context.Context, exportedFile string) error {
-	// Make sure the path exists
+	// 確保路徑存在
 	dir := filepath.Dir(exportedFile)
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		return err
@@ -248,7 +248,7 @@ func (r Runner) Export(ctx context.Context, exportedFile string) error {
 		return err
 	}
 
-	// Exported genesis is written on stderr from Cosmos-SDK v0.44.0
+	// 導出的創世紀是從 Cosmos-SDK v0.44.0 寫在 stderr 上的
 	var exportedState []byte
 	if stdout.Len() > 0 {
 		exportedState = stdout.Bytes()
@@ -256,42 +256,42 @@ func (r Runner) Export(ctx context.Context, exportedFile string) error {
 		exportedState = stderr.Bytes()
 	}
 
-	// Save the new state
+	// 保存新狀態
 	return os.WriteFile(exportedFile, exportedState, 0644)
 }
 
-// EventSelector is used to query events.
+// EventSelector 用於查詢事件。
 type EventSelector struct {
 	typ   string
 	attr  string
 	value string
 }
 
-// NewEventSelector creates a new event selector.
+// NewEventSelector 創建一個新的事件選擇器。
 func NewEventSelector(typ, addr, value string) EventSelector {
 	return EventSelector{typ, addr, value}
 }
 
-// Event represents a TX event.
+// Event 表示一個 TX 事件。
 type Event struct {
 	Type       string
 	Attributes []EventAttribute
 	Time       time.Time
 }
 
-// EventAttribute holds event's attributes.
+// EventAttribute 保存事件的屬性。
 type EventAttribute struct {
 	Key   string
 	Value string
 }
 
-// QueryTxEvents queries tx events by event selectors.
+//QueryTxEvents 通過事件選擇器查詢 tx 事件。
 func (r Runner) QueryTxEvents(
 	ctx context.Context,
 	selector EventSelector,
 	moreSelectors ...EventSelector,
 ) ([]Event, error) {
-	// prepare the slector.
+	// 準備選擇器。
 	var list []string
 
 	eventsSelectors := append([]EventSelector{selector}, moreSelectors...)
@@ -302,7 +302,7 @@ func (r Runner) QueryTxEvents(
 
 	query := strings.Join(list, "&")
 
-	// execute the commnd and parse the output.
+	// 執行命令並解析輸出。
 	b := newBuffer()
 
 	if err := r.run(ctx, runOptions{stdout: b}, r.chainCmd.QueryTxEventsCommand(query)); err != nil {

@@ -25,14 +25,14 @@ type (
 	}
 )
 
-// WithWriter configures an output for a spinner
+// WithWriter 為微調器配置輸出
 func WithWriter(w io.Writer) Option {
 	return func(options *Options) {
 		options.writer = w
 	}
 }
 
-// New creates a new spinner.
+// New 創建一個新的微調器。
 func New(options ...Option) *Spinner {
 	o := Options{}
 	for _, apply := range options {
@@ -50,10 +50,10 @@ func New(options ...Option) *Spinner {
 	s := &Spinner{
 		sp: sp,
 	}
-	return s.SetText("Initializing...")
+	return s.SetText("初始化...")
 }
 
-// SetText sets the text for spinner.
+// SetText 設置微調器的文本.
 func (s *Spinner) SetText(text string) *Spinner {
 	s.sp.Lock()
 	s.sp.Suffix = " " + text
@@ -61,7 +61,7 @@ func (s *Spinner) SetText(text string) *Spinner {
 	return s
 }
 
-// SetPrefix sets the prefix for spinner.
+// SetPrefix 設置微調器的前綴.
 func (s *Spinner) SetPrefix(text string) *Spinner {
 	s.sp.Lock()
 	s.sp.Prefix = text + " "
@@ -69,25 +69,25 @@ func (s *Spinner) SetPrefix(text string) *Spinner {
 	return s
 }
 
-// SetCharset sets the prefix for spinner.
+// SetCharset設置微調器的前綴.
 func (s *Spinner) SetCharset(charset []string) *Spinner {
 	s.sp.UpdateCharSet(charset)
 	return s
 }
 
-// SetColor sets the prefix for spinner.
+// SetColor 設置微調器的前綴.
 func (s *Spinner) SetColor(color string) *Spinner {
 	s.sp.Color(color)
 	return s
 }
 
-// Start starts spinning.
+// Start 開始旋轉.
 func (s *Spinner) Start() *Spinner {
 	s.sp.Start()
 	return s
 }
 
-// Stop stops spinning.
+// Stop 停止旋轉.
 func (s *Spinner) Stop() *Spinner {
 	s.sp.Stop()
 	s.sp.Prefix = ""

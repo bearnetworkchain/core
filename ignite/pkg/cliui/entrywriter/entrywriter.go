@@ -16,7 +16,7 @@ const (
 
 var ErrInvalidFormat = errors.New("invalid entry format")
 
-// MustWrite writes into out the tabulated entries and panic if the entry format is invalid
+// MustWrite 如果條目格式無效，則寫入列表條目並恐慌
 func MustWrite(out io.Writer, header []string, entries ...[]string) error {
 	err := Write(out, header, entries...)
 	if errors.Is(err, ErrInvalidFormat) {
@@ -25,7 +25,7 @@ func MustWrite(out io.Writer, header []string, entries ...[]string) error {
 	return err
 }
 
-// Write writes into out the tabulated entries
+// Write 寫入列表條目
 func Write(out io.Writer, header []string, entries ...[]string) error {
 	w := &tabwriter.Writer{}
 	w.Init(out, 0, 8, 0, '\t', 0)
@@ -41,18 +41,18 @@ func Write(out io.Writer, header []string, entries ...[]string) error {
 	}
 
 	if len(header) == 0 {
-		return errors.Wrap(ErrInvalidFormat, "empty header")
+		return errors.Wrap(ErrInvalidFormat, "空標題")
 	}
 
-	// write header
+	// 寫頭
 	if _, err := fmt.Fprintln(w, formatLine(header, true)); err != nil {
 		return err
 	}
 
-	// write entries
+	// 寫條目
 	for i, entry := range entries {
 		if len(entry) != len(header) {
-			return errors.Wrapf(ErrInvalidFormat, "entry %d doesn't match header length", i)
+			return errors.Wrapf(ErrInvalidFormat, "入口 %d 與標頭長度不匹配", i)
 		}
 		if _, err := fmt.Fprintf(w, formatLine(entry, false)+"\n"); err != nil {
 			return err

@@ -1,4 +1,4 @@
-// this tool generates Ignite CLI docs to be placed in the docs/cli dir and deployed
+// 此工具生成 Ignite CLI 文檔以放置在 docs/cli 目錄中並部署
 // on docs.ignite.com
 package main
 
@@ -20,13 +20,13 @@ import (
 )
 
 const head = `---
-sidebar_position: 7
-description: Ignite CLI docs.
+側邊欄位置: 7
+描述: Ignite CLI docs.
 ---
 
-# CLI Reference
+# CLI 參考
 
-Documentation for Ignite CLI.
+Ignite CLI 文檔.
 `
 
 func main() {
@@ -63,9 +63,9 @@ func generateCmd(cmd *cobra.Command, w io.Writer) error {
 		return err
 	}
 
-	// here we change sub titles to bold styling. Otherwise, these titles will get
-	// printed in the right menu of docs.starport.network which is unpleasant because
-	// we only want to see a list of all available commands without the extra noise.
+// 這裡我們將子標題改為粗體樣式。否則，這些標題將獲得
+// 打印在 docs.starport.network 的右側菜單中，這令人不快，因為
+// 我們只想看到所有可用命令的列表，沒有額外的噪音。
 	sc := bufio.NewScanner(b)
 	for sc.Scan() {
 		t := sc.Text()

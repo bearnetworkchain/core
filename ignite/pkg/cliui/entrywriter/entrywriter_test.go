@@ -26,15 +26,15 @@ func TestWrite(t *testing.T) {
 	}
 
 	require.NoError(t, entrywriter.Write(io.Discard, header, entries...))
-	require.NoError(t, entrywriter.Write(io.Discard, header), "should allow no entry")
+	require.NoError(t, entrywriter.Write(io.Discard, header), "應該不允許進入")
 
 	err := entrywriter.Write(io.Discard, []string{})
-	require.ErrorIs(t, err, entrywriter.ErrInvalidFormat, "should prevent no header")
+	require.ErrorIs(t, err, entrywriter.ErrInvalidFormat, "應該防止沒有標題")
 
 	entries[0] = []string{"foo", "bar"}
 	err = entrywriter.Write(io.Discard, header, entries...)
-	require.ErrorIs(t, err, entrywriter.ErrInvalidFormat, "should prevent entry length mismatch")
+	require.ErrorIs(t, err, entrywriter.ErrInvalidFormat, "應防止條目長度不符合")
 
 	var wErr WriterWithError
-	require.Error(t, entrywriter.Write(wErr, header, entries...), "should catch writer errors")
+	require.Error(t, entrywriter.Write(wErr, header, entries...), "應該捕捉作家錯誤")
 }

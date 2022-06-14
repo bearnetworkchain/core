@@ -1,17 +1,17 @@
 name: vars 
-description: Outputs variables that can be useful while creating a release
+description: 輸出在創建發佈時有用的變量
 outputs:
   should_release:
     description: Indicates whether a release should be created or not
     value: ${{ steps.vars.outputs.should_release }}
   is_release_type_latest:
-    description: Shows if release type is latest (not a v* release) 
+    description: 顯示版本類型是否是最新的（不是 v* 版本）
     value: ${{ steps.vars.outputs.is_release_type_latest }}
   tag_name:
-    description: Name of the tag that should be used for release
+    description: 應該用於發布的標籤的名稱
     value: ${{ steps.vars.outputs.tag_name }}
   tarball_prefix:
-    description: A prefix to use in tarball asset names
+    description: 用於 tarball 資產名稱的前綴
     value: ${{ steps.vars.outputs.tarball_prefix }}
 runs:
   using: "composite"

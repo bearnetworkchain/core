@@ -10,8 +10,8 @@ import (
 	"path/filepath"
 )
 
-// Sum reads files from dirPath, calculates sha256 for each file and creates a new checksum
-// file for them in outPath.
+// Sum 從 dirPath 讀取文件，計算每個文件的 sha256 並創建一個新的校驗和
+// 在 outPath 中為它們歸檔。
 func Sum(dirPath, outPath string) error {
 	var b bytes.Buffer
 
@@ -41,9 +41,9 @@ func Sum(dirPath, outPath string) error {
 	return os.WriteFile(outPath, b.Bytes(), 0666)
 }
 
-// Binary returns SHA256 hash of executable file, file is searched by name in PATH
+// 二進制返回可執行文件的 SHA256 哈希，文件在 PATH 中按名稱搜索
 func Binary(binaryName string) (string, error) {
-	// get binary path
+	// 獲取二進制路徑
 	binaryPath, err := exec.LookPath(binaryName)
 	if err != nil {
 		return "", err
@@ -62,7 +62,7 @@ func Binary(binaryName string) (string, error) {
 	return fmt.Sprintf("%x", h.Sum(nil)), nil
 }
 
-// Strings concatenates all inputs and returns SHA256 hash of them
+// 字符串連接所有輸入並返回它們的 SHA256 哈希
 func Strings(inputs ...string) string {
 	h := sha256.New()
 	for _, input := range inputs {

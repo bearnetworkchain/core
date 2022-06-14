@@ -7,9 +7,9 @@ import (
 	"time"
 )
 
-// Find finds n number of unused ports.
-// it is not guaranteed that these ports will not be allocated to
-// another program in the time of calling Find().
+// Find 查找 n 個未使用的端口。
+// 不保證這些端口不會被分配到
+// 調用 Find() 時的另一個程序。
 func Find(n int) (ports []int, err error) {
 	min := 44000
 	max := 55000
@@ -20,8 +20,8 @@ func Find(n int) (ports []int, err error) {
 			port := rand.Intn(max-min+1) + min
 
 			conn, err := net.Dial("tcp", fmt.Sprintf(":%d", port))
-			// if there is an error, this might mean that no one is listening from this port
-			// which is what we need.
+			// 如果有錯誤，這可能意味著沒有人在從這個端口監聽
+			// 這就是我們需要的。
 			if err == nil {
 				conn.Close()
 				continue

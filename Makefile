@@ -39,23 +39,23 @@ format:
 	@find . $(FIND_ARGS) | xargs gofmt -d -s
 	@find . $(FIND_ARGS) | xargs goimports -w -local github.com/ignite-hq/cli
 
-## lint: Run Golang CI Lint.
+## lint：運行 Golang CI Lint。
 lint:
 	@echo Running gocilint...
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2
 	@golangci-lint run --out-format=tab --issues-exit-code=0
 
-## test-unit: Run the unit tests.
+## test-unit：運行單元測試。
 test-unit:
 	@echo Running unit tests...
 	@go test -race -failfast -v ./ignite/...
 
-## test-integration: Run the integration tests.
+## test-integration：運行集成測試。
 test-integration: install
 	@echo Running integration tests...
 	@go test -race -failfast -v -timeout 60m ./integration/...
 
-## test: Run unit and integration tests.
+## 測試：運行單元和集成測試。
 test: govet test-unit test-integration
 
 help: Makefile

@@ -1,5 +1,5 @@
-// Package cosmosanalysis provides a toolset for statically analysing Cosmos SDK's
-// source code and blockchain source codes based on the Cosmos SDK
+// Package cosmosanalysis 提供靜態分析 Cosmos SDK 的工具集
+// 基於 Cosmos SDK 的源碼和區塊鏈源碼
 package cosmosanalysis
 
 import (
@@ -27,11 +27,11 @@ var appImplementation = []string{
 	"EndBlocker",
 }
 
-// implementation tracks the implementation of an interface for a given struct
+// implementation 跟踪給定結構的接口的實現
 type implementation map[string]bool
 
-// DeepFindImplementation does the same as FindImplementation, but walks recursively through the folder structure
-// Useful if implementations might be in sub folders
+// DeepFindImplementation 和查找實施一樣，但是遞歸遍歷文件夾結構
+// 如果實現可能位於子文件夾中，則很有用
 func DeepFindImplementation(modulePath string, interfaceList []string) (found []string, err error) {
 	err = filepath.Walk(modulePath,
 		func(path string, info os.FileInfo, err error) error {
@@ -58,9 +58,9 @@ func DeepFindImplementation(modulePath string, interfaceList []string) (found []
 	return found, nil
 }
 
-// FindImplementation finds the name of all types that implement the provided interface
+// FindImplementation 查找實現所提供接口的所有類型的名稱
 func FindImplementation(modulePath string, interfaceList []string) (found []string, err error) {
-	// parse go packages/files under path
+	// 解析路徑下的包/文件
 	fset := token.NewFileSet()
 
 	pkgs, err := parser.ParseDir(fset, modulePath, nil, 0)
@@ -79,25 +79,25 @@ func FindImplementation(modulePath string, interfaceList []string) (found []stri
 }
 
 func findImplementationInFiles(files []*ast.File, interfaceList []string) (found []string) {
-	// collect all structs under path to find out the ones that satisfies the implementation
+	// 收集路徑下的所有結構，找出滿足實現的結構
 	structImplementations := make(map[string]implementation)
 
 	for _, f := range files {
 		ast.Inspect(f, func(n ast.Node) bool {
-			// look for struct methods.
+			// 尋找結構方法。
 			methodDecl, ok := n.(*ast.FuncDecl)
 			if !ok {
 				return true
 			}
 
-			// not a method.
+			// 不是方法。
 			if methodDecl.Recv == nil {
 				return true
 			}
 
 			methodName := methodDecl.Name.Name
 
-			// find the struct name that method belongs to.
+			// 找到該方法所屬的結構名稱。
 			t := methodDecl.Recv.List[0].Type
 			ident, ok := t.(*ast.Ident)
 			if !ok {
@@ -109,7 +109,7 @@ func findImplementationInFiles(files []*ast.File, interfaceList []string) (found
 			}
 			structName := ident.Name
 
-			// mark the implementation that this struct satisfies.
+			// 標記此結構滿足的實現。
 			if _, ok := structImplementations[structName]; !ok {
 				structImplementations[structName] = newImplementation(interfaceList)
 			}
@@ -129,7 +129,7 @@ func findImplementationInFiles(files []*ast.File, interfaceList []string) (found
 	return found
 }
 
-// newImplementation returns a new object to parse implementation of an interface
+// newImplementation 返回一個新對象來解析接口的實現
 func newImplementation(interfaceList []string) implementation {
 	impl := make(implementation)
 	for _, m := range interfaceList {
@@ -138,7 +138,7 @@ func newImplementation(interfaceList []string) implementation {
 	return impl
 }
 
-// checkImplementation checks if the entire implementation is satisfied
+// checkImplementation 檢查整個實現是否滿足
 func checkImplementation(r implementation) bool {
 	for _, ok := range r {
 		if !ok {
@@ -148,7 +148,7 @@ func checkImplementation(r implementation) bool {
 	return true
 }
 
-// ValidateGoMod check if the cosmos-sdk and the tendermint packages are imported.
+// ValidateGoMod 檢查cosmos-sdk和tendermint包是否被導入.
 func ValidateGoMod(module *modfile.File) error {
 	moduleCheck := map[string]bool{
 		cosmosModulePath:     true,
@@ -158,12 +158,12 @@ func ValidateGoMod(module *modfile.File) error {
 		delete(moduleCheck, r.Mod.Path)
 	}
 	for m := range moduleCheck {
-		return fmt.Errorf("invalid go module, missing %s package dependency", m)
+		return fmt.Errorf("無效的GO模塊，丟失 %s 依賴包", m)
 	}
 	return nil
 }
 
-// FindAppFilePath looks for the app file that implements the interfaces listed in appImplementation
+// FindAppFilePath 查找實現了應用實施中列出的接口的應用文件
 func FindAppFilePath(chainRoot string) (path string, err error) {
 	var found []string
 
@@ -196,7 +196,7 @@ func FindAppFilePath(chainRoot string) (path string, err error) {
 
 	numFound := len(found)
 	if numFound == 0 {
-		return "", errors.New("app.go file cannot be found")
+		return "", errors.New("app.go 找不到文件")
 	}
 
 	if numFound == 1 {
@@ -207,7 +207,7 @@ func FindAppFilePath(chainRoot string) (path string, err error) {
 	for _, p := range found {
 		if filepath.Base(p) == appFileName {
 			if appFilePath != "" {
-				// multiple app.go found, fallback to app/app.go
+				// 找到多個 app.go，回退到 app/app.go
 				return getDefaultAppFile(chainRoot)
 			}
 
@@ -222,9 +222,9 @@ func FindAppFilePath(chainRoot string) (path string, err error) {
 	return getDefaultAppFile(chainRoot)
 }
 
-// getDefaultAppFile returns the default app.go file path for a chain.
+// getDefaultAppFile 返回鏈的默認 app.go 文件路徑。
 func getDefaultAppFile(chainRoot string) (string, error) {
 	path := filepath.Join(chainRoot, defaultAppFilePath)
 	_, err := os.Stat(path)
-	return path, errors.Wrap(err, "cannot locate your app.go")
+	return path, errors.Wrap(err, "找不到您的app.go")
 }

@@ -1,4 +1,4 @@
-# Ignite CLI
+# 熊網鏈 - Bear Network Chain
 
 ![Ignite CLI](./assets/BearNetwork-01.png)
 

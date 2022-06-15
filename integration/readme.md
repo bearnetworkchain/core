@@ -1,6 +1,6 @@
 # Starport Integration Tests
 
-The Starport integration tests build a new application and run all Starport commands to check the Starport code integrity. The runners and helper methods are located in this current folder. The test commands are split into folders, for better concurrency, each folder is a parallel job into the CI workflow. To create a new one, we only need to create a new folder. This will be automatically detected and added into the PR CI checks, or we can only create new tests into an existing folder or file.
+Starport 集成測試構建一個新的應用程序並運行所有 Starport 命令來檢查 Starport 代碼的完整性。運行器和輔助方法位於此當前文件夾中。測試命令被分成文件夾，為了更好的並發性，每個文件夾都是 CI 工作流程中的並行作業。要創建一個新文件夾，我們只需要創建一個新文件夾。這將被自動檢測並添加到 PR CI 檢查中，或者我們只能在現有文件夾或文件中創建新測試。
 
 Running synchronously all integration tests can be very slow. The command below can run everything:
 ```shell

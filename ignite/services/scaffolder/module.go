@@ -38,9 +38,9 @@ const (
 )
 
 var (
-	// reservedNames are either names from the default modules defined in a Cosmos-SDK app or names used in the default query and tx CLI namespace
-	// A new module's name can't be equal to a reserved name
-	// A map is used for direct comparing
+// reservedNames 是 Cosmos-SDK 應用程序中定義的默認模塊的名稱，或者是默認查詢和 tx CLI 命名空間中使用的名稱
+// 新模塊的名稱不能等於保留名稱
+// 一個映射用於直接比較
 	reservedNames = map[string]struct{}{
 		"account":      {},
 		"auth":         {},
@@ -71,8 +71,8 @@ var (
 		"vesting":      {},
 	}
 
-	// defaultStoreKeys are the names of the default store keys defined in a Cosmos-SDK app
-	// A new module's name can't have a defined store key in its prefix because of potential store key collision
+// defaultStoreKeys 是 Cosmos-SDK 應用程序中定義的默認存儲鍵的名稱
+// 由於潛在的存儲鍵衝突，新模塊的名稱不能在其前綴中定義存儲鍵
 	defaultStoreKeys = []string{
 		"acc",
 		"bank",
@@ -91,39 +91,39 @@ var (
 	}
 )
 
-// moduleCreationOptions holds options for creating a new module
+// moduleCreationOptions 包含用於創建新模塊的選項
 type moduleCreationOptions struct {
-	// ibc true if the module is an ibc module
+// ibc 如果模塊是 ibc 模塊，則為 true
 	ibc bool
 
-	// params list of parameters
+// params 參數列表
 	params []string
 
-	// ibcChannelOrdering ibc channel ordering
+// ibcChannelOrdering ibc 通道排序
 	ibcChannelOrdering string
 
-	// dependencies list of module dependencies
+// 模塊依賴的依賴列表
 	dependencies []modulecreate.Dependency
 }
 
-// ModuleCreationOption configures Chain.
+// ModuleCreationOption 配置鏈。
 type ModuleCreationOption func(*moduleCreationOptions)
 
-// WithIBC scaffolds a module with IBC enabled
+// WithIBC 搭建一個啟用了 IBC 的模塊
 func WithIBC() ModuleCreationOption {
 	return func(m *moduleCreationOptions) {
 		m.ibc = true
 	}
 }
 
-// WithParams scaffolds a module with params
+// WithParams 用 params 搭建一個模塊
 func WithParams(params []string) ModuleCreationOption {
 	return func(m *moduleCreationOptions) {
 		m.params = params
 	}
 }
 
-// WithIBCChannelOrdering configures channel ordering of the IBC module
+// WithIBCChannelOrdering 配置 IBC 模塊的通道排序
 func WithIBCChannelOrdering(ordering string) ModuleCreationOption {
 	return func(m *moduleCreationOptions) {
 		switch ordering {
@@ -137,14 +137,14 @@ func WithIBCChannelOrdering(ordering string) ModuleCreationOption {
 	}
 }
 
-// WithDependencies specifies the name of the modules that the module depends on
+// WithDependencies 指定模塊所依賴的模塊名稱
 func WithDependencies(dependencies []modulecreate.Dependency) ModuleCreationOption {
 	return func(m *moduleCreationOptions) {
 		m.dependencies = dependencies
 	}
 }
 
-// CreateModule creates a new empty module in the scaffolded app
+// CreateModule 在腳手架應用中創建一個新的空模塊
 func (s Scaffolder) CreateModule(
 	cacheStorage cache.Storage,
 	tracer *placeholder.Tracer,
@@ -157,33 +157,33 @@ func (s Scaffolder) CreateModule(
 	}
 	moduleName = mfName.LowerCase
 
-	// Check if the module name is valid
+// 檢查模塊名是否有效
 	if err := checkModuleName(s.path, moduleName); err != nil {
 		return sm, err
 	}
 
-	// Check if the module already exist
+// 檢查模塊是否已經存在
 	ok, err := moduleExists(s.path, moduleName)
 	if err != nil {
 		return sm, err
 	}
 	if ok {
-		return sm, fmt.Errorf("the module %v already exists", moduleName)
+		return sm, fmt.Errorf("模塊 %v 已經存在", moduleName)
 	}
 
-	// Apply the options
+// 應用選項
 	var creationOpts moduleCreationOptions
 	for _, apply := range options {
 		apply(&creationOpts)
 	}
 
-	// Parse params with the associated type
+// 使用關聯類型解析參數
 	params, err := field.ParseFields(creationOpts.params, checkForbiddenTypeIndex)
 	if err != nil {
 		return sm, err
 	}
 
-	// Check dependencies
+// 檢查依賴關係
 	if err := checkDependencies(creationOpts.dependencies, s.path); err != nil {
 		return sm, err
 	}
@@ -199,14 +199,14 @@ func (s Scaffolder) CreateModule(
 		Dependencies: creationOpts.dependencies,
 	}
 
-	// Generator from Cosmos SDK version
+// 來自 Cosmos SDK 版本的生成器
 	g, err := modulecreate.NewStargate(opts)
 	if err != nil {
 		return sm, err
 	}
 	gens := []*genny.Generator{g}
 
-	// Scaffold IBC module
+// 腳手架 IBC 模塊
 	if opts.IsIBC {
 		g, err = modulecreate.NewIBC(tracer, opts)
 		if err != nil {
@@ -219,7 +219,7 @@ func (s Scaffolder) CreateModule(
 		return sm, err
 	}
 
-	// Modify app.go to register the module
+// 修改 app.go 註冊模塊
 	newSourceModification, runErr := xgenny.RunWithValidation(tracer, modulecreate.NewStargateAppModify(tracer, opts))
 	sm.Merge(newSourceModification)
 	var validationErr validation.Error
@@ -230,11 +230,11 @@ func (s Scaffolder) CreateModule(
 	return sm, finish(cacheStorage, opts.AppPath, s.modpath.RawPath)
 }
 
-// ImportModule imports specified module with name to the scaffolded app.
+// ImportModule 將具有名稱的指定模塊導入腳手架應用程序。
 func (s Scaffolder) ImportModule(cacheStorage cache.Storage, tracer *placeholder.Tracer, name string) (sm xgenny.SourceModification, err error) {
 	// Only wasm is currently supported
 	if name != "wasm" {
-		return sm, errors.New("module cannot be imported. Supported module: wasm")
+		return sm, errors.New("模塊無法導入。支持模塊：wasm")
 	}
 
 	ok, err := isWasmImported(s.path)
@@ -242,7 +242,7 @@ func (s Scaffolder) ImportModule(cacheStorage cache.Storage, tracer *placeholder
 		return sm, err
 	}
 	if ok {
-		return sm, errors.New("wasm is already imported")
+		return sm, errors.New("wasm已經導入")
 	}
 
 	// run generator
@@ -260,14 +260,14 @@ func (s Scaffolder) ImportModule(cacheStorage cache.Storage, tracer *placeholder
 	if err != nil {
 		var validationErr validation.Error
 		if errors.As(err, &validationErr) {
-			// TODO: implement a more generic method when there will be new methods to import wasm
-			return sm, errors.New("wasm cannot be imported. Apps initialized with Starport <=0.16.2 must downgrade Starport to 0.16.2 to import wasm")
+			// TODO：當有新方法要導入時，實現更通用的方法wasm
+			return sm, errors.New("wasm無法導入.使用熊網鏈初始化的應用程序 <=0.16.2必須將熊網鏈版本降級為 0.16.2 在導入wasm")
 		}
 		return sm, err
 	}
 
-	// import a specific version of ComsWasm
-	// NOTE(dshulyak) it must be installed after validation
+// 導入特定版本的 ComsWasm
+// 注意（dshulyak）它必須在驗證後安裝
 	if err := s.installWasm(); err != nil {
 		return sm, err
 	}
@@ -275,7 +275,7 @@ func (s Scaffolder) ImportModule(cacheStorage cache.Storage, tracer *placeholder
 	return sm, finish(cacheStorage, s.path, s.modpath.RawPath)
 }
 
-// moduleExists checks if the module exists in the app
+// moduleExists 檢查模塊是否存在於應用程序中
 func moduleExists(appPath string, moduleName string) (bool, error) {
 	absPath, err := filepath.Abs(filepath.Join(appPath, moduleDir, moduleName))
 	if err != nil {
@@ -284,41 +284,41 @@ func moduleExists(appPath string, moduleName string) (bool, error) {
 
 	_, err = os.Stat(absPath)
 	if os.IsNotExist(err) {
-		// The module doesn't exist
+// 模塊不存在
 		return false, nil
 	}
 
 	return err == nil, err
 }
 
-// checkModuleName checks if the name can be used as a module name
+// checkModuleName 檢查名稱是否可以用作模塊名稱
 func checkModuleName(appPath, moduleName string) error {
-	// go keyword
+// 去關鍵字
 	if token.Lookup(moduleName).IsKeyword() {
-		return fmt.Errorf("%s is a Go keyword", moduleName)
+		return fmt.Errorf("%s 是一個 Go 關鍵字", moduleName)
 	}
 
-	// check if the name is a reserved name
+// 檢查名稱是否為保留名稱
 	if _, ok := reservedNames[moduleName]; ok {
-		return fmt.Errorf("%s is a reserved name and can't be used as a module name", moduleName)
+		return fmt.Errorf("%s 是保留名稱，不能用作模塊名稱", moduleName)
 	}
 
 	checkPrefix := func(name, prefix string) error {
 		if strings.HasPrefix(name, prefix) {
-			return fmt.Errorf("the module name can't be prefixed with %s because of potential store key collision", prefix)
+			return fmt.Errorf("模塊名稱不能以 %s 因為潛在的存儲鍵衝突", prefix)
 		}
 		return nil
 	}
 
-	// check if the name can imply potential store key collision
+	// 檢查名稱是否暗示潛在的存儲鍵衝突
 	for _, defaultStoreKey := range defaultStoreKeys {
 		if err := checkPrefix(moduleName, defaultStoreKey); err != nil {
 			return err
 		}
 	}
 
-	// check store key with user's defined modules
-	// we consider all user's defined modules use the module name as the store key
+// 使用用戶定義的模塊檢查存儲鍵
+// 我們認為所有用戶定義的模塊都使用模塊名稱作為存儲鍵
 	entries, err := os.ReadDir(filepath.Join(appPath, moduleDir))
 	if os.IsNotExist(err) {
 		return nil
@@ -367,28 +367,28 @@ func (s Scaffolder) installWasm() error {
 				step.New(step.Exec(gocmd.Name(), "get", gocmd.PackageLiteral(extrasImport, extrasVersion))),
 			)
 	default:
-		return errors.New("version not supported")
+		return errors.New("不支持的版本")
 	}
 }
 
-// checkDependencies perform checks on the dependencies
+//checkDependencies 對依賴項執行檢查
 func checkDependencies(dependencies []modulecreate.Dependency, appPath string) error {
 	depMap := make(map[string]struct{})
 	for _, dep := range dependencies {
-		// check the dependency has been registered
+		//檢查依賴項是否已註冊
 		path := filepath.Join(appPath, module.PathAppModule)
 		if err := appanalysis.CheckKeeper(path, dep.KeeperName); err != nil {
 			return fmt.Errorf(
-				"the module cannot have %s as a dependency: %s",
+				"模塊不能有 %s 作為依賴: %s",
 				dep.Name,
 				err.Error(),
 			)
 		}
 
-		// check duplicated
+		// 檢查重複
 		_, ok := depMap[dep.Name]
 		if ok {
-			return fmt.Errorf("%s is a duplicated dependency", dep)
+			return fmt.Errorf("%s 是一個重複的依賴", dep)
 		}
 		depMap[dep.Name] = struct{}{}
 	}

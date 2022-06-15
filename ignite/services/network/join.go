@@ -29,7 +29,7 @@ func WithAccountRequest(amount sdk.Coins) JoinOption {
 	}
 }
 
-// TODO accept struct not file path
+// TODO 接受結構而不是文件路徑
 func WithCustomGentxPath(path string) JoinOption {
 	return func(o *joinOptions) {
 		o.gentxPath = path
@@ -42,7 +42,7 @@ func WithPublicAddress(addr string) JoinOption {
 	}
 }
 
-// Join to the network.
+// 加入網絡。
 func (n Network) Join(
 	ctx context.Context,
 	c Chain,
@@ -61,7 +61,7 @@ func (n Network) Join(
 		err    error
 	)
 
-	// if the custom gentx is not provided, get the chain default from the chain home folder.
+	// 如果未提供自定義 gentx，則從鍊主文件夾獲取鏈默認值。
 	if !isCustomGentx {
 		if nodeID, err = c.NodeID(ctx); err != nil {
 			return err
@@ -79,7 +79,7 @@ func (n Network) Join(
 		}
 	}
 
-	// parse the gentx content
+	// 解析 gentx 內容
 	gentxInfo, gentx, err := cosmosutil.GentxFromPath(o.gentxPath)
 	if err != nil {
 		return err
@@ -91,13 +91,13 @@ func (n Network) Join(
 		}
 	}
 
-	// get the chain genesis path from the home folder
+	// 從主文件夾獲取鏈創世路徑
 	genesisPath, err := c.GenesisPath()
 	if err != nil {
 		return err
 	}
 
-	// change the chain address prefix to spn
+	// 將鏈地址前綴更改為 spn
 	accountAddress, err := cosmosutil.ChangeAddressPrefix(gentxInfo.DelegatorAddress, networktypes.SPN)
 	if err != nil {
 		return err
@@ -119,7 +119,7 @@ func (n Network) Join(
 	return n.sendValidatorRequest(ctx, launchID, peer, accountAddress, gentx, gentxInfo)
 }
 
-// ensureAccount creates an add AddAccount request message.
+// ensureAccount 創建添加 AddAccount 請求消息。
 func (n Network) ensureAccount(
 	ctx context.Context,
 	genesisPath string,
@@ -128,7 +128,7 @@ func (n Network) ensureAccount(
 	address string,
 	amount sdk.Coins,
 ) (err error) {
-	n.ev.Send(events.New(events.StatusOngoing, "Verifying account already exists "+address))
+	n.ev.Send(events.New(events.StatusOngoing, "驗證帳戶已存在 "+address))
 
 	// if is custom gentx path, avoid to check account into genesis from the home folder
 	var accExist bool
@@ -138,22 +138,22 @@ func (n Network) ensureAccount(
 			return err
 		}
 		if accExist {
-			return fmt.Errorf("account %s already exist", address)
+			return fmt.Errorf("帳戶 %s 已經存在", address)
 		}
 	}
-	// check if account exists as a genesis account in SPN chain launch information
+	// 檢查帳戶是否作為創世帳戶存在於 SPN 鏈啟動信息中
 	hasAccount, err := n.hasAccount(ctx, launchID, address)
 	if err != nil {
 		return err
 	}
 	if hasAccount {
-		return fmt.Errorf("account %s already exist", address)
+		return fmt.Errorf("帳戶 %s 已經存在", address)
 	}
 
 	return n.sendAccountRequest(launchID, address, amount)
 }
 
-// sendValidatorRequest creates the RequestAddValidator message into the SPN
+// sendValidatorRequest 在 SPN 中創建 RequestAddValidator 消息
 func (n Network) sendValidatorRequest(
 	ctx context.Context,
 	launchID uint64,
@@ -162,13 +162,13 @@ func (n Network) sendValidatorRequest(
 	gentx []byte,
 	gentxInfo cosmosutil.GentxInfo,
 ) error {
-	// Check if the validator request already exist
+	// 檢查驗證器請求是否已經存在
 	hasValidator, err := n.hasValidator(ctx, launchID, valAddress)
 	if err != nil {
 		return err
 	}
 	if hasValidator {
-		return fmt.Errorf("validator %s already exist", valAddress)
+		return fmt.Errorf("驗證器 %s 已經存在", valAddress)
 	}
 
 	msg := launchtypes.NewMsgRequestAddValidator(
@@ -181,7 +181,7 @@ func (n Network) sendValidatorRequest(
 		peer,
 	)
 
-	n.ev.Send(events.New(events.StatusOngoing, "Broadcasting validator transaction"))
+	n.ev.Send(events.New(events.StatusOngoing, "廣播驗證者交易"))
 
 	res, err := n.cosmos.BroadcastTx(n.account.Name, msg)
 	if err != nil {
@@ -194,17 +194,17 @@ func (n Network) sendValidatorRequest(
 	}
 
 	if requestRes.AutoApproved {
-		n.ev.Send(events.New(events.StatusDone, "Validator added to the network by the coordinator!"))
+		n.ev.Send(events.New(events.StatusDone, "由協調者添加到網絡的驗證者!"))
 	} else {
 		n.ev.Send(events.New(events.StatusDone,
-			fmt.Sprintf("Request %d to join the network as a validator has been submitted!",
+			fmt.Sprintf("要求 %d 已提交作為驗證人加入網絡!",
 				requestRes.RequestID),
 		))
 	}
 	return nil
 }
 
-// hasValidator verify if the validator already exist into the SPN store
+// hasValidator驗證驗證器是否已存在於 SPN 存儲中
 func (n Network) hasValidator(ctx context.Context, launchID uint64, address string) (bool, error) {
 	_, err := n.launchQuery.GenesisValidator(ctx, &launchtypes.QueryGetGenesisValidatorRequest{
 		LaunchID: launchID,
@@ -218,7 +218,7 @@ func (n Network) hasValidator(ctx context.Context, launchID uint64, address stri
 	return true, nil
 }
 
-// hasAccount verify if the account already exist into the SPN store
+// hasAccount 驗證帳戶是否已存在於 SPN 存儲中
 func (n Network) hasAccount(ctx context.Context, launchID uint64, address string) (bool, error) {
 	_, err := n.launchQuery.VestingAccount(ctx, &launchtypes.QueryGetVestingAccountRequest{
 		LaunchID: launchID,

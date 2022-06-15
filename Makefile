@@ -1,6 +1,6 @@
 #! /usr/bin/make -f
 
-# Project variables.
+#項目變量。
 PROJECT_NAME = ignite
 DATE := $(shell date '+%Y-%m-%dT%H:%M:%S')
 FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go'
@@ -10,19 +10,19 @@ LD_FLAGS = -X github.com/ignite-hq/cli/ignite/version.Head='$(HEAD)' \
 BUILD_FLAGS = -mod=readonly -ldflags='$(LD_FLAGS)'
 BUILD_FOLDER = ./dist
 
-## install: Install de binary.
+## install:安裝 de 二進製文件。
 install:
 	@echo Installing Bear Network...
 	@go install $(BUILD_FLAGS) ./...
 	@ignite version
 
-## build: Build the binary.
+## build:構建二進製文件。
 build:
 	@echo Building Bear Network...
 	@-mkdir -p $(BUILD_FOLDER) 2> /dev/null
 	@go build $(BUILD_FLAGS) -o $(BUILD_FOLDER) ./...
 
-## clean: Clean build files. Also runs `go clean` internally.
+## clean: 清理構建文件。還在內部運行`go clean`。
 clean:
 	@echo Cleaning build cache...
 	@-rm -rf $(BUILD_FOLDER) 2> /dev/null
@@ -33,13 +33,13 @@ govet:
 	@echo Running go vet...
 	@go vet ./...
 
-## format: Run gofmt.
+## format: 運行霍夫曼。
 format:
 	@echo Formatting...
 	@find . $(FIND_ARGS) | xargs gofmt -d -s
 	@find . $(FIND_ARGS) | xargs goimports -w -local github.com/ignite-hq/cli
 
-## lint：運行 Golang CI Lint。
+## lint：運行Golang CI Lint。
 lint:
 	@echo Running gocilint...
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2

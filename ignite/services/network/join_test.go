@@ -24,7 +24,7 @@ const (
 )
 
 func TestJoin(t *testing.T) {
-	t.Run("successfully send join request", func(t *testing.T) {
+	t.Run("成功發送加入請求", func(t *testing.T) {
 		var (
 			account = testutil.NewTestAccount(t, testutil.TestAccountName)
 			tmp     = t.TempDir()
@@ -84,7 +84,7 @@ func TestJoin(t *testing.T) {
 		suite.AssertAllMocks(t)
 	})
 
-	t.Run("successfully send join request with custom gentx", func(t *testing.T) {
+	t.Run("使用自定義 gentx 成功發送加入請求", func(t *testing.T) {
 		var (
 			account = testutil.NewTestAccount(t, testutil.TestAccountName)
 			tmp     = t.TempDir()

@@ -10,13 +10,13 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// Reviewal keeps a request's reviewal.
+// Reviewal保留請求的審查。
 type Reviewal struct {
 	RequestID  uint64
 	IsApproved bool
 }
 
-// ApproveRequest returns approval for a request with id.
+// ApproveRequest返回對帶有 id 的請求的批准。
 func ApproveRequest(requestID uint64) Reviewal {
 	return Reviewal{
 		RequestID:  requestID,
@@ -24,7 +24,7 @@ func ApproveRequest(requestID uint64) Reviewal {
 	}
 }
 
-// RejectRequest returns rejection for a request with id.
+// RejectRequest對帶有 id 的請求返回拒絕。
 func RejectRequest(requestID uint64) Reviewal {
 	return Reviewal{
 		RequestID:  requestID,
@@ -32,7 +32,7 @@ func RejectRequest(requestID uint64) Reviewal {
 	}
 }
 
-// Requests fetches all the chain requests from SPN by launch id
+// Requests通過啟動 ID 從 SPN 獲取所有鏈請求
 func (n Network) Requests(ctx context.Context, launchID uint64) ([]networktypes.Request, error) {
 	res, err := n.launchQuery.RequestAll(ctx, &launchtypes.QueryAllRequestRequest{
 		LaunchID: launchID,
@@ -47,7 +47,7 @@ func (n Network) Requests(ctx context.Context, launchID uint64) ([]networktypes.
 	return requests, nil
 }
 
-// Request fetches the chain request from SPN by launch and request id
+// Request通過啟動和請求 id 從 SPN 獲取鏈請求
 func (n Network) Request(ctx context.Context, launchID, requestID uint64) (networktypes.Request, error) {
 	res, err := n.launchQuery.Request(ctx, &launchtypes.QueryGetRequestRequest{
 		LaunchID:  launchID,
@@ -59,8 +59,8 @@ func (n Network) Request(ctx context.Context, launchID, requestID uint64) (netwo
 	return networktypes.ToRequest(res.Request), nil
 }
 
-// RequestFromIDs fetches the chain requested from SPN by launch and provided request IDs
-// TODO: once implemented, use the SPN query from https://github.com/tendermint/spn/issues/420
+// RequestFromIDs 獲取通過啟動和提供的請求 ID 從 SPN 請求的鏈
+// TODO：一旦實現，使用來自 https://github.com/tendermint/spn/issues/420 的 SPN 查詢
 func (n Network) RequestFromIDs(ctx context.Context, launchID uint64, requestIDs ...uint64) (reqs []networktypes.Request, err error) {
 	for _, id := range requestIDs {
 		req, err := n.Request(ctx, launchID, id)
@@ -72,9 +72,9 @@ func (n Network) RequestFromIDs(ctx context.Context, launchID uint64, requestIDs
 	return reqs, nil
 }
 
-// SubmitRequest submits reviewals for proposals in batch for chain.
+// SubmitRequest批量提交對鏈的提案的審查。
 func (n Network) SubmitRequest(launchID uint64, reviewal ...Reviewal) error {
-	n.ev.Send(events.New(events.StatusOngoing, "Submitting requests..."))
+	n.ev.Send(events.New(events.StatusOngoing, "提交請求..."))
 
 	messages := make([]sdk.Msg, len(reviewal))
 	for i, reviewal := range reviewal {

@@ -10,7 +10,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// Node is node builder.
+// Node是節點構建器。
 type Node struct {
 	cosmos       CosmosClient
 	stakingQuery stakingtypes.QueryClient
@@ -23,7 +23,7 @@ func NewNodeClient(cosmos CosmosClient) (Node, error) {
 	}, nil
 }
 
-// RewardsInfo Fetches the consensus state with the validator set
+// RewardsInfo 使用驗證器集獲取共識狀態
 func RewardsInfo(ctx context.Context, client CosmosClient, height int64) (networktypes.Reward, error) {
 	consensusState, err := client.ConsensusInfo(ctx, height)
 	if err != nil {
@@ -51,7 +51,7 @@ func RewardsInfo(ctx context.Context, client CosmosClient, height int64) (networ
 	}, nil
 }
 
-// StakingParams fetches the staking module params
+// StakingParams 獲取質押模塊參數
 func (n Node) StakingParams(ctx context.Context) (stakingtypes.Params, error) {
 	res, err := n.stakingQuery.Params(ctx, &stakingtypes.QueryParamsRequest{})
 	if err != nil {
@@ -60,7 +60,7 @@ func (n Node) StakingParams(ctx context.Context) (stakingtypes.Params, error) {
 	return res.Params, nil
 }
 
-// RewardsInfo Fetches the consensus state with the validator set and the unbounding time
+// RewardsInfo 使用驗證器集和無限制時間獲取共識狀態
 func (n Node) RewardsInfo(ctx context.Context) (networktypes.Reward, int64, error) {
 	status, err := n.cosmos.Status(ctx)
 	if err != nil {

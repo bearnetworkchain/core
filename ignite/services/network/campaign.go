@@ -12,10 +12,10 @@ import (
 )
 
 type (
-	// Prop update campaign proposal
+	// 道具更新活動提案
 	Prop func(*updateProp)
 
-	// updateProp represents the update campaign proposal
+	// updateProp 表示更新活動提案
 	updateProp struct {
 		name        string
 		metadata    []byte
@@ -23,30 +23,30 @@ type (
 	}
 )
 
-// WithCampaignName provides a name proposal to update the campaign.
+// WithCampaignName提供名稱建議以更新活動。
 func WithCampaignName(name string) Prop {
 	return func(c *updateProp) {
 		c.name = name
 	}
 }
 
-// WithCampaignMetadata provides a meta data proposal to update the campaign.
+// WithCampaignMetadata提供元數據建議以更新活動。
 func WithCampaignMetadata(metadata string) Prop {
 	return func(c *updateProp) {
 		c.metadata = []byte(metadata)
 	}
 }
 
-// WithCampaignTotalSupply provides a total supply proposal to update the campaign.
+// WithCampaignTotalSupply提供總供應建議以更新活動。
 func WithCampaignTotalSupply(totalSupply sdk.Coins) Prop {
 	return func(c *updateProp) {
 		c.totalSupply = totalSupply
 	}
 }
 
-// Campaign fetches the campaign from Network
+// 活動從網絡中獲取活動ID
 func (n Network) Campaign(ctx context.Context, campaignID uint64) (networktypes.Campaign, error) {
-	n.ev.Send(events.New(events.StatusOngoing, "Fetching campaign information"))
+	n.ev.Send(events.New(events.StatusOngoing, "獲取活動信息"))
 	res, err := n.campaignQuery.Campaign(ctx, &campaigntypes.QueryGetCampaignRequest{
 		CampaignID: campaignID,
 	})
@@ -56,18 +56,18 @@ func (n Network) Campaign(ctx context.Context, campaignID uint64) (networktypes.
 	return networktypes.ToCampaign(res.Campaign), nil
 }
 
-// Campaigns fetches the campaigns from Network
+// Campaigns從網絡中獲取活動
 func (n Network) Campaigns(ctx context.Context) ([]networktypes.Campaign, error) {
 	var campaigns []networktypes.Campaign
 
-	n.ev.Send(events.New(events.StatusOngoing, "Fetching campaigns information"))
+	n.ev.Send(events.New(events.StatusOngoing, "獲取活動信息"))
 	res, err := n.campaignQuery.
 		CampaignAll(ctx, &campaigntypes.QueryAllCampaignRequest{})
 	if err != nil {
 		return campaigns, err
 	}
 
-	// Parse fetched campaigns
+	// 解析獲取的活動
 	for _, campaign := range res.Campaign {
 		campaigns = append(campaigns, networktypes.ToCampaign(campaign))
 	}
@@ -75,9 +75,9 @@ func (n Network) Campaigns(ctx context.Context) ([]networktypes.Campaign, error)
 	return campaigns, nil
 }
 
-// CreateCampaign creates a campaign in Network
+// CreateCampaign在網絡中創建活動
 func (n Network) CreateCampaign(name, metadata string, totalSupply sdk.Coins) (uint64, error) {
-	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("Creating campaign %s", name)))
+	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("創建活動 %s", name)))
 
 	msgCreateCampaign := campaigntypes.NewMsgCreateCampaign(
 		n.account.Address(networktypes.SPN),
@@ -98,14 +98,14 @@ func (n Network) CreateCampaign(name, metadata string, totalSupply sdk.Coins) (u
 	return createCampaignRes.CampaignID, nil
 }
 
-// InitializeMainnet Initialize the mainnet of the campaign.
+// InitializeMainnet初始化活動的主網。
 func (n Network) InitializeMainnet(
 	campaignID uint64,
 	sourceURL,
 	sourceHash string,
 	mainnetChainID string,
 ) (uint64, error) {
-	n.ev.Send(events.New(events.StatusOngoing, "Initializing the mainnet campaign"))
+	n.ev.Send(events.New(events.StatusOngoing, "初始化主網活動"))
 	msg := campaigntypes.NewMsgInitializeMainnet(
 		n.account.Address(networktypes.SPN),
 		campaignID,
@@ -124,23 +124,23 @@ func (n Network) InitializeMainnet(
 		return 0, err
 	}
 
-	n.ev.Send(events.New(events.StatusDone, fmt.Sprintf("Campaign %d initialized on mainnet", campaignID)))
+	n.ev.Send(events.New(events.StatusDone, fmt.Sprintf("活動 %d 在主網上初始化", campaignID)))
 
 	return initMainnetRes.MainnetID, nil
 }
 
-// UpdateCampaign updates the campaign name or metadata
+// UpdateCampaign更新活動名稱或元數據
 func (n Network) UpdateCampaign(
 	id uint64,
 	props ...Prop,
 ) error {
-	// Apply the options provided by the user
+	//應用用戶提供的選項
 	p := updateProp{}
 	for _, apply := range props {
 		apply(&p)
 	}
 
-	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("Updating the campaign %d", id)))
+	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("更新活動 %d", id)))
 	account := n.account.Address(networktypes.SPN)
 	msgs := make([]sdk.Msg, 0)
 	if p.name != "" || len(p.metadata) > 0 {
@@ -163,7 +163,7 @@ func (n Network) UpdateCampaign(
 		return err
 	}
 	n.ev.Send(events.New(events.StatusDone, fmt.Sprintf(
-		"Campaign %d updated", id,
+		"活動 %d 更新", id,
 	)))
 	return nil
 }

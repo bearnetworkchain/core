@@ -5,7 +5,7 @@ import (
 	campaigntypes "github.com/tendermint/spn/x/campaign/types"
 )
 
-// Campaign represents the campaign of a chain on SPN
+// Campaign 代表 SPN 上某鏈的活動
 type Campaign struct {
 	ID                 uint64    `json:"ID"`
 	Name               string    `json:"Name"`
@@ -17,7 +17,7 @@ type Campaign struct {
 	Metadata           string    `json:"Metadata"`
 }
 
-// ToCampaign converts a campaign data from SPN and returns a Campaign object
+// ToCampaign 從 SPN 轉換活動數據並返回一個活動對象
 func ToCampaign(campaign campaigntypes.Campaign) Campaign {
 	return Campaign{
 		ID:                 campaign.CampaignID,
@@ -31,13 +31,13 @@ func ToCampaign(campaign campaigntypes.Campaign) Campaign {
 	}
 }
 
-// MainnetAccount represents the campaign mainnet account of a chain on SPN
+// MainnetAccount 代表 SPN 上某鏈的競選主網賬戶
 type MainnetAccount struct {
 	Address string               `json:"Address"`
 	Shares  campaigntypes.Shares `json:"Shares"`
 }
 
-// ToMainnetAccount converts a mainnet account data from SPN and returns a MainnetAccount object
+// ToMainnetAccount 從 SPN 轉換主網賬戶數據並返回 MainnetAccount 對象
 func ToMainnetAccount(acc campaigntypes.MainnetAccount) MainnetAccount {
 	return MainnetAccount{
 		Address: acc.Address,
@@ -45,7 +45,7 @@ func ToMainnetAccount(acc campaigntypes.MainnetAccount) MainnetAccount {
 	}
 }
 
-// MainnetVestingAccount represents the campaign mainnet vesting account of a chain on SPN
+// MainnetVestingAccount 代表 SPN 上鍊的活動主網歸屬賬戶
 type MainnetVestingAccount struct {
 	Address     string               `json:"Address"`
 	TotalShares campaigntypes.Shares `json:"TotalShares"`
@@ -53,7 +53,7 @@ type MainnetVestingAccount struct {
 	EndTime     int64                `json:"EndTime"`
 }
 
-// ToMainnetVestingAccount converts a mainnet vesting account data from SPN and returns a MainnetVestingAccount object
+// ToMainnetVestingAccount 從 SPN 轉換主網歸屬賬戶數據並返回 MainnetVestingAccount 對象
 func ToMainnetVestingAccount(acc campaigntypes.MainnetVestingAccount) MainnetVestingAccount {
 	delaydVesting := acc.VestingOptions.GetDelayedVesting()
 	return MainnetVestingAccount{

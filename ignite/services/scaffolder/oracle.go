@@ -21,28 +21,28 @@ const (
 	bandVersion = "v0.0.2"
 )
 
-// OracleOption configures options for AddOracle.
+// OracleOption 為 AddOracle 配置選項。
 type OracleOption func(*oracleOptions)
 
 type oracleOptions struct {
 	signer string
 }
 
-// newOracleOptions returns a oracleOptions with default options
+// newOracleOptions 返回一個帶有默認選項的 oracleOptions
 func newOracleOptions() oracleOptions {
 	return oracleOptions{
 		signer: "creator",
 	}
 }
 
-// OracleWithSigner provides a custom signer name for the message
+// OracleWithSigner為消息提供自定義簽名者名稱
 func OracleWithSigner(signer string) OracleOption {
 	return func(m *oracleOptions) {
 		m.signer = signer
 	}
 }
 
-// AddOracle adds a new BandChain oracle envtest.
+// AddOracle添加了一個新的 BandChain oracle envtest。
 func (s *Scaffolder) AddOracle(
 	cacheStorage cache.Storage,
 	tracer *placeholder.Tracer,
@@ -79,16 +79,16 @@ func (s *Scaffolder) AddOracle(
 		return sm, err
 	}
 
-	// Module must implement IBC
+	// 模塊必須實現 IBC
 	ok, err := isIBCModule(s.path, moduleName)
 	if err != nil {
 		return sm, err
 	}
 	if !ok {
-		return sm, fmt.Errorf("the module %s doesn't implement IBC module interface", moduleName)
+		return sm, fmt.Errorf("模塊 %s 沒有實現 IBC 模塊接口", moduleName)
 	}
 
-	// Generate the packet
+	// 生成數據包
 	var (
 		g    *genny.Generator
 		opts = &ibc.OracleOptions{

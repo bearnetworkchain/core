@@ -1,7 +1,7 @@
 {
 	"name": "nodetime",
 	"version": "1.0.0",
-	"description": "Starport's Swiss knife",
+	"description": "熊網鏈的瑞士刀",
 	"scripts": {
 		"prebuild": "rm -rf dist && tsc",
 		"build": "pkg --public-packages \"*\" --public --no-bytecode -c package.json -o nodetime nodetime"

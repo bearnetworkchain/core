@@ -21,37 +21,37 @@ const (
 	ibcModuleImplementation = "module_ibc.go"
 )
 
-// packetOptions represents configuration for the packet scaffolding
+// packetOptions 表示數據包腳手架的配置
 type packetOptions struct {
 	withoutMessage bool
 	signer         string
 }
 
-// newPacketOptions returns a packetOptions with default options
+// newPacketOptions返回一個帶有默認選項的 packetOptions
 func newPacketOptions() packetOptions {
 	return packetOptions{
 		signer: "creator",
 	}
 }
 
-// PacketOption configures the packet scaffolding
+// PacketOption 配置數據包腳手架
 type PacketOption func(*packetOptions)
 
-// PacketWithoutMessage disables generating sdk compatible messages and tx related APIs.
+// PacketWithoutMessage 禁用生成 sdk 兼容消息和 tx 相關 API。
 func PacketWithoutMessage() PacketOption {
 	return func(o *packetOptions) {
 		o.withoutMessage = true
 	}
 }
 
-// PacketWithSigner provides a custom signer name for the packet
+// PacketWithSigner 為數據包提供自定義簽名者名稱
 func PacketWithSigner(signer string) PacketOption {
 	return func(m *packetOptions) {
 		m.signer = signer
 	}
 }
 
-// AddPacket adds a new type stype to scaffolded app by using optional type fields.
+// AddPacket 使用可選類型字段向腳手架應用程序添加新類型 stype。
 func (s Scaffolder) AddPacket(
 	ctx context.Context,
 	cacheStorage cache.Storage,
@@ -62,7 +62,7 @@ func (s Scaffolder) AddPacket(
 	ackFields []string,
 	options ...PacketOption,
 ) (sm xgenny.SourceModification, err error) {
-	// apply options.
+	// 應用選項。
 	o := newPacketOptions()
 	for _, apply := range options {
 		apply(&o)
@@ -88,13 +88,13 @@ func (s Scaffolder) AddPacket(
 		return sm, err
 	}
 
-	// Module must implement IBC
+	// Module 必須實施 IBC
 	ok, err := isIBCModule(s.path, moduleName)
 	if err != nil {
 		return sm, err
 	}
 	if !ok {
-		return sm, fmt.Errorf("the module %s doesn't implement IBC module interface", moduleName)
+		return sm, fmt.Errorf("模塊 %s 沒有實現 IBC 模塊接口", moduleName)
 	}
 
 	signer := ""
@@ -102,7 +102,7 @@ func (s Scaffolder) AddPacket(
 		signer = o.signer
 	}
 
-	// Check and parse packet fields
+	// 檢查和解析數據包字段
 	if err := checkCustomTypes(ctx, s.path, moduleName, packetFields); err != nil {
 		return sm, err
 	}
@@ -111,7 +111,7 @@ func (s Scaffolder) AddPacket(
 		return sm, err
 	}
 
-	// check and parse acknowledgment fields
+	// 檢查和解析確認字段
 	if err := checkCustomTypes(ctx, s.path, moduleName, ackFields); err != nil {
 		return sm, err
 	}
@@ -120,7 +120,7 @@ func (s Scaffolder) AddPacket(
 		return sm, err
 	}
 
-	// Generate the packet
+	//生成數據包
 	var (
 		g    *genny.Generator
 		opts = &ibc.PacketOptions{
@@ -146,8 +146,8 @@ func (s Scaffolder) AddPacket(
 	return sm, finish(cacheStorage, opts.AppPath, s.modpath.RawPath)
 }
 
-// isIBCModule returns true if the provided module implements the IBC module interface
-// we naively check the existence of module_ibc.go for this check
+// 如果提供的模塊實現了 IBC 模塊接口，isIBCModule 返回 true
+// 我們天真地檢查 module_ibc.go 的存在以進行此檢查
 func isIBCModule(appPath string, moduleName string) (bool, error) {
 	absPath, err := filepath.Abs(filepath.Join(appPath, moduleDir, moduleName, ibcModuleImplementation))
 	if err != nil {
@@ -156,14 +156,14 @@ func isIBCModule(appPath string, moduleName string) (bool, error) {
 
 	_, err = os.Stat(absPath)
 	if os.IsNotExist(err) {
-		// Not an IBC module
+		// 不是 IBC 模塊
 		return false, nil
 	}
 
 	return true, err
 }
 
-// checkForbiddenPacketField returns true if the name is forbidden as a packet name
+// 如果名稱被禁止作為數據包名稱，則 checkForbiddenPacketField 返回 true
 func checkForbiddenPacketField(name string) error {
 	mfName, err := multiformatname.NewName(name)
 	if err != nil {
@@ -176,7 +176,7 @@ func checkForbiddenPacketField(name string) error {
 		"port",
 		"channelid",
 		datatype.TypeCustom:
-		return fmt.Errorf("%s is used by the packet scaffolder", name)
+		return fmt.Errorf("%s 由包腳手架使用", name)
 	}
 
 	return checkGoReservedWord(name)

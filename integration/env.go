@@ -37,14 +37,14 @@ const (
 
 var isCI, _ = strconv.ParseBool(os.Getenv("CI"))
 
-// Env provides an isolated testing environment and what's needed to
-// make it possible.
+// Env 提供了一個隔離的測試環境以及需要什麼
+// 使它成為可能。
 type Env struct {
 	t   *testing.T
 	ctx context.Context
 }
 
-// New creates a new testing environment.
+//new 創建一個新的測試環境。
 func New(t *testing.T) Env {
 	ctx, cancel := context.WithCancel(context.Background())
 	e := Env{
@@ -54,19 +54,19 @@ func New(t *testing.T) Env {
 	t.Cleanup(cancel)
 
 	if !xexec.IsCommandAvailable(IgniteApp) {
-		t.Fatal("ignite needs to be installed")
+		t.Fatal("Ignite需要安裝")
 	}
 
 	return e
 }
 
-// SetCleanup registers a function to be called when the test (or subtest) and all its
-// subtests complete.
+// SetCleanup 註冊一個函數，當測試（或子測試）及其所有
+// 子測試完成。
 func (e Env) SetCleanup(f func()) {
 	e.t.Cleanup(f)
 }
 
-// Ctx returns parent context for the test suite to use for cancelations.
+// Ctx 返回測試套件的父上下文以用於取消。
 func (e Env) Ctx() context.Context {
 	return e.ctx
 }
@@ -79,43 +79,43 @@ type execOptions struct {
 
 type ExecOption func(*execOptions)
 
-// ExecShouldError sets the expectations of a command's execution to end with a failure.
+// ExecShouldError 將命令執行的期望設置為以失敗結束。
 func ExecShouldError() ExecOption {
 	return func(o *execOptions) {
 		o.shouldErr = true
 	}
 }
 
-// ExecCtx sets cancelation context for the execution.
+// ExecCtx 設置執行的取消上下文。
 func ExecCtx(ctx context.Context) ExecOption {
 	return func(o *execOptions) {
 		o.ctx = ctx
 	}
 }
 
-// ExecStdout captures stdout of an execution.
+// ExecStdout 捕獲執行的標準輸出。
 func ExecStdout(w io.Writer) ExecOption {
 	return func(o *execOptions) {
 		o.stdout = w
 	}
 }
 
-// ExecStderr captures stderr of an execution.
+// ExecStderr 捕獲執行的標準錯誤。
 func ExecStderr(w io.Writer) ExecOption {
 	return func(o *execOptions) {
 		o.stderr = w
 	}
 }
 
-// ExecRetry retries command until it is successful before context is canceled.
+// ExecRetry 在取消上下文之前重試命令直到成功。
 func ExecRetry() ExecOption {
 	return func(o *execOptions) {
 		o.shouldRetry = true
 	}
 }
 
-// Exec executes a command step with options where msg describes the expectation from the test.
-// unless calling with Must(), Exec() will not exit test runtime on failure.
+// Exec 執行帶有選項的命令步驟，其中 msg 描述了測試的期望。
+// 除非使用 Must() 調用，否則 Exec() 不會在失敗時退出測試運行時。
 func (e Env) Exec(msg string, steps step.Steps, options ...ExecOption) (ok bool) {
 	opts := &execOptions{
 		ctx:    e.ctx,
@@ -165,7 +165,7 @@ const (
 	Stargate = "stargate"
 )
 
-// Scaffold scaffolds an app to a unique appPath and returns it.
+// Scaffold 將一個應用程序腳手架到一個唯一的 appPath 並返回它。
 func (e Env) Scaffold(name string, flags ...string) (appPath string) {
 	root := e.TmpDir()
 	e.Exec("scaffold an app",
@@ -184,7 +184,7 @@ func (e Env) Scaffold(name string, flags ...string) (appPath string) {
 
 	appDir := path.Base(name)
 
-	// Cleanup the home directory and cache of the app
+	// 清理應用的主目錄和緩存
 	e.t.Cleanup(func() {
 		os.RemoveAll(filepath.Join(e.Home(), fmt.Sprintf(".%s", appDir)))
 	})
@@ -192,9 +192,9 @@ func (e Env) Scaffold(name string, flags ...string) (appPath string) {
 	return filepath.Join(root, appDir)
 }
 
-// Serve serves an application lives under path with options where msg describes the
-// execution from the serving action.
-// unless calling with Must(), Serve() will not exit test runtime on failure.
+// Serve 服務於路徑下的應用程序，其中帶有 msg 描述的選項
+// 從服務動作執行。
+// 除非使用 Must() 調用，否則 Serve() 不會在失敗時退出測試運行時。
 func (e Env) Serve(msg, path, home, configPath string, options ...ExecOption) (ok bool) {
 	serveCommand := []string{
 		"chain",
@@ -218,7 +218,7 @@ func (e Env) Serve(msg, path, home, configPath string, options ...ExecOption) (o
 	)
 }
 
-// Simulate runs the simulation test for the app
+// Simulate 為應用程序運行模擬測試
 func (e Env) Simulate(appPath string, numBlocks, blockSize int) {
 	e.Exec("running the simulation tests",
 		step.NewSteps(step.New(
@@ -236,13 +236,13 @@ func (e Env) Simulate(appPath string, numBlocks, blockSize int) {
 	)
 }
 
-// EnsureAppIsSteady ensures that app living at the path can compile and its tests
-// are passing.
+// EnsureAppIsSteady 確保位於該路徑的應用程序可以編譯及其測試
+// 正在通過。
 func (e Env) EnsureAppIsSteady(appPath string) {
 	_, statErr := os.Stat(filepath.Join(appPath, ConfigYML))
-	require.False(e.t, os.IsNotExist(statErr), "config.yml cannot be found")
+	require.False(e.t, os.IsNotExist(statErr), "config.yml找不到")
 
-	e.Exec("make sure app is steady",
+	e.Exec("確保應用程序穩定",
 		step.NewSteps(step.New(
 			step.Exec(gocmd.Name(), "test", "./..."),
 			step.Workdir(appPath),
@@ -250,8 +250,8 @@ func (e Env) EnsureAppIsSteady(appPath string) {
 	)
 }
 
-// IsAppServed checks that app is served properly and servers are started to listening
-// before ctx canceled.
+// IsAppServed 檢查應用程序是否正確服務並且服務器是否開始監聽
+// 在 ctx 取消之前。
 func (e Env) IsAppServed(ctx context.Context, host chainconfig.Host) error {
 	checkAlive := func() error {
 		addr, err := xurl.HTTP(host.API)
@@ -261,14 +261,14 @@ func (e Env) IsAppServed(ctx context.Context, host chainconfig.Host) error {
 
 		ok, err := httpstatuschecker.Check(ctx, fmt.Sprintf("%s/node_info", addr))
 		if err == nil && !ok {
-			err = errors.New("app is not online")
+			err = errors.New("應用不在線")
 		}
 		return err
 	}
 	return backoff.Retry(checkAlive, backoff.WithContext(backoff.NewConstantBackOff(time.Second), ctx))
 }
 
-// IsFaucetServed checks that faucet of the app is served properly
+// IsFaucetServed 檢查應用程序的水龍頭是否正確提供
 func (e Env) IsFaucetServed(ctx context.Context, faucetClient cosmosfaucet.HTTPClient) error {
 	checkAlive := func() error {
 		_, err := faucetClient.FaucetInfo(ctx)
@@ -277,7 +277,7 @@ func (e Env) IsFaucetServed(ctx context.Context, faucetClient cosmosfaucet.HTTPC
 	return backoff.Retry(checkAlive, backoff.WithContext(backoff.NewConstantBackOff(time.Second), ctx))
 }
 
-// TmpDir creates a new temporary directory.
+// TmpDir創建一個新的臨時目錄。
 func (e Env) TmpDir() (path string) {
 	path, err := os.MkdirTemp("", "integration")
 	require.NoError(e.t, err, "create a tmp dir")
@@ -285,14 +285,14 @@ func (e Env) TmpDir() (path string) {
 	return path
 }
 
-// RandomizeServerPorts randomizes server ports for the app at path, updates
-// its config.yml and returns new values.
+// RandomizeServerPorts 在路徑中隨機化應用程序的服務器端口，更新
+// 它的 config.yml 並返回新值。
 func (e Env) RandomizeServerPorts(path string, configFile string) chainconfig.Host {
 	if configFile == "" {
 		configFile = ConfigYML
 	}
 
-	// generate random server ports and servers list.
+	// 生成隨機服務器端口和服務器列表。
 	ports, err := availableport.Find(6)
 	require.NoError(e.t, err)
 
@@ -309,7 +309,7 @@ func (e Env) RandomizeServerPorts(path string, configFile string) chainconfig.Ho
 		API:     genAddr(ports[5]),
 	}
 
-	// update config.yml with the generated servers list.
+	// 使用生成的服務器列表更新 config.yml。
 	configyml, err := os.OpenFile(filepath.Join(path, configFile), os.O_RDWR|os.O_CREATE, 0755)
 	require.NoError(e.t, err)
 	defer configyml.Close()
@@ -326,13 +326,13 @@ func (e Env) RandomizeServerPorts(path string, configFile string) chainconfig.Ho
 	return servers
 }
 
-// ConfigureFaucet finds a random port for the app faucet and updates config.yml with this port and provided coins options
+//ConfigureFaucet 為應用程序水龍頭找到一個隨機端口並使用此端口更新 config.yml 並提供硬幣選項
 func (e Env) ConfigureFaucet(path string, configFile string, coins, coinsMax []string) string {
 	if configFile == "" {
 		configFile = ConfigYML
 	}
 
-	// find a random available port
+	// 找到一個隨機的可用端口
 	port, err := availableport.Find(1)
 	require.NoError(e.t, err)
 
@@ -357,13 +357,13 @@ func (e Env) ConfigureFaucet(path string, configFile string, coins, coinsMax []s
 	return addr
 }
 
-// SetRandomHomeConfig sets in the blockchain config files generated temporary directories for home directories
+// SetRandomHomeConfig 在區塊鏈配置文件中設置為主目錄生成臨時目錄
 func (e Env) SetRandomHomeConfig(path string, configFile string) {
 	if configFile == "" {
 		configFile = ConfigYML
 	}
 
-	// update config.yml with the generated temporary directories
+	// 使用生成的臨時目錄更新 config.yml
 	configyml, err := os.OpenFile(filepath.Join(path, configFile), os.O_RDWR|os.O_CREATE, 0755)
 	require.NoError(e.t, err)
 	defer configyml.Close()
@@ -378,22 +378,22 @@ func (e Env) SetRandomHomeConfig(path string, configFile string) {
 	require.NoError(e.t, yaml.NewEncoder(configyml).Encode(conf))
 }
 
-// Must fails the immediately if not ok.
-// t.Fail() needs to be called for the failing tests before running Must().
+// 如果不正常，必須立即失敗。
+// 在運行 Must() 之前，需要為失敗的測試調用 t.Fail()。
 func (e Env) Must(ok bool) {
 	if !ok {
 		e.t.FailNow()
 	}
 }
 
-// Home returns user's home dir.
+// Home 返回用戶的主目錄。
 func (e Env) Home() string {
 	home, err := os.UserHomeDir()
 	require.NoError(e.t, err)
 	return home
 }
 
-// AppdHome returns appd's home dir.
+//AppdHome 返回 appd 的主目錄。
 func (e Env) AppdHome(name string) string {
 	return filepath.Join(e.Home(), fmt.Sprintf(".%s", name))
 }

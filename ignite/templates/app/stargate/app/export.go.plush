@@ -13,17 +13,17 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 )
 
-// ExportAppStateAndValidators exports the state of the application for a genesis
-// file.
+// ExportAppStateAndValidators 為創世導出應用程序的狀態
+// 文件。
 func (app *App) ExportAppStateAndValidators(
 	forZeroHeight bool, jailAllowedAddrs []string,
 ) (servertypes.ExportedApp, error) {
 
-	// as if they could withdraw from the start of the next block
+	// 就好像他們可以從下一個區塊的開始處退出一樣
 	ctx := app.NewContext(true, tmproto.Header{Height: app.LastBlockHeight()})
 
-	// We export at last height + 1, because that's the height at which
-	// Tendermint will start InitChain.
+// 我們在最後一個高度 + 1 處導出，因為那是高度
+// Tendermint 將啟動 InitChain。
 	height := app.LastBlockHeight() + 1
 	if forZeroHeight {
 		height = 0
@@ -48,13 +48,13 @@ func (app *App) ExportAppStateAndValidators(
 	}, nil
 }
 
-// prepare for fresh start at zero height
-// NOTE zero height genesis is a temporary feature which will be deprecated
-//      in favour of export at a block height
+// 準備從零高度重新開始
+// 注意零高度創世是一個臨時功能，將被棄用
+// 支持在塊高度導出
 func (app *App) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []string) {
 	applyAllowedAddrs := false
 
-	// check if there is a allowed address list
+// 檢查是否有允許的地址列表
 	if len(jailAllowedAddrs) > 0 {
 		applyAllowedAddrs = true
 	}
@@ -69,12 +69,12 @@ func (app *App) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []str
 		allowedAddrsMap[addr] = true
 	}
 
-	/* Just to be safe, assert the invariants on current state. */
+/* 為了安全起見，斷言當前狀態的不變量。 */
 	app.CrisisKeeper.AssertInvariants(ctx)
 
-	/* Handle fee distribution state. */
+/* 處理費用分配狀態。 */
 
-	// withdraw all validator commission
+// 撤回所有驗證人佣金
 	app.StakingKeeper.IterateValidators(ctx, func(_ int64, val stakingtypes.ValidatorI) (stop bool) {
 		_, err := app.DistrKeeper.WithdrawValidatorCommission(ctx, val.GetOperator())
 		if err != nil {
@@ -83,7 +83,7 @@ func (app *App) prepForZeroHeightGenesis(ctx sdk.Context, jailAllowedAddrs []str
 		return false
 	})
 
-	// withdraw all delegator rewards
+// 撤回所有委託人獎勵
 	dels := app.StakingKeeper.GetAllDelegations(ctx)
 	for _, delegation := range dels {
 		_, err := app.DistrKeeper.WithdrawDelegationRewards(ctx, delegation.GetDelegatorAddr(), delegation.GetValidatorAddr())

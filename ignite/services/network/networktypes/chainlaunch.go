@@ -5,7 +5,7 @@ import launchtypes "github.com/tendermint/spn/x/launch/types"
 type (
 	NetworkType string
 
-	// ChainLaunch represents the launch of a chain on SPN
+	// ChainLaunch 代表在 SPN 上啟動一個鏈
 	ChainLaunch struct {
 		ID                     uint64      `json:"ID"`
 		ConsumerRevisionHeight int64       `json:"ConsumerRevisionHeight"`
@@ -31,7 +31,7 @@ func (n NetworkType) String() string {
 	return string(n)
 }
 
-// ToChainLaunch converts a chain launch data from SPN and returns a ChainLaunch object
+// ToChainLaunch 從 SPN 轉換鏈啟動數據並返回一個 ChainLaunch 對象
 func ToChainLaunch(chain launchtypes.Chain) ChainLaunch {
 	var launchTime int64
 	if chain.LaunchTriggered {
@@ -55,7 +55,7 @@ func ToChainLaunch(chain launchtypes.Chain) ChainLaunch {
 		Network:                network,
 	}
 
-	// check if custom genesis URL is provided.
+	// 檢查是否提供了自定義創世紀 URL。
 	if customGenesisURL := chain.InitialGenesis.GetGenesisURL(); customGenesisURL != nil {
 		launch.GenesisURL = customGenesisURL.Url
 		launch.GenesisHash = customGenesisURL.Hash

@@ -17,18 +17,18 @@ func (sp SharePercents) Empty() bool {
 
 var rePercentageRequired = regexp.MustCompile(`^[0-9]+.[0-9]*%`)
 
-// SharePercent represent percent of total share
+// SharePercent 代表佔總份額的百分比
 type SharePercent struct {
 	denom string
-	// in order to avoid using numbers with floating point
-	// fractional representation is used: 297/10000 instead of 2.97%
+	// 為了避免使用帶有浮點數的數字
+	// 使用分數表示：297/10000 而不是 2.97%
 	nominator, denominator uint64
 }
 
-// NewSharePercent creates new share percent representation
+// NewSharePercent創建新的份額百分比表示
 func NewSharePercent(denom string, nominator, denominator uint64) (SharePercent, error) {
 	if denominator < nominator {
-		return SharePercent{}, fmt.Errorf("%q can not be bigger than 100", denom)
+		return SharePercent{}, fmt.Errorf("%q 不能大於 100", denom)
 	}
 	return SharePercent{
 		denom:       denom,
@@ -37,11 +37,11 @@ func NewSharePercent(denom string, nominator, denominator uint64) (SharePercent,
 	}, nil
 }
 
-// Share returns coin share of total according to underlying percent
+// Share根據基礎百分比返回總硬幣份額
 func (p SharePercent) Share(total uint64) (sdk.Coin, error) {
 	resultNominator := total * p.nominator
 	if resultNominator%p.denominator != 0 {
-		err := fmt.Errorf("%s share from total %d is not integer: %f",
+		err := fmt.Errorf("%s 佔總數的份額 %d 不是整數: %f",
 			p.denom,
 			total,
 			float64(resultNominator)/float64(p.denominator),
@@ -51,10 +51,10 @@ func (p SharePercent) Share(total uint64) (sdk.Coin, error) {
 	return sdk.NewInt64Coin(p.denom, int64(resultNominator/p.denominator)), nil
 }
 
-// SharePercentFromString parses share percent from string
-// format: 11.87%foo
+// SharePercentFromString 從字符串中解析份額百分比
+// 格式：11.87%foo
 func SharePercentFromString(str string) (SharePercent, error) {
-	// validate raw percentage format
+	// 驗證原始百分比格式
 	if len(rePercentageRequired.FindStringIndex(str)) == 0 {
 		return SharePercent{}, newInvalidPercentageFormat(str)
 	}
@@ -84,8 +84,8 @@ func SharePercentFromString(str string) (SharePercent, error) {
 	}
 }
 
-// ParseSharePercents parses SharePercentage list from string
-// format: 12.4%foo,10%bar,0.133%baz
+// ParseSharePercents 從字符串中解析 SharePercentage 列表
+// 格式：12.5% Fu, 10% Bar, 0.15% Bass
 func ParseSharePercents(percents string) (SharePercents, error) {
 	rawPercentages := strings.Split(percents, ",")
 	ps := make([]SharePercent, len(rawPercentages))
@@ -110,5 +110,5 @@ func uintPow(x, y uint64) uint64 {
 }
 
 func newInvalidPercentageFormat(s string) error {
-	return fmt.Errorf("invalid percentage format %s", s)
+	return fmt.Errorf("無效的百分比格式 %s", s)
 }

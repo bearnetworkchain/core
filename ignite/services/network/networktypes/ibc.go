@@ -4,7 +4,7 @@ import (
 	spntypes "github.com/tendermint/spn/pkg/types"
 )
 
-// Reward is node reward info.
+//獎勵是節點及獎勵信息。
 type Reward struct {
 	ConsensusState spntypes.ConsensusState
 	ValidatorSet   spntypes.ValidatorSet

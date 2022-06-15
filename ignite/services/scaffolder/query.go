@@ -14,7 +14,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/templates/query"
 )
 
-// AddQuery adds a new query to scaffolded app
+//AddQuery 將新查詢添加到腳手架應用程序
 func (s Scaffolder) AddQuery(
 	ctx context.Context,
 	cacheStorage cache.Storage,
@@ -26,7 +26,7 @@ func (s Scaffolder) AddQuery(
 	resFields []string,
 	paginated bool,
 ) (sm xgenny.SourceModification, err error) {
-	// If no module is provided, we add the type to the app's module
+	// 如果沒有提供模塊，我們將類型添加到應用程序的模塊中
 	if moduleName == "" {
 		moduleName = s.modpath.Package
 	}
@@ -45,16 +45,16 @@ func (s Scaffolder) AddQuery(
 		return sm, err
 	}
 
-	// Check and parse provided request fields
+	// 檢查並解析提供的請求字段
 	if ok := containCustomTypes(reqFields); ok {
-		return sm, errors.New("query request params can't contain custom type")
+		return sm, errors.New("查詢請求參數不能包含自定義類型")
 	}
 	parsedReqFields, err := field.ParseFields(reqFields, checkGoReservedWord)
 	if err != nil {
 		return sm, err
 	}
 
-	// Check and parse provided response fields
+	// 檢查並解析提供的響應字段
 	if err := checkCustomTypes(ctx, s.path, moduleName, resFields); err != nil {
 		return sm, err
 	}
@@ -78,7 +78,7 @@ func (s Scaffolder) AddQuery(
 		}
 	)
 
-	// Scaffold
+	// 腳手架
 	g, err = query.NewStargate(tracer, opts)
 	if err != nil {
 		return sm, err

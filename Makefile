@@ -12,13 +12,13 @@ BUILD_FOLDER = ./dist
 
 ## install:安裝 de 二進製文件。
 install:
-	@echo Installing Bear Network...
+	@echo 安裝熊網鏈...
 	@go install $(BUILD_FLAGS) ./...
 	@ignite version
 
 ## build:構建二進製文件。
 build:
-	@echo Building Bear Network...
+	@echo 建立熊網鏈...
 	@-mkdir -p $(BUILD_FOLDER) 2> /dev/null
 	@go build $(BUILD_FLAGS) -o $(BUILD_FOLDER) ./...
 
@@ -60,7 +60,7 @@ test: govet test-unit test-integration
 
 help: Makefile
 	@echo
-	@echo " Choose a command run in "$(PROJECT_NAME)", or just run 'make' for install"
+	@echo " 選擇一個命令運行 "$(PROJECT_NAME)", 或者只是運行'make'進行"install"
 	@echo
 	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
 	@echo

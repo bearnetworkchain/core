@@ -1,6 +1,6 @@
 package data
 
-// Binary returns the compressed platform specific nodetime binary.
+// Binary 返回壓縮的平台特定節點時間二進製文件。
 func Binary() []byte {
 	return binaryCompressed
 }

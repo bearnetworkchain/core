@@ -6,10 +6,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/bech32"
 )
 
-// ChangeAddressPrefix returns the address with another prefix
+// ChangeAddressPrefix 返回帶有另一個前綴的地址
 func ChangeAddressPrefix(address, newPrefix string) (string, error) {
 	if newPrefix == "" {
-		return "", errors.New("empty prefix")
+		return "", errors.New("空前綴")
 	}
 	_, pubKey, err := bech32.DecodeAndConvert(address)
 	if err != nil {
@@ -18,7 +18,7 @@ func ChangeAddressPrefix(address, newPrefix string) (string, error) {
 	return bech32.ConvertAndEncode(newPrefix, pubKey)
 }
 
-// GetAddressPrefix returns the bech 32 prefix used by the address
+// GetAddressPrefix 返回地址使用的 bech 32 前綴
 func GetAddressPrefix(address string) (string, error) {
 	prefix, _, err := bech32.DecodeAndConvert(address)
 	return prefix, err

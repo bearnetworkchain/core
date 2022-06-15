@@ -1,4 +1,4 @@
-// Package xfilepath defines functions to define path retrievers that support error handling
+// Package xfilepath 定義函數來定義支持錯誤處理的路徑檢索器
 package xfilepath
 
 import (
@@ -6,24 +6,24 @@ import (
 	"path/filepath"
 )
 
-// PathRetriever is a function that retrieve the contained path or an error
+// PathRetriever 是檢索包含路徑或錯誤的函數
 type PathRetriever func() (path string, err error)
 
-// PathsRetriever is a function that retrieve the contained list of paths or an error
+// PathsRetriever 是檢索包含的路徑列表或錯誤的函數
 type PathsRetriever func() (path []string, err error)
 
-// Path returns a path retriever from the provided path
+// Path 從提供的路徑返迴路徑檢索器
 func Path(path string) PathRetriever {
 	return func() (string, error) { return path, nil }
 }
 
-// PathWithError returns a path retriever from the provided path and error
+// PathWithError 從提供的路徑和錯誤返迴路徑檢索器
 func PathWithError(path string, err error) PathRetriever {
 	return func() (string, error) { return path, err }
 }
 
-// Join returns a path retriever from the join of the provided path retrievers
-// The returned path retriever eventually returns the error from the first provided path retrievers that returns a non-nil error
+// Join 從提供的路徑檢索器的連接中返回一個路徑檢索器
+// 返回的路徑檢索器最終從返回非零錯誤的第一個提供的路徑檢索器返回錯誤
 func Join(paths ...PathRetriever) PathRetriever {
 	var components []string
 	var err error
@@ -42,14 +42,14 @@ func Join(paths ...PathRetriever) PathRetriever {
 	}
 }
 
-// JoinFromHome returns a path retriever from the join of the user home and the provided path retrievers
-// The returned path retriever eventually returns the error from the first provided path retrievers that returns a non-nil error
+// JoinFromHome從用戶 home 和提供的路徑檢索器的連接返迴路徑檢索器
+// 返回的路徑檢索器最終從返回非零錯誤的第一個提供的路徑檢索器返回錯誤
 func JoinFromHome(paths ...PathRetriever) PathRetriever {
 	return Join(append([]PathRetriever{os.UserHomeDir}, paths...)...)
 }
 
-// List returns a paths retriever from a list of path retrievers
-// The returned paths retriever eventually returns the error from the first provided path retrievers that returns a non-nil error
+// List 從路徑檢索器列表中返回一個路徑檢索器
+// 返回的路徑檢索器最終從返回非零錯誤的第一個提供的路徑檢索器返回錯誤
 func List(paths ...PathRetriever) PathsRetriever {
 	var list []string
 	var err error

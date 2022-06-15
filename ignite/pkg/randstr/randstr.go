@@ -7,7 +7,7 @@ import (
 
 var letterRunes = []rune("abcdefghijklmnopqrstuvwxyz")
 
-// Runes generates a random string with n length from runes.
+// Runes 從 runes 生成一個長度為 n 的隨機字符串。
 func Runes(n int) string {
 	rand.Seed(time.Now().UnixNano())
 	b := make([]rune, n)

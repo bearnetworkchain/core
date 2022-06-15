@@ -1,4 +1,4 @@
-// THIS FILE IS GENERATED AUTOMATICALLY. DO NOT MODIFY.
+// 該文件是自動生成的。不要修改。
 
 {{ range .Modules }}import {{ .FullName }} from './{{ .FullPath }}'
 {{ end }}

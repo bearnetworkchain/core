@@ -24,21 +24,21 @@ const (
 	relayDuration       = time.Second * 5
 )
 
-// Relayer is an IBC relayer.
+// 中繼器是一個 IBC 中繼器。
 type Relayer struct {
 	ca cosmosaccount.Registry
 }
 
-// New creates a new IBC relayer and uses ca to access accounts.
+// New 創建一個新的 IBC 中繼器並使用 ca 訪問帳戶。
 func New(ca cosmosaccount.Registry) Relayer {
 	return Relayer{
 		ca: ca,
 	}
 }
 
-// Link links all chains that has a path to each other.
-// paths are optional and acts as a filter to only link some chains.
-// calling Link multiple times for the same paths does not have any side effects.
+// 鏈接鏈接所有具有彼此路徑的鏈。
+// 路徑是可選的，並充當過濾器以僅鏈接某些鏈。
+// 為相同的路徑多次調用 Link 沒有任何副作用。
 func (r Relayer) Link(ctx context.Context, pathIDs ...string) error {
 	conf, err := relayerconf.Get()
 	if err != nil {
@@ -51,7 +51,7 @@ func (r Relayer) Link(ctx context.Context, pathIDs ...string) error {
 			return err
 		}
 
-		if path.Src.ChannelID != "" { // already linked.
+		if path.Src.ChannelID != "" { //已經鏈接了。
 			continue
 		}
 
@@ -70,7 +70,7 @@ func (r Relayer) Link(ctx context.Context, pathIDs ...string) error {
 	return nil
 }
 
-// Start relays packets for linked paths until ctx is canceled.
+// Start 中繼鏈接路徑的數據包，直到取消 ctx。
 func (r Relayer) Start(ctx context.Context, pathIDs ...string) error {
 	conf, err := relayerconf.Get()
 	if err != nil {
@@ -78,7 +78,7 @@ func (r Relayer) Start(ctx context.Context, pathIDs ...string) error {
 	}
 
 	wg, ctx := errgroup.WithContext(ctx)
-	var m sync.Mutex // protects relayerconf.Path.
+	var m sync.Mutex // 保護relayerconf.Path。
 
 	start := func(id string) error {
 		path, err := conf.PathByID(id)
@@ -160,7 +160,7 @@ func (r Relayer) prepare(ctx context.Context, conf relayerconf.Config, chainID s
 		return relayerconf.Chain{}, "", err
 	}
 
-	errMissingBalance := fmt.Errorf(`account "%s(%s)" on %q chain does not have enough balances`,
+	errMissingBalance := fmt.Errorf(`帳戶 "%s(%s)" 上 %q 鏈沒有足夠的餘額`,
 		account.Address(chain.AddressPrefix),
 		chain.Account,
 		chain.ID,
@@ -210,7 +210,7 @@ func (r Relayer) balance(ctx context.Context, rpcAddress, account, addressPrefix
 	return res.Balances, nil
 }
 
-// GetPath returns a path by its id.
+// GetPath 通過 id 返迴路徑。
 func (r Relayer) GetPath(_ context.Context, id string) (relayerconf.Path, error) {
 	conf, err := relayerconf.Get()
 	if err != nil {
@@ -220,7 +220,7 @@ func (r Relayer) GetPath(_ context.Context, id string) (relayerconf.Path, error)
 	return conf.PathByID(id)
 }
 
-// ListPaths list all the paths.
+// ListPaths 列出所有路徑。
 func (r Relayer) ListPaths(_ context.Context) ([]relayerconf.Path, error) {
 	conf, err := relayerconf.Get()
 	if err != nil {

@@ -7,8 +7,8 @@ import (
 	"io/fs"
 )
 
-// SaveTemp saves file system f to a temporary path in the local file system
-// and returns that path.
+// SaveTemp 將文件系統 f 保存到本地文件系統中的一個臨時路徑
+// 並返回該路徑。
 func SaveTemp(f fs.FS) (path string, cleanup func(), err error) {
 	path, err = os.MkdirTemp("", "")
 	if err != nil {

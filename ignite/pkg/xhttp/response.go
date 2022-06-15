@@ -6,8 +6,8 @@ import (
 	"net/http"
 )
 
-// ResponseJSON writes a JSON response to w by using status as http status and data
-// as payload.
+// ResponseJSON 使用 status 作為 http 狀態和數據向 w 寫入 JSON 響應
+// 作為有效載荷。
 func ResponseJSON(w http.ResponseWriter, status int, data interface{}) error {
 	bdata, err := json.Marshal(data)
 	if err != nil {
@@ -20,18 +20,18 @@ func ResponseJSON(w http.ResponseWriter, status int, data interface{}) error {
 	return err
 }
 
-// ErrorResponseBody is the skeleton for error messages that should be sent to
-// client.
+// ErrorResponseBody 是應該發送到的錯誤消息的骨架
+// 客戶。
 type ErrorResponseBody struct {
 	Error ErrorResponse `json:"error"`
 }
 
-// ErrorResponse holds the error message.
+// ErrorResponse 保存錯誤消息。
 type ErrorResponse struct {
 	Message string `json:"message"`
 }
 
-// NewErrorResponse creates a new http error response from err.
+// NewErrorResponse 從 err 創建一個新的 http 錯誤響應。
 func NewErrorResponse(err error) ErrorResponseBody {
 	return ErrorResponseBody{
 		Error: ErrorResponse{

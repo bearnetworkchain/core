@@ -24,31 +24,31 @@ type watcher struct {
 	done          *sync.WaitGroup
 }
 
-// WatcherOption used to configure watcher.
+// WatcherOption 用於配置觀察者。
 type WatcherOption func(*watcher)
 
-// WatcherWorkdir to set as a root to paths needs to be watched.
+// WatcherWorkdir需要注意設置為路徑的根.
 func WatcherWorkdir(path string) WatcherOption {
 	return func(w *watcher) {
 		w.workdir = path
 	}
 }
 
-// WatcherOnChange sets a hook that executed on every change on filesystem.
+// WatcherOnChange設置一個在文件系統上的每次更改時執行的鉤子。
 func WatcherOnChange(hook func()) WatcherOption {
 	return func(w *watcher) {
 		w.onChange = hook
 	}
 }
 
-// WatcherPollingInterval overwrites default polling interval to check filesystem changes.
+// WatcherPollingInterval 覆蓋默認輪詢間隔以檢查文件系統更改。
 func WatcherPollingInterval(d time.Duration) WatcherOption {
 	return func(w *watcher) {
 		w.interval = d
 	}
 }
 
-// WatcherIgnoreHidden ignores hidden(dot) files.
+// WatcherIgnoreHidden忽略隱藏（點）文件。
 func WatcherIgnoreHidden() WatcherOption {
 	return func(w *watcher) {
 		w.ignoreHidden = true
@@ -61,15 +61,15 @@ func WatcherIgnoreFolders() WatcherOption {
 	}
 }
 
-// WatcherIgnoreExt ignores files with matching file extensions.
+// WatcherIgnoreExt忽略具有匹配文件擴展名的文件。
 func WatcherIgnoreExt(exts ...string) WatcherOption {
 	return func(w *watcher) {
 		w.ignoreExts = exts
 	}
 }
 
-// Watch starts watching changes on the paths. options are used to configure the
-// behaviour of watch operation.
+// Watch 開始觀察路徑上的變化。選項用於配置
+// watch 操作的行為。
 func Watch(ctx context.Context, paths []string, options ...WatcherOption) error {
 	w := &watcher{
 		wt:       wt.New(),
@@ -95,15 +95,15 @@ func Watch(ctx context.Context, paths []string, options ...WatcherOption) error 
 		return nil
 	})
 
-	// ignore hidden paths.
+	// 忽略隱藏路徑。
 	w.wt.IgnoreHiddenFiles(w.ignoreHidden)
 
-	// add paths to watch
+	//添加要觀看的路徑
 	if err := w.addPaths(paths...); err != nil {
 		return err
 	}
 
-	// start watching.
+	// 開始觀看。
 	w.done.Add(1)
 	go w.listen()
 	if err := w.wt.Start(w.interval); err != nil {
@@ -133,7 +133,7 @@ func (w *watcher) addPaths(paths ...string) error {
 			path = filepath.Join(w.workdir, path)
 		}
 
-		// Ignoring paths that don't exist
+		// 忽略不存在的路徑
 		if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
 			continue
 		}

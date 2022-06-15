@@ -1,4 +1,4 @@
-// Package multiformatname provides names automatically converted into multiple naming convention
+// Package multiformatname 提供名稱自動轉換為多個命名約定
 package multiformatname
 
 import (
@@ -9,8 +9,8 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-// Name represents a name with multiple naming convention representations
-// Supported naming convention are: camel, pascal, and kebab cases
+// Name 表示一個名稱，具有多種命名約定表示
+// 支持的命名約定有：camel、pascal 和 kebab 大小寫
 type Name struct {
 	Original   string
 	LowerCamel string
@@ -23,7 +23,7 @@ type Name struct {
 
 type Checker func(name string) error
 
-// NewName returns a new multi-format name from a name
+// NewName 從名稱返回一個新的多格式名稱
 func NewName(name string, additionalChecks ...Checker) (Name, error) {
 	checks := append([]Checker{basicCheckName}, additionalChecks...)
 
@@ -44,42 +44,42 @@ func NewName(name string, additionalChecks ...Checker) (Name, error) {
 	}, nil
 }
 
-// NoNumber prevents using number in a name
+// NoNumber 防止在名稱中使用數字
 func NoNumber(name string) error {
 	for _, c := range name {
 		if '0' <= c && c <= '9' {
-			return errors.New("name cannot contain number")
+			return errors.New("名稱不能包含數字")
 		}
 	}
 
 	return nil
 }
 
-// basicCheckName performs basic checks common for all names
+// basicCheckName 執行所有名稱通用的基本檢查
 func basicCheckName(name string) error {
 	if name == "" {
-		return errors.New("name cannot be empty")
+		return errors.New("名稱不能為空")
 	}
 
 	// check  characters
 	c := name[0]
 	authorized := ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z')
 	if !authorized {
-		return fmt.Errorf("name cannot contain %v as first character", string(c))
+		return fmt.Errorf("名稱不能包含 %v 作為第一個字符", string(c))
 	}
 
 	for _, c := range name[1:] {
-		// A name can contains letter, hyphen or underscore
+		// 名稱可以包含字母、連字符或下劃線
 		authorized := ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ('0' <= c && c <= '9') || c == '-' || c == '_'
 		if !authorized {
-			return fmt.Errorf("name cannot contain %v", string(c))
+			return fmt.Errorf("名稱不能包含 %v", string(c))
 		}
 	}
 
 	return nil
 }
 
-// lowercase returns the name with lower case and no special character
+// lowercase 返回小寫且無特殊字符的名稱
 func lowercase(name string) string {
 	return strings.ToLower(
 		strings.ReplaceAll(

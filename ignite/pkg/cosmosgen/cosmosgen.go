@@ -11,7 +11,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
 )
 
-// generateOptions used to configure code generation.
+// generateOptions 用於配置代碼生成。
 type generateOptions struct {
 	includeDirs []string
 	gomodPath   string
@@ -27,18 +27,18 @@ type generateOptions struct {
 	dartRootPath          string
 }
 
-// TODO add WithInstall.
+// TODO 添加WithInstall。
 
-// ModulePathFunc defines a function type that returns a path based on a Cosmos SDK module.
+// ModulePathFunc 定義返回基於 Cosmos SDK 模塊的路徑的函數類型。
 type ModulePathFunc func(module.Module) string
 
-// Option configures code generation.
+// 選項配置代碼生成。
 type Option func(*generateOptions)
 
-// WithJSGeneration adds JS code generation. out hook is called for each module to
-// retrieve the path that should be used to place generated js code inside for a given module.
-// if includeThirdPartyModules set to true, code generation will be made for the 3rd party modules
-// used by the app -including the SDK- as well.
+// WithJSGeneration 添加 JS 代碼生成。為每個模塊調用 out hook
+// 檢索應該用於將生成的 js 代碼放入給定模塊的路徑。
+// 如果 includeThirdPartyModules 設置為 true，將為第 3 方模塊生成代碼
+// 由應用程序（包括 SDK）使用。
 func WithJSGeneration(includeThirdPartyModules bool, out ModulePathFunc) Option {
 	return func(o *generateOptions) {
 		o.jsOut = out
@@ -46,9 +46,9 @@ func WithJSGeneration(includeThirdPartyModules bool, out ModulePathFunc) Option 
 	}
 }
 
-// WithVuexGeneration adds Vuex code generation. storeRootPath is used to determine the root path of generated
-// Vuex stores. includeThirdPartyModules and out configures the underlying JS lib generation which is
-// documented in WithJSGeneration.
+// WithVuexGeneration 添加了 Vuex 代碼生成。 storeRootPath 用於確定生成的根路徑
+// Vuex 商店。 includeThirdPartyModules 和 out 配置底層 JS 庫生成，即
+// 記錄在 WithJSGeneration 中。
 func WithVuexGeneration(includeThirdPartyModules bool, out ModulePathFunc, storeRootPath string) Option {
 	return func(o *generateOptions) {
 		o.jsOut = out
@@ -65,29 +65,29 @@ func WithDartGeneration(includeThirdPartyModules bool, out ModulePathFunc, rootP
 	}
 }
 
-// WithGoGeneration adds Go code generation.
+// WithGoGeneration添加 Go 代碼生成。
 func WithGoGeneration(gomodPath string) Option {
 	return func(o *generateOptions) {
 		o.gomodPath = gomodPath
 	}
 }
 
-// WithOpenAPIGeneration adds OpenAPI spec generation.
+// WithOpenAPIGeneration 添加 OpenAPI 規範生成。
 func WithOpenAPIGeneration(out string) Option {
 	return func(o *generateOptions) {
 		o.specOut = out
 	}
 }
 
-// IncludeDirs configures the third party proto dirs that used by app's proto.
-// relative to the projectPath.
+// IncludeDirs 配置應用程序 proto 使用的第三方 proto 目錄。
+// 相對於項目路徑。
 func IncludeDirs(dirs []string) Option {
 	return func(o *generateOptions) {
 		o.includeDirs = dirs
 	}
 }
 
-// generator generates code for sdk and sdk apps.
+// generator 為 sdk 和 sdk 應用程序生成代碼。
 type generator struct {
 	ctx          context.Context
 	cacheStorage cache.Storage
@@ -97,11 +97,11 @@ type generator struct {
 	sdkImport    string
 	deps         []gomodmodule.Version
 	appModules   []module.Module
-	thirdModules map[string][]module.Module // app dependency-modules pair.
+	thirdModules map[string][]module.Module // 應用程序依賴模塊對。
 }
 
-// Generate generates code from protoDir of an SDK app residing at appPath with given options.
-// protoDir must be relative to the projectPath.
+// Generate 從位於 appPath 的 SDK 應用程序的 protoDir 生成代碼，並帶有給定的選項。
+// protoDir 必須相對於 projectPath。
 func Generate(ctx context.Context, cacheStorage cache.Storage, appPath, protoDir string, options ...Option) error {
 	g := &generator{
 		ctx:          ctx,
@@ -126,9 +126,9 @@ func Generate(ctx context.Context, cacheStorage cache.Storage, appPath, protoDir
 		}
 	}
 
-	// js generation requires Go types to be existent in the source code. because
-	// sdk.Msg implementations defined on the generated Go types.
-	// so it needs to run after Go code gen.
+	// js 生成要求源代碼中存在 Go 類型。因為
+	// 在生成的 Go 類型上定義的 sdk.Msg 實現。
+	// 所以它需要在 Go 代碼生成之後運行。
 	if g.o.jsOut != nil {
 		if err := g.generateJS(); err != nil {
 			return err
@@ -151,8 +151,8 @@ func Generate(ctx context.Context, cacheStorage cache.Storage, appPath, protoDir
 
 }
 
-// VuexStoreModulePath generates Vuex store module paths for Cosmos SDK modules.
-// The root path is used as prefix for the generated paths.
+//VuexStoreModulePath 為 Cosmos SDK 模塊生成 Vuex 存儲模塊路徑。
+//根路徑用作生成路徑的前綴。
 func VuexStoreModulePath(rootPath string) ModulePathFunc {
 	return func(m module.Module) string {
 		appModulePath := gomodulepath.ExtractAppPath(m.GoModulePath)

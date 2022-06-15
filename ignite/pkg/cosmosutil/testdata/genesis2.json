@@ -6,7 +6,7 @@
         {
           "@type": "/cosmos.auth.v1beta1.BaseAccount",
           "account_number": "0",
-          "address": "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+          "address": "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
           "pub_key": null,
           "sequence": "0"
         }
@@ -22,7 +22,7 @@
     "bank": {
       "balances": [
         {
-          "address": "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+          "address": "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
           "coins": [
             {
               "amount": "95000000",
@@ -117,11 +117,11 @@
                   "max_rate": "0.200000000000000000",
                   "rate": "0.100000000000000000"
                 },
-                "delegator_address": "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+                "delegator_address": "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
                 "description": {
                   "details": "",
                   "identity": "",
-                  "moniker": "alice",
+                  "moniker": "Alice",
                   "security_contact": "",
                   "website": ""
                 },
@@ -130,7 +130,7 @@
                   "@type": "/cosmos.crypto.ed25519.PubKey",
                   "key": "OL+EIoo7DwyaBFDbPbgAhwS5rvgIqoUa0x8qWqzfQVQ="
                 },
-                "validator_address": "cosmosvaloper1mmlqwyqk7neqegffp99q86eckpm4pjah5sl2dw",
+                "validator_address": "bnktvaloper1mmlqwyqk7neqegffp99q86eckpm4pjah5sl2dw",
                 "value": {
                   "amount": "95000000",
                   "denom": "bnkt"

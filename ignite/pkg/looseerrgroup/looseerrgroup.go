@@ -6,11 +6,11 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-// Wait waits until g.Wait() returns or ctx canceled, whichever occurs first.
-// returned error is context.Canceled if ctx canceled otherwise the error returned by g.Wait().
+// 等待直到 g.Wait() 返回或 ctx 取消，以先發生者為準。
+// 返回的錯誤是 context.Canceled 如果 ctx 取消否則 g.Wait() 返回的錯誤。
 //
-// this is useful when errgroup cannot be used with errgroup.WithContext which happens if executed
-// func does not support cancelation.
+// 這在 errgroup 不能與 errgroup.WithContext 一起使用時很有用，如果執行會發生這種情況
+// func 不支持取消。
 func Wait(ctx context.Context, g *errgroup.Group) error {
 	doneC := make(chan struct{})
 

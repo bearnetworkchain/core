@@ -20,24 +20,24 @@ type dryRunError struct {
 	error
 }
 
-// ValidationInfo returns validation info
+//ValidationInfo 返回驗證信息
 func (d *dryRunError) ValidationInfo() string {
 	return d.Error()
 }
 
-// DryRunner is a genny DryRunner with a logger
+//DryRunner 是一個帶有記錄器的 genny DryRunner
 func DryRunner(ctx context.Context) *genny.Runner {
 	runner := genny.DryRunner(ctx)
 	runner.Logger = logger.New(genny.DefaultLogLvl)
 	return runner
 }
 
-// RunWithValidation checks the generators with a dry run and then execute the wet runner to the generators
+// RunWithValidation 用乾運行檢查生成器，然後對生成器執行濕流道
 func RunWithValidation(
 	tracer *placeholder.Tracer,
 	gens ...*genny.Generator,
 ) (sm SourceModification, err error) {
-	// run executes the provided runner with the provided generator
+	// run 使用提供的生成器執行提供的運行器
 	run := func(runner *genny.Runner, gen *genny.Generator) error {
 		err := runner.With(gen)
 		if err != nil {
@@ -46,7 +46,7 @@ func RunWithValidation(
 		return runner.Run()
 	}
 	for _, gen := range gens {
-		// check with a dry runner the generators
+		// 用乾流道檢查發電機
 		dryRunner := DryRunner(context.Background())
 		if err := run(dryRunner, gen); err != nil {
 			if errors.Is(err, os.ErrNotExist) {
@@ -58,25 +58,25 @@ func RunWithValidation(
 			return sm, err
 		}
 
-		// fetch the source modification
+		// 獲取源修改
 		sm = NewSourceModification()
 		for _, file := range dryRunner.Results().Files {
 			fileName := file.Name()
 			_, err := os.Stat(fileName)
 
-			// nolint:gocritic
+			//不願意：gocritic
 			if os.IsNotExist(err) {
-				// if the file doesn't exist in the source, it means it has been created by the runner
+				// 如果該文件在源中不存在，則表示它已由運行程序創建
 				sm.AppendCreatedFiles(fileName)
 			} else if err != nil {
 				return sm, err
 			} else {
-				// the file has been modified by the runner
+				// 該文件已被跑步者修改
 				sm.AppendModifiedFiles(fileName)
 			}
 		}
 
-		// execute the modification with a wet runner
+		// 使用濕流道執行修改
 		if err := run(genny.WetRunner(context.Background()), gen); err != nil {
 			return sm, err
 		}
@@ -84,7 +84,7 @@ func RunWithValidation(
 	return sm, nil
 }
 
-// Box will mount each file in the Box and wrap it, already existing files are ignored
+// Box 將掛載 Box 中的每個文件並進行包裝，已經存在的文件將被忽略
 func Box(g *genny.Generator, box packd.Walker) error {
 	return box.Walk(func(path string, bf packd.File) error {
 		f := genny.NewFile(path, bf)

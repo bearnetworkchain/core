@@ -1,4 +1,4 @@
-// Package protoanalysis provides a toolset for analyzing proto files and packages.
+// Package protoanalysis 提供用於分析 proto 文件和包的工具集。
 package protoanalysis
 
 import (
@@ -8,18 +8,18 @@ import (
 	"github.com/pkg/errors"
 )
 
-// ErrImportNotFound returned when proto file import cannot be found.
-var ErrImportNotFound = errors.New("proto import not found")
+// ErrImportNotFound 找不到 proto 文件導入時返回。
+var ErrImportNotFound = errors.New("未找到原始導入")
 
 const protoFilePattern = "*.proto"
 
-type Cache map[string]Packages // proto dir path-proto packages pair.
+type Cache map[string]Packages // proto dir path-proto 包對。
 
 func NewCache() Cache {
 	return make(Cache)
 }
 
-// Parse parses proto packages by finding them with given glob pattern.
+// Parse 通過使用給定的 glob 模式找到它們來解析 proto 包。
 func Parse(ctx context.Context, cache Cache, path string) (Packages, error) {
 	if cache != nil {
 		if packages, ok := cache[path]; ok {
@@ -45,7 +45,7 @@ func Parse(ctx context.Context, cache Cache, path string) (Packages, error) {
 	return packages, nil
 }
 
-// ParseFile parses a proto file at path.
+// ParseFile在 path 解析一個 proto 文件。
 func ParseFile(path string) (File, error) {
 	packages, err := Parse(context.Background(), nil, path)
 	if err != nil {
@@ -53,12 +53,12 @@ func ParseFile(path string) (File, error) {
 	}
 	files := packages.Files()
 	if len(files) != 1 {
-		return File{}, errors.New("path does not point to single file or it cannot be found")
+		return File{}, errors.New("路徑不指向單個文件或找不到")
 	}
 	return files[0], nil
 }
 
-// HasMessages checks if the proto package under path contains messages with given names.
+// HasMessages 檢查 path 下的 proto 包是否包含具有給定名稱的消息。
 func HasMessages(ctx context.Context, path string, names ...string) error {
 	pkgs, err := Parse(ctx, NewCache(), path)
 	if err != nil {
@@ -73,7 +73,7 @@ func HasMessages(ctx context.Context, path string, names ...string) error {
 				}
 			}
 		}
-		return fmt.Errorf("invalid proto message name %s", name)
+		return fmt.Errorf("無效的原始消息名稱 %s", name)
 	}
 
 	for _, name := range names {
@@ -84,7 +84,7 @@ func HasMessages(ctx context.Context, path string, names ...string) error {
 	return nil
 }
 
-// IsImported checks if the proto package under path imports list of dependencies.
+// IsImported 檢查路徑下的 proto 包是否導入依賴項列表。
 func IsImported(path string, dependencies ...string) error {
 	f, err := ParseFile(path)
 	if err != nil {
@@ -101,7 +101,7 @@ func IsImported(path string, dependencies ...string) error {
 		}
 		if !found {
 			return errors.Wrap(ErrImportNotFound, fmt.Sprintf(
-				"invalid proto dependency %s for file %s", wantDep, path),
+				"無效的原型依賴 %s 用於文件 %s", wantDep, path),
 			)
 		}
 	}

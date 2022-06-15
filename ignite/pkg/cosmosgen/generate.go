@@ -23,28 +23,28 @@ type ModulesInPath struct {
 }
 
 func (g *generator) setup() (err error) {
-	// Cosmos SDK hosts proto files of own x/ modules and some third party ones needed by itself and
-	// blockchain apps. Generate should be aware of these and make them available to the blockchain
-	// app that wants to generate code for its own proto.
-	//
-	// blockchain apps may use different versions of the SDK. following code first makes sure that
-	// app's dependencies are download by 'go mod' and cached under the local filesystem.
-	// and then, it determines which version of the SDK is used by the app and what is the absolute path
-	// of its source code.
+// Cosmos SDK 託管自己的 x/ 模塊的 proto 文件和一些自己需要的第三方的 proto 文件和
+// 區塊鏈應用程序。 Generate 應該知道這些並將它們提供給區塊鏈
+// 想要為自己的 proto 生成代碼的應用程序。
+//
+// 區塊鏈應用可能使用不同版本的 SDK。以下代碼首先確保
+// 應用程序的依賴項由“go mod”下載並緩存在本地文件系統下。
+// 然後判斷應用使用的是哪個版本的SDK，絕對路徑是什麼
+// 其源代碼。
 	if err := cmdrunner.
 		New(cmdrunner.DefaultWorkdir(g.appPath)).
 		Run(g.ctx, step.New(step.Exec("go", "mod", "download"))); err != nil {
 		return err
 	}
 
-	// parse the go.mod of the app and extract dependencies.
+	//解析應用程序的 go.mod 並提取依賴項。
 	modfile, err := gomodule.ParseAt(g.appPath)
 	if err != nil {
 		return err
 	}
 
 	g.sdkImport = defaultSdkImport
-	// look for any cosmos-sdk replace directive in mod file
+	//在 mod 文件中查找任何 cosmos-sdk 替換指令
 	for _, r := range modfile.Replace {
 		if r.Old.Path == defaultSdkImport {
 			g.sdkImport = r.New.Path
@@ -57,25 +57,25 @@ func (g *generator) setup() (err error) {
 		return err
 	}
 
-	// this is for user's app itself. it may contain custom modules. it is the first place to look for.
+	// 這是針對用戶應用程序本身的。它可能包含自定義模塊。這是第一個要尋找的地方。
 	g.appModules, err = g.discoverModules(g.appPath, g.protoDir)
 	if err != nil {
 		return err
 	}
 
-	// go through the Go dependencies (inside go.mod) of the user's app, some of them might be hosting
-	// Cosmos SDK modules that could be in use by user's blockchain.
-	//
-	// Cosmos SDK is a dependency of all blockchains, so it's absolute that we'll be discovering all modules of the
-	// SDK as well during this process.
-	//
-	// even if a dependency contains some SDK modules, not all of these modules could be used by user's blockchain.
-	// this is fine, we can still generate JS clients for those non modules, it is up to user to use (import in JS)
-	// not use generated modules.
-	// not used ones will never get resolved inside JS environment and will not ship to production, JS bundlers will avoid.
-	//
-	// TODO(ilgooz): we can still implement some sort of smart filtering to detect non used modules by the user's blockchain
-	// at some point, it is a nice to have.
+// 瀏覽用戶應用程序的 Go 依賴項（在 go.mod 中），其中一些可能是託管的
+// 用戶區塊鏈可以使用的 Cosmos SDK 模塊。
+//
+// Cosmos SDK 是所有區塊鏈的依賴項，所以我們肯定會發現所有的模塊
+// SDK 在這個過程中也是如此。
+//
+// 即使依賴項包含一些 SDK 模塊，也不是所有這些模塊都可以被用戶的區塊鏈使用。
+// 這很好，我們仍然可以為那些非模塊生成 JS 客戶端，這取決於用戶使用（在 JS 中導入）
+// 不使用生成的模塊。
+// 未使用的將永遠不會在 JS 環境中得到解決，也不會交付到生產環境中，JS 捆綁器將避免。
+//
+// TODO(ilgooz): 我們仍然可以實現某種智能過濾來檢測用戶區塊鏈未使用的模塊
+// 在某些時候，很高興擁有。
 	moduleCache := cache.New[ModulesInPath](g.cacheStorage, moduleCacheNamespace)
 	for _, dep := range g.deps {
 		cacheKey := cache.Key(dep.Path, dep.Version)

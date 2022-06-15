@@ -10,20 +10,20 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/events"
 )
 
-// Init initializes blockchain by building the binaries and running the init command and
-// create the initial genesis of the chain, and set up a validator key
+// Init 通過構建二進製文件並運行 init 命令來初始化區塊鏈
+// 創建鏈的初始創世，並設置驗證者密鑰
 func (c *Chain) Init(ctx context.Context, cacheStorage cache.Storage) error {
 	chainHome, err := c.chain.Home()
 	if err != nil {
 		return err
 	}
 
-	// cleanup home dir of app if exists.
+	//清理應用程序的主目錄（如果存在）。
 	if err = os.RemoveAll(chainHome); err != nil {
 		return err
 	}
 
-	// build the chain and initialize it with a new validator key
+	//構建鏈並使用新的驗證器密鑰對其進行初始化
 	if _, err := c.Build(ctx, cacheStorage); err != nil {
 		return err
 	}
@@ -36,7 +36,7 @@ func (c *Chain) Init(ctx context.Context, cacheStorage cache.Storage) error {
 
 	c.ev.Send(events.New(events.StatusDone, "Blockchain initialized"))
 
-	// initialize and verify the genesis
+	//初始化並驗證創世紀
 	if err = c.initGenesis(ctx); err != nil {
 		return err
 	}
@@ -46,9 +46,9 @@ func (c *Chain) Init(ctx context.Context, cacheStorage cache.Storage) error {
 	return nil
 }
 
-// initGenesis creates the initial genesis of the genesis depending on the initial genesis type (default, url, ...)
+//initGenesis 根據初始創世類型（默認，url，...）創建創世的初始創世
 func (c *Chain) initGenesis(ctx context.Context) error {
-	c.ev.Send(events.New(events.StatusOngoing, "Computing the Genesis"))
+	c.ev.Send(events.New(events.StatusOngoing, "計算創世紀"))
 
 	genesisPath, err := c.chain.GenesisPath()
 	if err != nil {
@@ -60,28 +60,28 @@ func (c *Chain) initGenesis(ctx context.Context) error {
 		return err
 	}
 
-	// if the blockchain has a genesis URL, the initial genesis is fetched from the URL
-	// otherwise, the default genesis is used, which requires no action since the default genesis is generated from the init command
+	// 如果區塊鏈有創世 URL，則從該 URL 獲取初始創世
+	// 否則，使用默認創世，不需要任何操作，因為默認創世是從 init 命令生成的
 	if c.genesisURL != "" {
 		genesis, hash, err := cosmosutil.GenesisAndHashFromURL(ctx, c.genesisURL)
 		if err != nil {
 			return err
 		}
 
-		// if the blockchain has been initialized with no genesis hash, we assign the fetched hash to it
-		// otherwise we check the genesis integrity with the existing hash
+		//如果區塊鏈已經初始化且沒有創世哈希，我們將獲取的哈希分配給它
+		//否則我們用現有的哈希檢查創世完整性
 		if c.genesisHash == "" {
 			c.genesisHash = hash
 		} else if hash != c.genesisHash {
-			return fmt.Errorf("genesis from URL %s is invalid. expected hash %s, actual hash %s", c.genesisURL, c.genesisHash, hash)
+			return fmt.Errorf("創世於 URL %s 是無效的。預期哈希 %s, 實際哈希 %s", c.genesisURL, c.genesisHash, hash)
 		}
 
-		// replace the default genesis with the fetched genesis
+		// 用獲取的創世紀,替換默認的創世紀
 		if err := os.WriteFile(genesisPath, genesis, 0644); err != nil {
 			return err
 		}
 	} else {
-		// default genesis is used, init CLI command is used to generate it
+		// 使用默認創世紀，使用 init CLI 命令生成它
 		cmd, err := c.chain.Commands(ctx)
 		if err != nil {
 			return err
@@ -99,13 +99,13 @@ func (c *Chain) initGenesis(ctx context.Context) error {
 		return err
 	}
 
-	c.ev.Send(events.New(events.StatusDone, "Genesis initialized"))
+	c.ev.Send(events.New(events.StatusDone, "創世紀初始化"))
 	return nil
 }
 
-// checkGenesis checks the stored genesis is valid
+// checkGenesis 檢查存儲的創世紀是否有效
 func (c *Chain) checkGenesis(ctx context.Context) error {
-	// perform static analysis of the chain with the validate-genesis command.
+	//使用 validate-genesis 命令對鏈執行靜態分析。
 	chainCmd, err := c.chain.Commands(ctx)
 	if err != nil {
 		return err
@@ -113,7 +113,7 @@ func (c *Chain) checkGenesis(ctx context.Context) error {
 
 	return chainCmd.ValidateGenesis(ctx)
 
-	// TODO: static analysis of the genesis with validate-genesis doesn't check the full validity of the genesis
-	// example: gentxs formats are not checked
-	// to perform a full validity check of the genesis we must try to start the chain with sample accounts
+// TODO: 使用 validate-genesis 對 genesis 進行靜態分析不會檢查 genesis 的完全有效性
+// 示例：不檢查 gentxs 格式
+// 要對創世進行完整的有效性檢查，我們必須嘗試使用示例賬戶啟動鏈
 }

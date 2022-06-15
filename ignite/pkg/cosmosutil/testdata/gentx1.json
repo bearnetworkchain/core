@@ -32,7 +32,7 @@
           "max_rate": "0.200000000000000000",
           "rate": "0.100000000000000000"
         },
-        "delegator_address": "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+        "delegator_address": "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
         "description": {
           "details": "",
           "identity": "",
@@ -45,7 +45,7 @@
           "@type": "/cosmos.crypto.ed25519.PubKey",
           "key": "aeQLCJOjXUyB7evOodI4mbrshIt3vhHGlycJDbUkaMs="
         },
-        "validator_address": "cosmosvaloper1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
+        "validator_address": "bnktvaloper1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
         "value": {
           "amount": "95000000",
           "denom": "bnkt"

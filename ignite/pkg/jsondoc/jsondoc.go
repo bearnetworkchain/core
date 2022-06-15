@@ -6,10 +6,10 @@ import (
 	"github.com/goccy/go-yaml"
 )
 
-// Doc represents a JSON encoded data.
+// Doc 代表一個 JSON 編碼的數據。
 type Doc []byte
 
-// ToDocs converts a list of JSON encoded data to docs.
+// ToDocs 將 JSON 編碼數據列表轉換為文檔。
 func ToDocs(data [][]byte) []Doc {
 	var docs []Doc
 	for _, d := range data {
@@ -18,7 +18,7 @@ func ToDocs(data [][]byte) []Doc {
 	return docs
 }
 
-// MarshalYAML converts Doc to a YAML encoded data during YAML marshaling.
+// MarshalYAML 在 YAML 編組期間將 Doc 轉換為 YAML 編碼數據。
 func (d Doc) MarshalYAML() ([]byte, error) {
 	var out interface{}
 	if err := json.Unmarshal(d, &out); err != nil {
@@ -27,7 +27,7 @@ func (d Doc) MarshalYAML() ([]byte, error) {
 	return yaml.Marshal(out)
 }
 
-// Pretty converts a Doc to a human readable string.
+// Pretty 將 Doc 轉換為人類可讀的字符串。
 func (d Doc) Pretty() (string, error) {
 	proposalyaml, err := yaml.Marshal(d)
 	return string(proposalyaml), err

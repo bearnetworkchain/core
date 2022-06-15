@@ -9,8 +9,8 @@ import (
 	"github.com/goccy/go-yaml/parser"
 )
 
-// Marshal converts an object to a string in a YAML format and transforms
-// the byte slice fields from the path to string to be more readable.
+// Marshal 將對象轉換為 YAML 格式的字符串並轉換
+// 從路徑到字符串的字節切片字段更具可讀性。
 func Marshal(ctx context.Context, obj interface{}, paths ...string) (string, error) {
 	requestYaml, err := yaml.MarshalContext(ctx, obj)
 	if err != nil {
@@ -21,7 +21,7 @@ func Marshal(ctx context.Context, obj interface{}, paths ...string) (string, err
 		return "", err
 	}
 
-	// normalize the structure converting the byte slice fields to string
+	// 規範化將字節切片字段轉換為字符串的結構
 	for _, path := range paths {
 		pathString, err := yaml.PathString(path)
 		if err != nil {

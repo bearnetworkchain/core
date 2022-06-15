@@ -21,24 +21,24 @@ func TestChainGenesis_HasAccount(t *testing.T) {
 		want     bool
 	}{
 		{
-			name:    "found account",
-			address: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+			name:    "找到帳戶",
+			address: "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
 			accounts: []string{
-				"cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
-				"cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+				"bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+				"bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
 			},
 			want: true,
 		}, {
-			name:    "not found account",
-			address: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
+			name:    "未找到帳戶",
+			address: "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
 			accounts: []string{
-				"cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
-				"cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+				"bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+				"bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
 			},
 			want: false,
 		}, {
-			name:     "empty accounts",
-			address:  "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+			name:     "空賬戶",
+			address:  "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
 			accounts: []string{},
 			want:     false,
 		},
@@ -56,13 +56,13 @@ func TestParseChainGenesis(t *testing.T) {
 	genesis1 := cosmosutil.ChainGenesis{ChainID: "earth-1"}
 	genesis1.AppState.Auth.Accounts = []struct {
 		Address string `json:"address"`
-	}{{Address: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"}}
+	}{{Address: "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"}}
 	genesis1.AppState.Staking.Params.BondDenom = "bnkt"
 
 	genesis2 := cosmosutil.ChainGenesis{ChainID: "earth-1"}
 	genesis2.AppState.Auth.Accounts = []struct {
 		Address string `json:"address"`
-	}{{Address: "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"}}
+	}{{Address: "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"}}
 	genesis2.AppState.Staking.Params.BondDenom = "bnkt"
 
 	tests := []struct {
@@ -112,14 +112,14 @@ func TestParseGenesis(t *testing.T) {
 			name:        "parse genesis file 1",
 			genesisPath: "testdata/genesis1.json",
 			want: cosmosutil.Genesis{
-				Accounts:   []string{"cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"},
+				Accounts:   []string{"bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"},
 				StakeDenom: "bnkt",
 			},
 		}, {
 			name:        "parse genesis file 2",
 			genesisPath: "testdata/genesis2.json",
 			want: cosmosutil.Genesis{
-				Accounts:   []string{"cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"},
+				Accounts:   []string{"bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"},
 				StakeDenom: "bnkt",
 			},
 		}, {
@@ -156,14 +156,14 @@ func TestParseGenesisFromPath(t *testing.T) {
 			name:        "parse genesis file 1",
 			genesisPath: "testdata/genesis1.json",
 			want: cosmosutil.Genesis{
-				Accounts:   []string{"cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"},
+				Accounts:   []string{"bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj"},
 				StakeDenom: "bnkt",
 			},
 		}, {
 			name:        "parse genesis file 2",
 			genesisPath: "testdata/genesis2.json",
 			want: cosmosutil.Genesis{
-				Accounts:   []string{"cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"},
+				Accounts:   []string{"bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa"},
 				StakeDenom: "bnkt",
 			},
 		}, {

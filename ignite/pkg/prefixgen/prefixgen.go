@@ -1,5 +1,4 @@
-// Package prefixgen is a prefix generation helper for log messages
-// and any other kind.
+// Package prefixgen 是日誌消息的前綴生成助手和任何其他種類。
 package prefixgen
 
 import (
@@ -9,7 +8,7 @@ import (
 	"github.com/gookit/color"
 )
 
-// Prefixer generates prefixes.
+// Prefixer生成前綴。
 type Prefixer struct {
 	format           string
 	color            uint8
@@ -17,17 +16,17 @@ type Prefixer struct {
 	convertUppercase bool
 }
 
-// Option configures Prefixer.
+//選項配置前綴。
 type Option func(p *Prefixer)
 
-// Color sets color to the prefix.
+//顏色將顏色設置為前綴。
 func Color(color uint8) Option {
 	return func(p *Prefixer) {
 		p.color = color
 	}
 }
 
-// SquareBrackets adds square brackets to the prefix.
+//SquareBrackets 將方括號添加到前綴。
 func SquareBrackets() Option {
 	return func(p *Prefixer) {
 		p.left = "["
@@ -35,22 +34,22 @@ func SquareBrackets() Option {
 	}
 }
 
-// SpaceRight adds rights space to the prefix.
+//SpaceRight 將權限空間添加到前綴。
 func SpaceRight() Option {
 	return func(p *Prefixer) {
 		p.right += " "
 	}
 }
 
-// Uppercase formats the prefix to uppercase.
+//大寫將前綴格式化為大寫。
 func Uppercase() Option {
 	return func(p *Prefixer) {
 		p.convertUppercase = true
 	}
 }
 
-// Common holds some common prefix options and extends those
-// options by given options.
+//Common 擁有一些常見的前綴選項並擴展了這些選項
+//給定選項的選項。
 func Common(options ...Option) []Option {
 	return append([]Option{
 		SquareBrackets(),
@@ -59,9 +58,9 @@ func Common(options ...Option) []Option {
 	}, options...)
 }
 
-// New creates a new Prefixer with format and options.
-// Format is an fmt.Sprintf() like format to dynamically create prefix texts
-// as needed.
+// New 使用格式和選項創建一個新的前綴。
+//Format 是一種類似於 fmt.Sprintf() 的格式，用於動態創建前綴文本
+//如所須。
 func New(format string, options ...Option) *Prefixer {
 	p := &Prefixer{
 		format: format,
@@ -72,7 +71,7 @@ func New(format string, options ...Option) *Prefixer {
 	return p
 }
 
-// Gen generates a new prefix by applying s to format given during New().
+//Gen 通過將 s 應用於 New() 期間給出的格式來生成新前綴。
 func (p *Prefixer) Gen(s ...interface{}) string {
 	format := p.format
 	format = p.left + format

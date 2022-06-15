@@ -11,7 +11,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
 )
 
-// Config represent swagger-combine config.
+//Config 代表 swagger-combine 配置。
 type Config struct {
 	Swagger string `json:"swagger"`
 	Info    Info   `json:"info"`
@@ -39,9 +39,9 @@ type OperationIDs struct {
 
 var opReg = regexp.MustCompile(`(?m)operationId.+?(\w+)`)
 
-// AddSpec adds a new OpenAPI spec to Config by path in the fs and unique id of spec.
+// AddSpec 通過 fs 中的路徑和 spec 的唯一 id 向 Config 添加一個新的 OpenAPI 規範。
 func (c *Config) AddSpec(id, path string) error {
-	// make operationId fields unique.
+	// 使 operationId 字段唯一。
 	f, err := os.Open(path)
 	if err != nil {
 		return err
@@ -61,12 +61,12 @@ func (c *Config) AddSpec(id, path string) error {
 		rename[o] = id + o
 	}
 
-	// add api with replaced operantion ids.
+	// 添加帶有替換操作 ID 的 api。
 	c.APIs = append(c.APIs, API{
 		ID:           id,
 		URL:          path,
 		OperationIDs: OperationIDs{Rename: rename},
-		// Added due to https://github.com/maxdome/swagger-combine/pull/110 after enabling more services to be generated in #835
+		// 由於 https://github.com/maxdome/swagger-combine/pull/110 在#835 中啟用更多服務後添加
 		Dereference: struct {
 			Circular string `json:"circular"`
 		}(struct{ Circular string }{Circular: "ignore"}),
@@ -75,8 +75,8 @@ func (c *Config) AddSpec(id, path string) error {
 	return nil
 }
 
-// Combine combines openapi specs into one and saves to out path.
-// specs is a spec id-fs path pair.
+// 將 openapi 規範合併為一個並保存到路徑中。
+// specs 是一個規範 id-fs 路徑對。
 func Combine(ctx context.Context, c Config, out string) error {
 	command, cleanup, err := nodetime.Command(nodetime.CommandSwaggerCombine)
 	if err != nil {
@@ -105,6 +105,6 @@ func Combine(ctx context.Context, c Config, out string) error {
 		"--includeDefinitions", "true",
 	}...)
 
-	// execute the command.
+	// 執行命令。
 	return exec.Exec(ctx, command, exec.IncludeStdLogsToError())
 }

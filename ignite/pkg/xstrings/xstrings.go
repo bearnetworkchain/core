@@ -8,9 +8,9 @@ import (
 	"golang.org/x/text/language"
 )
 
-// AllOrSomeFilter filters elems out from the list as they  present in filterList and
-// returns the remaning ones.
-// if filterList is empty, all elems from list returned.
+// AllOrSomeFilter 從列表中過濾出元素，因為它們出現在 filterList 和
+// 返回剩餘的。
+// 如果過濾器列表為空，則返回列表中的所有元素。
 func AllOrSomeFilter(list, filterList []string) []string {
 	if len(filterList) == 0 {
 		return list
@@ -27,7 +27,7 @@ func AllOrSomeFilter(list, filterList []string) []string {
 	return elems
 }
 
-// SliceContains returns with true if s is a member of ss.
+// 如果 s 是 ss 的成員，則 SliceContains 返回 true。
 func SliceContains(ss []string, s string) bool {
 	for _, e := range ss {
 		if e == s {
@@ -38,8 +38,8 @@ func SliceContains(ss []string, s string) bool {
 	return false
 }
 
-// List returns a slice of strings captured after the value returned by do which is
-// called n times.
+// List 返回在 do 返回的值之後捕獲的字符串切片，即
+// 調用 n 次。
 func List(n int, do func(i int) string) []string {
 	var list []string
 
@@ -50,28 +50,28 @@ func List(n int, do func(i int) string) []string {
 	return list
 }
 
-// FormatUsername formats a username to make it usable as a variable
+// FormatUsername 格式化用戶名以使其可用作變量
 func FormatUsername(s string) string {
 	return NoDash(NoNumberPrefix(s))
 }
 
-// NoDash removes dash from the string
+//NoDash 從字符串中刪除破折號
 func NoDash(s string) string {
 	return strings.ReplaceAll(s, "-", "")
 }
 
-// NoNumberPrefix adds a underscore at the beginning of the string if it stars with a number
-// this is used for package of proto files template because the package name can't start with a number.
+// 如果 NoNumberPrefix 以數字開頭，則在字符串開頭添加下劃線
+// 這用於原始文件模板的包，因為包名不能以數字開頭。
 func NoNumberPrefix(s string) string {
-	// Check if it starts with a digit
+	//檢查它是否以數字開頭
 	if unicode.IsDigit(rune(s[0])) {
 		return "_" + s
 	}
 	return s
 }
 
-// Title returns a copy of the string s with all Unicode letters that begin words
-// mapped to their Unicode title case.
+// 標題返回字符串 s 的副本，其中包含以單詞開頭的所有 Unicode 字母
+// 映射到他們的 Unicode 標題大小寫。
 func Title(title string) string {
 	return cases.Title(language.English).String(title)
 }

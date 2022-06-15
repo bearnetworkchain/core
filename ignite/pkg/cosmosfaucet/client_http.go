@@ -8,27 +8,27 @@ import (
 	"net/http"
 )
 
-// ErrTransferRequest is a error that occurs when a transfer request fails
+// ErrTransferRequest 是傳輸請求失敗時發生的錯誤
 type ErrTransferRequest struct {
 	StatusCode int
 }
 
-// Error implement error
+// 錯誤實施錯誤
 func (err ErrTransferRequest) Error() string {
 	return http.StatusText(err.StatusCode)
 }
 
-// HTTPClient is a faucet client.
+// HTTPClient 是一個水龍頭客戶端。
 type HTTPClient struct {
 	addr string
 }
 
-// NewClient returns a new faucet client.
+// NewClient 返回一個新的水龍頭客戶端。
 func NewClient(addr string) HTTPClient {
 	return HTTPClient{addr}
 }
 
-// Transfer requests tokens from the faucet with req.
+// 使用 req 從水龍頭轉移請求令牌。
 func (c HTTPClient) Transfer(ctx context.Context, req TransferRequest) (TransferResponse, error) {
 	data, err := json.Marshal(req)
 	if err != nil {
@@ -55,8 +55,8 @@ func (c HTTPClient) Transfer(ctx context.Context, req TransferRequest) (Transfer
 	return res, err
 }
 
-// FaucetInfo fetch the faucet info for clients to determine if this is a real faucet and
-// what is the chain id of the chain that faucet is operating for.
+// FaucetInfo 為客戶端獲取水龍頭信息以確定這是否是一個真正的水龍頭和
+// 水龍頭正在運行的鏈的鏈 ID 是什麼。
 func (c HTTPClient) FaucetInfo(ctx context.Context) (FaucetInfoResponse, error) {
 	hreq, err := http.NewRequestWithContext(ctx, http.MethodGet, c.addr+"/info", nil)
 	if err != nil {

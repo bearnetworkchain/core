@@ -8,7 +8,7 @@ const (
 	cosmosModulePath = "github.com/cosmos/cosmos-sdk"
 )
 
-// Detect detects major version of Cosmos.
+// Detect 檢測 Cosmos 的主要版本。
 func Detect(appPath string) (version Version, err error) {
 	parsed, err := gomodule.ParseAt(appPath)
 	if err != nil {

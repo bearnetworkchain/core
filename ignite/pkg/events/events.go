@@ -1,5 +1,5 @@
-// Package events provides functionalities for packages to log their states as events
-// for others to consume and display to end users in meaningful ways.
+// Package events 為包提供將其狀態記錄為事件的功能
+// 供其他人以有意義的方式消費和展示給最終用戶。
 package events
 
 import (
@@ -10,25 +10,25 @@ import (
 )
 
 type (
-	// Event represents a state.
+	// Event 代表一個狀態。
 	Event struct {
-		// Description of the state.
+		// 狀態描述。
 		Description string
 
-		// Status shows the current status of event.
+		// Status 顯示事件的當前狀態。
 		Status Status
 
-		// TextColor of the text.
+		// TextColor 的文本。
 		TextColor color.Color
 
-		// Icon of the text.
+		// Icon 的文本。
 		Icon string
 	}
 
-	// Status shows if state is ongoing or completed.
+	// Status 顯示狀態是正在進行還是完成。
 	Status int
 
-	// Option event options
+	// Option 事件選項
 	Option func(*Event)
 )
 
@@ -38,21 +38,21 @@ const (
 	StatusNeutral
 )
 
-// TextColor sets the text color
+// TextColor 設置文本顏色
 func TextColor(c color.Color) Option {
 	return func(e *Event) {
 		e.TextColor = c
 	}
 }
 
-// Icon sets the text icon prefix.
+// Icon 設置文本圖標前綴。
 func Icon(icon string) Option {
 	return func(e *Event) {
 		e.Icon = icon
 	}
 }
 
-// New creates a new event with given config.
+// New 使用給定的配置創建一個新事件。
 func New(status Status, description string, options ...Option) Event {
 	ev := Event{Status: status, Description: description}
 	for _, applyOption := range options {
@@ -61,27 +61,27 @@ func New(status Status, description string, options ...Option) Event {
 	return ev
 }
 
-// NewOngoing creates a new StatusOngoing event.
+// NewOngoing 創建一個新的 StatusOngoing 事件。
 func NewOngoing(description string) Event {
 	return New(StatusOngoing, description)
 }
 
-// NewNeutral creates a new StatusNeutral event.
+// NewNeutral 創建一個新的 StatusNeutral 事件。
 func NewNeutral(description string) Event {
 	return New(StatusNeutral, description)
 }
 
-// NewDone creates a new StatusDone event.
+// NewDone 創建一個新的 StatusDone 事件。
 func NewDone(description, icon string) Event {
 	return New(StatusDone, description, Icon(icon))
 }
 
-// IsOngoing checks if state change that triggered this event is still ongoing.
+// IsOngoing 檢查觸發此事件的狀態更改是否仍在進行中。
 func (e Event) IsOngoing() bool {
 	return e.Status == StatusOngoing
 }
 
-// Text returns the text state of event.
+// Text 返回事件的文本狀態。
 func (e Event) Text() string {
 	text := e.Description
 	if e.IsOngoing() {
@@ -90,7 +90,7 @@ func (e Event) Text() string {
 	return e.TextColor.Render(text)
 }
 
-// Bus is a send/receive event bus.
+// Bus 是一個發送/接收事件總線。
 type (
 	Bus struct {
 		evchan chan Event
@@ -100,21 +100,21 @@ type (
 	BusOption func(*Bus)
 )
 
-// WithWaitGroup sets wait group which is blocked if events bus is not empty.
+// WithWaitGroup 設置等待組，如果事件總線不為空則阻塞。
 func WithWaitGroup(wg *sync.WaitGroup) BusOption {
 	return func(bus *Bus) {
 		bus.buswg = wg
 	}
 }
 
-// WithCustomBufferSize configures buffer size of underlying bus channel
+// WithCustomBufferSize 配置底層總線通道的緩衝區大小
 func WithCustomBufferSize(size int) BusOption {
 	return func(bus *Bus) {
 		bus.evchan = make(chan Event, size)
 	}
 }
 
-// NewBus creates a new event bus to send/receive events.
+// NewBus 創建一個新的事件總線來發送/接收事件。
 func NewBus(options ...BusOption) Bus {
 	bus := Bus{
 		evchan: make(chan Event),
@@ -127,7 +127,7 @@ func NewBus(options ...BusOption) Bus {
 	return bus
 }
 
-// Send sends a new event to bus.
+// Send 向總線發送一個新事件。
 func (b Bus) Send(e Event) {
 	if b.evchan == nil {
 		return
@@ -138,12 +138,12 @@ func (b Bus) Send(e Event) {
 	b.evchan <- e
 }
 
-// Events returns go channel with Event accessible only for read.
+// Events 返回帶有事件的 go channel 只能用於讀取。
 func (b *Bus) Events() <-chan Event {
 	return b.evchan
 }
 
-// Shutdown shutdowns event bus.
+// Shutdown 關閉事件總線。
 func (b Bus) Shutdown() {
 	if b.evchan == nil {
 		return

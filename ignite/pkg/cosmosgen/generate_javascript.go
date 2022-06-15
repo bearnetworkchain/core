@@ -101,7 +101,7 @@ func (g *jsGenerator) generateModules() error {
 	return gg.Wait()
 }
 
-// generateModule generates generates JS code for a module.
+// generateModule 產生為模塊生成 JS 代碼。
 func (g *jsGenerator) generateModule(ctx context.Context, tsprotoPluginPath, appPath string, m module.Module) error {
 	var (
 		out          = g.g.o.jsOut(m)
@@ -118,7 +118,7 @@ func (g *jsGenerator) generateModule(ctx context.Context, tsprotoPluginPath, app
 		return err
 	}
 
-	// generate ts-proto types.
+	// generate ts-first 類型。
 	err = protoc.Generate(
 		g.g.ctx,
 		typesOut,
@@ -126,13 +126,13 @@ func (g *jsGenerator) generateModule(ctx context.Context, tsprotoPluginPath, app
 		includePaths,
 		tsOut,
 		protoc.Plugin(tsprotoPluginPath, "--ts_proto_opt=snakeToCamel=false"),
-		protoc.Env("NODE_OPTIONS="), // unset nodejs options to avoid unexpected issues with vercel "pkg"
+		protoc.Env("NODE_OPTIONS="), // 取消設置 nodejs 選項以避免 vercel "pkg" 出現意外問題
 	)
 	if err != nil {
 		return err
 	}
 
-	// generate OpenAPI spec.
+	// 生成 OpenAPI 規範。
 	oaitemp, err := os.MkdirTemp("", "gen-js-openapi-module-spec")
 	if err != nil {
 		return err
@@ -150,7 +150,7 @@ func (g *jsGenerator) generateModule(ctx context.Context, tsprotoPluginPath, app
 		return err
 	}
 
-	// generate the REST client from the OpenAPI spec.
+	// 從 OpenAPI 規範生成 REST 客戶端。
 	var (
 		srcspec = filepath.Join(oaitemp, "apidocs.swagger.json")
 		outREST = filepath.Join(out, "rest.ts")
@@ -160,13 +160,13 @@ func (g *jsGenerator) generateModule(ctx context.Context, tsprotoPluginPath, app
 		return err
 	}
 
-	// generate the js client wrapper.
+	// 生成 js 客戶端包裝器。
 	pp := filepath.Join(appPath, g.g.protoDir)
 	if err := templateJSClient.Write(out, pp, struct{ Module module.Module }{m}); err != nil {
 		return err
 	}
 
-	// generate Vuex if enabled.
+	// 如果啟用，則生成 Vuex。
 	if g.g.o.vuexStoreRootPath != "" {
 		err = templateVuexStore.Write(storeDirPath, pp, struct{ Module module.Module }{m})
 		if err != nil {

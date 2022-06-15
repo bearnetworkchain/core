@@ -1,9 +1,9 @@
 swagger: "2.0"
 
 info:
-  description: "Faucet API doc and explorer.\n\nSend coins from the faucet account configured in `config.yml` to the receiver account."
+  描述: "Faucet API 文檔和資源管理器.\n\nSend 來自配置的水龍頭帳戶的硬幣 `config.yml` 到收款人賬戶."
   version: "1.0.0"
-  title: "Faucet for {{ .ChainID }}"
+  title: "水龍頭 {{ .ChainID }}"
 
 servers:
   - url: / 
@@ -11,7 +11,7 @@ servers:
 paths:
   /:
     post:
-      summary: "Send tokens to receiver account"
+      summary: "將令牌發送到接收者帳戶"
       consumes:
       - "application/json"
       produces:
@@ -19,17 +19,17 @@ paths:
       parameters:
       - in: "body"
         name: "body"
-        description: "Send coins request object\n\nAfter making a sample execution by the 'Try it out' button in the right corner, visit the following link to see the difference in sample account's balance: {{ .APIAddress }}/bank/balances/cosmos1uzv4v9g9xln2qx2vtqhz99yxum33calja5vruz"
+        description: "發送硬幣請求對象\n\nAfter 製作樣品由執行 '試試看' 右上角的按鈕, 訪問以下鏈接以查看示例帳戶的差異平衡: {{ .APIAddress }}/bank/balances/bnkt1uzv4v9g9xln2qx2vtqhz99yxum33calja5vruz"
         required: true
         schema:
           $ref: "#/definitions/SendRequest"
       responses:
         "400":
-          description: "Bad request"
+          description: "錯誤的請求"
         "500":
-          description: "Internal error"
+          description: "內部錯誤"
         "200":
-          description: "All coins are successfully sent\n\nAfter making a sample execution, visit the following link to see the difference in sample account's balance: {{ .APIAddress }}/bank/balances/cosmos1uzv4v9g9xln2qx2vtqhz99yxum33calja5vruz"
+          description: "所有硬幣都已成功發送\n\nAfter 執行示例, 訪問以下鏈接以查看示例帳戶餘額的差異: {{ .APIAddress }}/bank/balances/bnkt1uzv4v9g9xln2qx2vtqhz99yxum33calja5vruz"
           schema:
             $ref: "#/definitions/SendResponse"
 
@@ -41,7 +41,7 @@ definitions:
     properties:
       address:
         type: "string"
-        default: "cosmos1uzv4v9g9xln2qx2vtqhz99yxum33calja5vruz"
+        default: "bnkt1uzv4v9g9xln2qx2vtqhz99yxum33calja5vruz"
       coins:
         type: "array"
         default:
@@ -57,5 +57,5 @@ definitions:
 
 
 externalDocs:
-  description: "Find out more about Starport"
+  description: "了解有關熊網鏈更多信息"
   url: "https://github.com/ignite-hq/cli/tree/develop/docs"

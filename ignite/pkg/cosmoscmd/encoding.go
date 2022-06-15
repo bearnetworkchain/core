@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/tx"
 )
 
-// EncodingConfig specifies the concrete encoding types to use for a given app.
-// This is provided for compatibility between protobuf and amino implementations.
+// EncodingConfig 指定用於給定應用程序的具體編碼類型。
+// 這是為了兼容性而提供的 在protobuf和amino實現之間.
 type EncodingConfig struct {
 	InterfaceRegistry types.InterfaceRegistry
 	Marshaler         codec.Codec
@@ -18,7 +18,7 @@ type EncodingConfig struct {
 	Amino             *codec.LegacyAmino
 }
 
-// makeEncodingConfig creates an EncodingConfig for an amino based test configuration.
+// makeEncodingConfig 為 一個 amino 基於測試 配置.
 func makeEncodingConfig() EncodingConfig {
 	amino := codec.NewLegacyAmino()
 	interfaceRegistry := types.NewInterfaceRegistry()
@@ -33,7 +33,7 @@ func makeEncodingConfig() EncodingConfig {
 	}
 }
 
-// MakeEncodingConfig creates an EncodingConfig for testing
+// MakeEncodingConfig 創建一個 EncodingConfig 用於測試
 func MakeEncodingConfig(moduleBasics module.BasicManager) EncodingConfig {
 	encodingConfig := makeEncodingConfig()
 	std.RegisterLegacyAminoCodec(encodingConfig.Amino)

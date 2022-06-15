@@ -1,4 +1,4 @@
-// Package sta provides access to swagger-typescript-api CLI.
+// Package sta 提供對 swagger-typescript-api CLI 的訪問。
 package sta
 
 import (
@@ -9,7 +9,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
 )
 
-// Generate generates client code and TS types to outPath from an OpenAPI spec that resides at specPath.
+// Generate 從位於 specPath 的 OpenAPI 規範生成客戶端代碼和 TS 類型到 outPath。
 func Generate(ctx context.Context, outPath, specPath, moduleNameIndex string) error {
 	command, cleanup, err := nodetime.Command(nodetime.CommandSTA)
 	if err != nil {
@@ -20,7 +20,7 @@ func Generate(ctx context.Context, outPath, specPath, moduleNameIndex string) er
 	dir := filepath.Dir(outPath)
 	file := filepath.Base(outPath)
 
-	// command constructs the sta command.
+	// command 構造 sta 命令。
 	command = append(command, []string{
 		"--module-name-index",
 		moduleNameIndex,
@@ -32,6 +32,6 @@ func Generate(ctx context.Context, outPath, specPath, moduleNameIndex string) er
 		file,
 	}...)
 
-	// execute the command.
+	// 執行命令。
 	return exec.Exec(ctx, command, exec.IncludeStdLogsToError())
 }

@@ -21,10 +21,10 @@ import (
 
 const pathCacheNamespace = "gomodule.path"
 
-// ErrGoModNotFound returned when go.mod file cannot be found for an app.
+// ErrGoModNotFound 找不到應用的 go.mod 文件時返回。
 var ErrGoModNotFound = errors.New("go.mod not found")
 
-// ParseAt finds and parses go.mod at app's path.
+// ParseAt 查找和解析go.mod在應用程序的路徑。
 func ParseAt(path string) (*modfile.File, error) {
 	gomod, err := os.ReadFile(filepath.Join(path, "go.mod"))
 	if err != nil {
@@ -36,7 +36,7 @@ func ParseAt(path string) (*modfile.File, error) {
 	return modfile.Parse("", gomod, nil)
 }
 
-// FilterVersions filters dependencies under require section by their paths.
+// FilterVersions 通過路徑過濾 require 部分下的依賴項。
 func FilterVersions(dependencies []module.Version, paths ...string) []module.Version {
 	var filtered []module.Version
 
@@ -79,10 +79,10 @@ func ResolveDependencies(f *modfile.File) ([]module.Version, error) {
 	return versions, nil
 }
 
-// LocatePath locates pkg's absolute path managed by 'go mod' on the local filesystem.
+// LocatePath 在本地文件系統上定位由 'go mod' 管理的 pkg 的絕對路徑。
 func LocatePath(ctx context.Context, cacheStorage cache.Storage, src string, pkg module.Version) (path string, err error) {
-	// can be a local package.
-	if pkg.Version == "" { // indicates that this is a local package.
+	//可以是本地包。
+	if pkg.Version == "" { // 表示這是本地包。
 		if filepath.IsAbs(pkg.Path) {
 			return pkg.Path, nil
 		}
@@ -99,7 +99,7 @@ func LocatePath(ctx context.Context, cacheStorage cache.Storage, src string, pkg
 		return path, nil
 	}
 
-	// otherwise, it is hosted.
+	// 否則，它是託管的。
 	out := &bytes.Buffer{}
 
 	if err := cmdrunner.
@@ -132,5 +132,5 @@ func LocatePath(ctx context.Context, cacheStorage cache.Storage, src string, pkg
 		}
 	}
 
-	return "", fmt.Errorf("module %q not found", pkg.Path)
+	return "", fmt.Errorf("模塊 %q 未找到", pkg.Path)
 }

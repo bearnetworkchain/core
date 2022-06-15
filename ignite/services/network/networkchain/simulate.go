@@ -21,32 +21,32 @@ import (
 
 const (
 	ListeningTimeout            = time.Minute * 1
-	ValidatorSetNilErrorMessage = "validator set is nil in genesis and still empty after InitChain"
+	ValidatorSetNilErrorMessage = "驗證器集在創世中為零，在 InitChain 之後仍然為空"
 )
 
-// SimulateRequests simulates the genesis creation and the start of the network from the provided requests
+// SimulateRequests 根據提供的請求模擬創世創建和網絡啟動
 func (c Chain) SimulateRequests(
 	ctx context.Context,
 	cacheStorage cache.Storage,
 	gi networktypes.GenesisInformation,
 	reqs []networktypes.Request,
 ) (err error) {
-	c.ev.Send(events.New(events.StatusOngoing, "Verifying requests format"))
+	c.ev.Send(events.New(events.StatusOngoing, "驗證請求格式"))
 	for _, req := range reqs {
-		// static verification of the request
+		//請求的靜態驗證
 		if err := networktypes.VerifyRequest(req); err != nil {
 			return err
 		}
 
-		// apply the request to the genesis information
+		//將請求應用於創世信息
 		gi, err = gi.ApplyRequest(req)
 		if err != nil {
 			return err
 		}
 	}
-	c.ev.Send(events.New(events.StatusDone, "Requests format verified"))
+	c.ev.Send(events.New(events.StatusDone, "請求格式已驗證"))
 
-	// prepare the chain with the requests
+	// 用請求準備鏈
 	if err := c.Prepare(
 		ctx,
 		cacheStorage,
@@ -59,57 +59,57 @@ func (c Chain) SimulateRequests(
 		return err
 	}
 
-	c.ev.Send(events.New(events.StatusOngoing, "Trying starting the network with the requests"))
+	c.ev.Send(events.New(events.StatusOngoing, "嘗試使用請求啟動網絡"))
 	if err := c.simulateChainStart(ctx); err != nil {
 		return err
 	}
-	c.ev.Send(events.New(events.StatusDone, "The network can be started"))
+	c.ev.Send(events.New(events.StatusDone, "網絡可以啟動"))
 
 	return nil
 }
 
-// SimulateChainStart simulates and verify the chain start by starting it with a simulation config
-// and checking if the gentxs execution is successful
+// SimulateChainStart 通過使用模擬配置啟動它來模擬和驗證鏈開始
+// 並檢查 gentxs 執行是否成功
 func (c Chain) simulateChainStart(ctx context.Context) error {
 	cmd, err := c.chain.Commands(ctx)
 	if err != nil {
 		return err
 	}
 
-	// set the config with random ports to test the start command
+	//使用隨機端口設置配置以測試啟動命令
 	addressAPI, err := c.setSimulationConfig()
 	if err != nil {
 		return err
 	}
 
-	// verify that the chain can be started with a valid genesis
+	//驗證該鍊是否可以以有效的創世紀啟動
 	ctx, cancel := context.WithTimeout(ctx, ListeningTimeout)
 	exit := make(chan error)
 
-	// routine to check the app is listening
+	//檢查應用程序是否正在收聽的例行程序
 	go func() {
 		defer cancel()
 		exit <- isChainListening(ctx, addressAPI)
 	}()
 
-	// routine chain start
+	// 常規鏈啟動
 	go func() {
-		// if the error is validator set is nil, it means the genesis didn't get broken after an applied request
-		// the genesis was correctly generated but there is no gentxs so far
-		// so we don't consider it as an error making requests to verify as invalid
+// 如果錯誤是驗證器設置為 nil，這意味著在應用請求後創世沒有被破壞
+// 創世紀已正確生成，但目前還沒有 gentxs
+// 所以我們不認為這是一個錯誤，使請求驗證無效
 		err := cmd.Start(ctx)
 		if err != nil && strings.Contains(err.Error(), ValidatorSetNilErrorMessage) {
 			err = nil
 		}
-		exit <- errors.Wrap(err, "the chain failed to start")
+		exit <- errors.Wrap(err, "熊網鏈無法啟動")
 	}()
 
 	return <-exit
 }
 
-// setSimulationConfig sets in the config random available ports to allow check if the chain network can start
+// setSimulationConfig 在配置中設置隨機可用端口，以允許檢查鍊網絡是否可以啟動
 func (c Chain) setSimulationConfig() (string, error) {
-	// generate random server ports and servers list
+	// 生成隨機服務器端口和服務器列表
 	ports, err := availableport.Find(5)
 	if err != nil {
 		return "", err
@@ -118,7 +118,7 @@ func (c Chain) setSimulationConfig() (string, error) {
 		return fmt.Sprintf("localhost:%d", port)
 	}
 
-	// updating app toml
+	//更新應用程序 toml
 	appPath, err := c.AppTOMLPath()
 	if err != nil {
 		return "", err
@@ -187,17 +187,17 @@ func (c Chain) setSimulationConfig() (string, error) {
 	return genAddr(ports[0]), err
 }
 
-// isChainListening checks if the chain is listening for API queries on the specified address
+// isChainListening 檢查鍊是否正在偵聽指定地址上的 API 查詢
 func isChainListening(ctx context.Context, addressAPI string) error {
 	checkAlive := func() error {
 		addr, err := xurl.HTTP(addressAPI)
 		if err != nil {
-			return fmt.Errorf("invalid api address format %s: %w", addressAPI, err)
+			return fmt.Errorf("api地址格式無效 %s: %w", addressAPI, err)
 		}
 
 		ok, err := httpstatuschecker.Check(ctx, fmt.Sprintf("%s/node_info", addr))
 		if err == nil && !ok {
-			err = errors.New("app is not online")
+			err = errors.New("應用不在線")
 		}
 		return err
 	}

@@ -7,7 +7,7 @@ import (
 	"golang.org/x/term"
 )
 
-// View starts the Markdown viewer at path that .md files are located at.
+// View 在 .md 文件所在的路徑啟動 Markdown 查看器。
 func View(path string) error {
 	conf, err := config(path)
 	if err != nil {

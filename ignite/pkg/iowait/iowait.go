@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// Until waits for the appearance of s in the string n times and
-// then stops blocking.
+// 直到等待 s 在字符串中出現 n 次並且
+// 然後停止阻塞。
 func Until(r io.Reader, s string, n int) (capturedLines []string, err error) {
 	total := n
 	scanner := bufio.NewScanner(r)
@@ -18,7 +18,7 @@ func Until(r io.Reader, s string, n int) (capturedLines []string, err error) {
 		}
 		if !scanner.Scan() {
 			if n != 0 {
-				return capturedLines, fmt.Errorf("could not find %d out of %d", n, total)
+				return capturedLines, fmt.Errorf("找不到 %d out of %d", n, total)
 			}
 			return capturedLines, scanner.Err()
 		}

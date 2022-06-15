@@ -1,4 +1,4 @@
-// Package protoc provides high level access to protoc command.
+// Package protoc 提供對 protoc 命令的高級訪問。
 package protoc
 
 import (
@@ -15,10 +15,10 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/protoc/data"
 )
 
-// Option configures Generate configs.
+// Option配置 生成配置。
 type Option func(*configs)
 
-// configs holds Generate configs.
+// configs持有生成配置。
 type configs struct {
 	pluginPath             string
 	isGeneratedDepsEnabled bool
@@ -26,7 +26,7 @@ type configs struct {
 	env                    []string
 }
 
-// Plugin configures a plugin for code generation.
+// Plugin配置一個用於代碼生成的插件。
 func Plugin(path string, options ...string) Option {
 	return func(c *configs) {
 		c.pluginPath = path
@@ -34,15 +34,15 @@ func Plugin(path string, options ...string) Option {
 	}
 }
 
-// GenerateDependencies enables code generation for the proto files that your protofile depends on.
-// use this if your protoc plugin does not give you an option to enable the same feature.
+// Generate Dependencies 為您的 proto 文件所依賴的 proto 文件啟用代碼生成。
+// 如果您的 protoc 插件沒有為您提供啟用相同功能的選項，請使用此選項。
 func GenerateDependencies() Option {
 	return func(c *configs) {
 		c.isGeneratedDepsEnabled = true
 	}
 }
 
-// Env assigns environment values during the code generation.
+// Env 在代碼生成期間分配環境值。
 func Env(v ...string) Option {
 	return func(c *configs) {
 		c.env = v
@@ -54,7 +54,7 @@ type Cmd struct {
 	Included []string
 }
 
-// Command sets the protoc binary up and returns the command needed to execute c.
+// Command 設置 protoc 二進製文件並返回執行 c 所需的命令。
 func Command() (command Cmd, cleanup func(), err error) {
 	path, cleanupProto, err := localfs.SaveBytesTemp(data.Binary(), "protoc", 0755)
 	if err != nil {
@@ -80,7 +80,7 @@ func Command() (command Cmd, cleanup func(), err error) {
 	return command, cleanup, nil
 }
 
-// Generate generates code into outDir from protoPath and its includePaths by using plugins provided with protocOuts.
+// Generate 使用 protocOuts 提供的插件從 protoPath 及其 includePaths 生成代碼到 outDir。
 func Generate(ctx context.Context, outDir, protoPath string, includePaths, protocOuts []string, options ...Option) error {
 	c := configs{}
 
@@ -96,13 +96,13 @@ func Generate(ctx context.Context, outDir, protoPath string, includePaths, proto
 
 	command := cmd.Command
 
-	// add plugin if set.
+	// 如果設置添加插件。
 	if c.pluginPath != "" {
 		command = append(command, "--plugin", c.pluginPath)
 	}
 	var existentIncludePaths []string
 
-	// skip if a third party proto source actually doesn't exist on the filesystem.
+	//如果文件系統上實際上不存在第三方 proto 源，請跳過。
 	for _, path := range includePaths {
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			continue
@@ -110,18 +110,18 @@ func Generate(ctx context.Context, outDir, protoPath string, includePaths, proto
 		existentIncludePaths = append(existentIncludePaths, path)
 	}
 
-	// append third party proto locations to the command.
+	// 將第三方原型位置附加到命令中。
 	for _, importPath := range existentIncludePaths {
 		command = append(command, "-I", importPath)
 	}
 
-	// find out the list of proto files to generate code for and perform code generation.
+	// 找出要為其生成代碼並執行代碼生成的 proto 文件列表。
 	files, err := discoverFiles(ctx, c, protoPath, append(cmd.Included, existentIncludePaths...), protoanalysis.NewCache())
 	if err != nil {
 		return err
 	}
 
-	// run command for each protocOuts.
+	// 為每個 protocOuts 運行命令。
 	for _, out := range protocOuts {
 		command := append(command, out)
 		command = append(command, files...)
@@ -143,12 +143,12 @@ func Generate(ctx context.Context, outDir, protoPath string, includePaths, proto
 	return nil
 }
 
-// discoverFiles discovers .proto files to do code generation for. .proto files of the app
-// (everything under protoPath) will always be a part of the discovered files.
+// discoverFiles 發現要為其生成代碼的 .proto 文件。應用程序的 .proto 文件
+//（protoPath 下的所有內容）將始終是已發現文件的一部分。
 //
-// when .proto files of the app depends on another proto package under includePaths (dependencies), those
-// ones may need to be discovered as well. some protoc plugins already do this discovery internally but
-// for the ones that don't, it needs to be handled here if GenerateDependencies() is enabled.
+// 當應用的 .proto 文件依賴於 includePaths (dependencies) 下的另一個 proto 包時，那些
+// 也可能需要發現。一些 protoc 插件已經在內部進行了這個發現，但是
+// 對於沒有的，如果啟用了 GenerateDependencies() 則需要在這里處理。
 func discoverFiles(ctx context.Context, c configs, protoPath string, includePaths []string, cache protoanalysis.Cache) (
 	discovered []string, err error) {
 	packages, err := protoanalysis.Parse(ctx, cache, protoPath)
@@ -177,7 +177,7 @@ func searchFile(file protoanalysis.File, protoPath string, includePaths []string
 	dir := filepath.Dir(file.Path)
 
 	for _, dep := range file.Dependencies {
-		// try to locate imported .proto file relative to the this .proto file.
+		// 嘗試相對於這個 .proto 文件定位導入的 .proto 文件。
 		guessedPath := filepath.Join(dir, dep)
 		_, err := os.Stat(guessedPath)
 		if err == nil {
@@ -188,18 +188,18 @@ func searchFile(file protoanalysis.File, protoPath string, includePaths []string
 			return nil, err
 		}
 
-		// otherwise, search by absolute path in includePaths.
+		// 否則，在 includePaths 中按絕對路徑搜索。
 		var found bool
 		for _, included := range includePaths {
 			guessedPath := filepath.Join(included, dep)
 			_, err := os.Stat(guessedPath)
 			if err == nil {
-				// found the dependency.
-				// if it's under protoPath, it is already discovered so, skip it.
+// 找到依賴。
+// 如果它在 protoPath 下，它已經被發現，所以跳過它。
 				if !strings.HasPrefix(guessedPath, protoPath) {
 					discovered = append(discovered, guessedPath)
 
-					// perform a complete search on this one to discover its dependencies as well.
+					// 對這個執行完整的搜索以發現它的依賴關係。
 					depFile, err := protoanalysis.ParseFile(guessedPath)
 					if err != nil {
 						return nil, err
@@ -220,7 +220,7 @@ func searchFile(file protoanalysis.File, protoPath string, includePaths []string
 		}
 
 		if !found {
-			return nil, fmt.Errorf("cannot locate dependency %q for %q", dep, file.Path)
+			return nil, fmt.Errorf("找不到依賴項 %q 給予 %q", dep, file.Path)
 		}
 	}
 

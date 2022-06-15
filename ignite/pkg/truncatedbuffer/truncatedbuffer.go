@@ -4,16 +4,16 @@ import (
 	"bytes"
 )
 
-// TruncatedBuffer contains a bytes buffer that has a limited capacity
-// The buffer is truncated on Write if the length reaches the maximum capacity
-// Only the first bytes are preserved
+// TruncatedBuffer 包含一個容量有限的字節緩衝區
+// 如果長度達到最大容量，則緩衝區在寫入時被截斷
+// 只保留第一個字節
 type TruncatedBuffer struct {
 	buf *bytes.Buffer
 	cap int
 }
 
-// NewTruncatedBuffer returns a new TruncatedBuffer
-// If the provided cap is 0, the truncated buffer has no limit for truncating
+// NewTruncatedBuffer 返回一個新的TruncatedBuffer
+// 如果提供的上限為 0，則截斷緩衝區沒有截斷限制
 func NewTruncatedBuffer(cap int) *TruncatedBuffer {
 	return &TruncatedBuffer{
 		buf: &bytes.Buffer{},
@@ -21,24 +21,24 @@ func NewTruncatedBuffer(cap int) *TruncatedBuffer {
 	}
 }
 
-// GetCap returns the buffer
+//GetCap 返回緩衝區
 func (b TruncatedBuffer) GetBuffer() *bytes.Buffer {
 	return b.buf
 }
 
-// GetCap returns the maximum capacity of the buffer
+// GetCap 返回緩衝區的最大容量
 func (b TruncatedBuffer) GetCap() int {
 	return b.cap
 }
 
-// Write implements io.Writer
+//Write 實現 io.Writer
 func (b *TruncatedBuffer) Write(p []byte) (n int, err error) {
 	n, err = b.buf.Write(p)
 	if err != nil {
 		return n, err
 	}
 
-	// Check surplus bytes
+	// 檢查剩餘字節
 	surplus := b.buf.Len() - b.cap
 
 	if b.cap > 0 && surplus > 0 {

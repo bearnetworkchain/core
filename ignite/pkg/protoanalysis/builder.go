@@ -12,7 +12,7 @@ type builder struct {
 	p pkg
 }
 
-// buil turns a low lovel proto pkg into a high level Package.
+//build 將一個低級的 prot pkg 變成一個高級的 Package。
 func build(p pkg) Package {
 	br := builder{p}
 
@@ -46,7 +46,7 @@ func (b builder) buildMessages() (messages []Message) {
 	for _, f := range b.p.files {
 		for _, message := range f.messages {
 
-			// Find the highest field number
+			// 查找最高的字段號
 			var highestFieldNumber int
 			for _, elem := range message.Elements {
 				field, ok := elem.(*proto.NormalField)
@@ -57,9 +57,9 @@ func (b builder) buildMessages() (messages []Message) {
 				}
 			}
 
-			// some proto messages might be defined inside another proto messages.
-			// to represents these types, an underscore is used.
-			// e.g. if C message inside B, and B inside A: A_B_C.
+// 一些原始消息可能在另一個原始消息中定義。
+// 為了表示這些類型，使用了下劃線。
+// 例如如果 C 消息在 B 中，B 在 A 中：A_B_C。
 			var (
 				name   = message.Name
 				parent = message.Parent
@@ -182,24 +182,24 @@ func (b builder) constantToHTTPRules(requestMessage *proto.Message, constant pro
 		params = append(params, item[1])
 	}
 
-	// calculate url params, query params and body fields counts.
+	// 計算 url 參數、查詢參數和正文字段計數。
 	var (
 		messageFieldsCount = b.messageFieldsCount(requestMessage)
 		paramsCount        = len(params)
 		bodyFieldsCount    int
 	)
 
-	if body, ok := constant.Map["body"]; ok { // check if body is specified.
-		if body.Source == "*" { // means there should be no query params per the spec.
+	if body, ok := constant.Map["body"]; ok { // 檢查是否指定了正文。
+		if body.Source == "*" { // 意味著每個規範不應該有查詢參數。
 			bodyFieldsCount = messageFieldsCount - paramsCount
 		} else if body.Source != "" {
-			bodyFieldsCount = 1 // means body fields are grouped under a single top-level field.
+			bodyFieldsCount = 1 // 表示正文字段分組在單個頂級字段下。
 		}
 	}
 
 	queryParamsCount := messageFieldsCount - paramsCount - bodyFieldsCount
 
-	// create and add the HTTP rule to the list.
+	// 創建 HTTP 規則並將其添加到列表中。
 	httpRule := HTTPRule{
 		Params:   params,
 		HasQuery: queryParamsCount > 0,

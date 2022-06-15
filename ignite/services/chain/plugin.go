@@ -7,22 +7,22 @@ import (
 	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
 )
 
-// TODO omit -cli log messages for Stargate.
+// TODO 省略 Stargate 的 -cli 日誌消息。
 
 type Plugin interface {
-	// Name of a Cosmos version.
+	// Cosmos 版本的名稱。
 	Name() string
 
-	// Gentx returns step.Exec configuration for gentx command.
+	// Gentx 返回 gentx 命令的 step.Exec 配置。
 	Gentx(context.Context, chaincmdrunner.Runner, Validator) (path string, err error)
 
-	// Configure configures config defaults.
+	// Configure 配置默認值.
 	Configure(string, chainconfig.Config) error
 
-	// Start returns step.Exec configuration to start servers.
+	// Start 返回 step.Exec 配置以啟動服務器。
 	Start(context.Context, chaincmdrunner.Runner, chainconfig.Config) error
 
-	// Home returns the blockchain node's home dir.
+	// Home 返回區塊鏈節點的主目錄。
 	Home() string
 }
 

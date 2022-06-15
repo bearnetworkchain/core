@@ -8,7 +8,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// ChainHome returns the default home dir used for a chain from SPN.
+// ChainHome 從 SPN 返回用於鏈的默認主目錄。
 func ChainHome(launchID uint64) (path string) {
 	home, err := os.UserHomeDir()
 	if err != nil {
@@ -18,7 +18,7 @@ func ChainHome(launchID uint64) (path string) {
 	return filepath.Join(home, networktypes.SPN, strconv.FormatUint(launchID, 10))
 }
 
-// IsChainHomeExist checks if a home with the provided launchID already exist.
+// IsChainHomeExist 檢查具有提供的launchID的家是否已經存在。
 func IsChainHomeExist(launchID uint64) (path string, ok bool, err error) {
 	home := ChainHome(launchID)
 

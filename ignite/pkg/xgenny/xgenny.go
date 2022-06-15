@@ -9,20 +9,20 @@ import (
 	"github.com/gobuffalo/packd"
 )
 
-// Walker implements packd.Walker for Go embed's fs.FS.
+// Walker 為 Go embed 的 fs.FS 實現了 packd.Walker。
 type Walker struct {
 	fs         embed.FS
 	trimPrefix string
 	path       string
 }
 
-// NewEmbedWalker returns a new Walker for fs.
-// trimPrefix is used to trim parent paths from the paths of found files.
+// NewEmbedWalker 為 fs 返回一個新的 Walker。
+// trimPrefix 用於從找到的文件的路徑中修剪父路徑。
 func NewEmbedWalker(fs embed.FS, trimPrefix, path string) Walker {
 	return Walker{fs: fs, trimPrefix: trimPrefix, path: path}
 }
 
-// Walk implements packd.Walker.
+// Walk 實現 packd.Walker。
 func (w Walker) Walk(wl packd.WalkFunc) error {
 	return w.walkDir(wl, ".")
 }

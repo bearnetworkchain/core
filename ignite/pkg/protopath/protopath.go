@@ -14,21 +14,21 @@ import (
 
 var (
 	globalInclude = xfilepath.List(
-		// this one should be already known by naked protoc execution, but adding it anyway to making sure.
+		// 這個應該已經被裸協議執行知道了，但無論如何都要添加它以確保。
 		xfilepath.JoinFromHome(xfilepath.Path("local/include")),
-		// this one is the suggested installation path for placing default proto by
+		// 這個是放置默認 proto 的建議安裝路徑
 		// https://grpc.io/docs/protoc-installation/.
 		xfilepath.JoinFromHome(xfilepath.Path(".local/include")),
 	)
 )
 
-// Module represents a go module that hosts dependency proto paths.
+// Module 表示一個託管依賴原型路徑的 go 模塊。
 type Module struct {
 	importPath string
 	include    []string
 }
 
-// NewModule cretes a new go module representation to look for protoPaths.
+// New Module 創建一個新的 go 模塊表示來查找 protoPaths.
 func NewModule(importPath string, protoPaths ...string) Module {
 	return Module{
 		importPath: importPath,
@@ -36,10 +36,10 @@ func NewModule(importPath string, protoPaths ...string) Module {
 	}
 }
 
-// ResolveDependencyPaths resolves dependency proto paths (include/-I) for modules over given r inside go modules.
-// r should be the list of required packages of the target go app. it is used to resolve exact versions
-// of the go modules that used by the target app.
-// global dependencies are also included to paths.
+// ResolveDependencyPaths 為 go 模塊中給定 r 上的模塊解析依賴原型路徑（包括/-I）。
+// r 應該是目標 go app 所需包的列表。它用於解析確切的版本
+// 目標應用程序使用的 go 模塊。
+// 全局依賴也包含在路徑中。
 func ResolveDependencyPaths(ctx context.Context, cacheStorage cache.Storage, src string, versions []module.Version, modules ...Module) (paths []string, err error) {
 	globalInclude, err := globalInclude()
 	if err != nil {
@@ -57,7 +57,7 @@ func ResolveDependencyPaths(ctx context.Context, cacheStorage cache.Storage, src
 	vs := gomodule.FilterVersions(versions, importPaths...)
 
 	if len(vs) != len(modules) {
-		return nil, errors.New("go.mod has missing proto modules")
+		return nil, errors.New("go.mod 缺少原型模塊")
 	}
 
 	for i, v := range vs {

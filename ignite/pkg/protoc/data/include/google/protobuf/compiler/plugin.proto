@@ -1,48 +1,46 @@
-// Protocol Buffers - Google's data interchange format
-// Copyright 2008 Google Inc.  All rights reserved.
+// Protocol Buffers - Google 的數據交換格式
+// 版權所有 2008 Google Inc. 保留所有權利。
 // https://developers.google.com/protocol-buffers/
 //
-// Redistribution and use in source and binary forms, with or without
-// modification, are permitted provided that the following conditions are
-// met:
+// 以源代碼和二進制形式重新分發和使用，有或沒有允許修改，前提是滿足以下條件的：
 //
-//     * Redistributions of source code must retain the above copyright
-// notice, this list of conditions and the following disclaimer.
-//     * Redistributions in binary form must reproduce the above
-// copyright notice, this list of conditions and the following disclaimer
-// in the documentation and/or other materials provided with the
-// distribution.
-//     * Neither the name of Google Inc. nor the names of its
-// contributors may be used to endorse or promote products derived from
-// this software without specific prior written permission.
-//
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+// * 重新發布源代碼必須保留以上版權
+// 請注意，此條件列表和以下免責聲明。
+// * 二進制形式的重新分發必須重現上述內容
+// 版權聲明、此條件列表和以下免責聲明
+// 在文檔和或隨分配。
 
-// Author: kenton@google.com (Kenton Varda)
+// * 既不是 Google Inc. 的名稱，也不是它的名稱
+// 貢獻者可用於支持或推廣衍生自
+// 此軟件未經事先書面許可。
 //
-// WARNING:  The plugin interface is currently EXPERIMENTAL and is subject to
-//   change.
+// 本軟件由版權所有者和貢獻者提供
+// “原樣”和任何明示或暗示的保證，包括但不
+// 僅限於對適銷性和適用性的默示保證
+// 特定目的被拒絕。在任何情況下，版權均不得
+// 所有者或貢獻者應對任何直接、間接、附帶、
+// 特殊的、懲戒性的或間接的損害（包括但不包括
+// 僅限於採購替代商品或服務；失去使用，
+// 數據或利潤；或業務中斷）不管是什麼原因造成的
+// 責任理論，無論是合同、嚴格責任還是侵權
+//（包括疏忽或其他）以任何方式產生的使用
+// 本軟件，即使被告知存在此類損害的可能性。
+
+// 作者：kenton@google.com (Kenton Varda)
 //
-// protoc (aka the Protocol Compiler) can be extended via plugins.  A plugin is
-// just a program that reads a CodeGeneratorRequest from stdin and writes a
-// CodeGeneratorResponse to stdout.
+// 警告：插件接口目前是實驗性的，受制於
+//   改變。
 //
-// Plugins written using C++ can use google/protobuf/compiler/plugin.h instead
-// of dealing with the raw protocol defined here.
+// protoc（又名協議編譯器）可以通過插件進行擴展。一個插件是
+// 只是一個從標準輸入讀取 CodeGeneratorRequest 並寫入
+// CodeGeneratorResponse 到標準輸出。
 //
-// A plugin executable needs only to be placed somewhere in the path.  The
-// plugin should be named "protoc-gen-$NAME", and will then be used when the
-// flag "--${NAME}_out" is passed to protoc.
+// 使用 C++ 編寫的插件可以使用 google/protobuf/compiler/plugin.h 代替
+// 處理此處定義的原始協議。
+//
+// 插件可執行文件只需要放置在路徑中的某個位置。這
+// 插件應該命名為“protoc-gen-$NAME”，然後在
+// 標誌 "--${NAME}_out" 被傳遞給 protoc.
 
 syntax = "proto2";
 
@@ -54,129 +52,129 @@ option go_package = "google.golang.org/protobuf/types/pluginpb";
 
 import "google/protobuf/descriptor.proto";
 
-// The version number of protocol compiler.
+// 協議編譯器的版本號。
 message Version {
   optional int32 major = 1;
   optional int32 minor = 2;
   optional int32 patch = 3;
-  // A suffix for alpha, beta or rc release, e.g., "alpha-1", "rc2". It should
-  // be empty for mainline stable releases.
+// alpha、beta 或 rc 版本的後綴，例如“alpha-1”、“rc2”。它應該
+// 對於主線穩定版本，為空。
   optional string suffix = 4;
 }
 
-// An encoded CodeGeneratorRequest is written to the plugin's stdin.
+//編碼的 CodeGeneratorRequest 被寫入插件的標準輸入。
 message CodeGeneratorRequest {
-  // The .proto files that were explicitly listed on the command-line.  The
-  // code generator should generate code only for these files.  Each file's
-  // descriptor will be included in proto_file, below.
+// 命令行中明確列出的 .proto 文件。這
+// 代碼生成器應該只為這些文件生成代碼。每個文件的
+// 描述符將包含在下面的 proto_file 中。
   repeated string file_to_generate = 1;
 
-  // The generator parameter passed on the command-line.
+  // 在命令行上傳遞的生成器參數。
   optional string parameter = 2;
 
-  // FileDescriptorProtos for all files in files_to_generate and everything
-  // they import.  The files will appear in topological order, so each file
-  // appears before any file that imports it.
-  //
-  // protoc guarantees that all proto_files will be written after
-  // the fields above, even though this is not technically guaranteed by the
-  // protobuf wire format.  This theoretically could allow a plugin to stream
-  // in the FileDescriptorProtos and handle them one by one rather than read
-  // the entire set into memory at once.  However, as of this writing, this
-  // is not similarly optimized on protoc's end -- it will store all fields in
-  // memory at once before sending them to the plugin.
-  //
-  // Type names of fields and extensions in the FileDescriptorProto are always
-  // fully qualified.
+// 用於 files_to_generate 中所有文件的 FileDescriptorProtos 和所有內容
+// 他們導入。這些文件將以拓撲順序出現，因此每個文件
+// 出現在任何導入它的文件之前。
+//
+// protoc 保證所有 proto_files 都將在之後寫入
+// 上面的字段，即使這在技術上不受
+// protobuf 有線格式。這理論上可以允許插件流式傳輸
+// 在 FileDescriptorProtos 中並一一處理而不是讀取
+// 整個集合一次進入內存。然而，在撰寫本文時，這
+// 沒有在 protoc 端進行類似的優化——它將所有字段存儲在
+// 在將它們發送到插件之前立即存儲。
+//
+// FileDescriptorProto 中的字段和擴展名的類型名稱總是
+// 完全合格。
   repeated FileDescriptorProto proto_file = 15;
 
-  // The version number of protocol compiler.
+  // 協議編譯器的版本號。
   optional Version compiler_version = 3;
 
 }
 
-// The plugin writes an encoded CodeGeneratorResponse to stdout.
+// 該插件將編碼的 CodeGeneratorResponse 寫入標準輸出。
 message CodeGeneratorResponse {
-  // Error message.  If non-empty, code generation failed.  The plugin process
-  // should exit with status code zero even if it reports an error in this way.
-  //
-  // This should be used to indicate errors in .proto files which prevent the
-  // code generator from generating correct code.  Errors which indicate a
-  // problem in protoc itself -- such as the input CodeGeneratorRequest being
-  // unparseable -- should be reported by writing a message to stderr and
-  // exiting with a non-zero status code.
+// 錯誤信息。如果非空，則代碼生成失敗。插件流程
+// 即使它以這種方式報告錯誤，也應該以狀態碼零退出。
+//
+// 這應該用於指示 .proto 文件中的錯誤，這些錯誤會阻止
+// 生成正確代碼的代碼生成器。錯誤表明
+// protoc 本身的問題——比如輸入的 CodeGeneratorRequest 是
+// 不可解析 -- 應該通過向 stderr 寫入消息來報告
+// 以非零狀態碼退出。
   optional string error = 1;
 
-  // A bitmask of supported features that the code generator supports.
-  // This is a bitwise "or" of values from the Feature enum.
+ // 代碼生成器支持的受支持功能的位掩碼。
+// 這是 Feature 枚舉中值的按位“或”。
   optional uint64 supported_features = 2;
 
-  // Sync with code_generator.h.
+ // 與 code_generator.h 同步。
   enum Feature {
     FEATURE_NONE = 0;
     FEATURE_PROTO3_OPTIONAL = 1;
   }
 
-  // Represents a single generated file.
+  // 表示單個生成的文件。
   message File {
-    // The file name, relative to the output directory.  The name must not
-    // contain "." or ".." components and must be relative, not be absolute (so,
-    // the file cannot lie outside the output directory).  "/" must be used as
-    // the path separator, not "\".
-    //
-    // If the name is omitted, the content will be appended to the previous
-    // file.  This allows the generator to break large files into small chunks,
-    // and allows the generated text to be streamed back to protoc so that large
-    // files need not reside completely in memory at one time.  Note that as of
-    // this writing protoc does not optimize for this -- it will read the entire
-    // CodeGeneratorResponse before writing files to disk.
+// 文件名，相對於輸出目錄。名字不得
+// 包含 ”。”或“..”組件並且必須是相對的，而不是絕對的（所以，
+// 文件不能位於輸出目錄之外）。 “/”必須用作
+// 路徑分隔符，而不是“\”。
+//
+// 如果省略名稱，內容將附加到前面
+// 文件。這允許生成器將大文件分成小塊，
+// 並允許生成的文本流回 protoc 以便大
+// 文件不需要一次完全駐留在內存中。請注意，截至
+// 這個寫入協議沒有為此優化——它將讀取整個
+// 將文件寫入磁盤之前的 CodeGeneratorResponse。
     optional string name = 1;
 
-    // If non-empty, indicates that the named file should already exist, and the
-    // content here is to be inserted into that file at a defined insertion
-    // point.  This feature allows a code generator to extend the output
-    // produced by another code generator.  The original generator may provide
-    // insertion points by placing special annotations in the file that look
-    // like:
-    //   @@protoc_insertion_point(NAME)
-    // The annotation can have arbitrary text before and after it on the line,
-    // which allows it to be placed in a comment.  NAME should be replaced with
-    // an identifier naming the point -- this is what other generators will use
-    // as the insertion_point.  Code inserted at this point will be placed
-    // immediately above the line containing the insertion point (thus multiple
-    // insertions to the same point will come out in the order they were added).
-    // The double-@ is intended to make it unlikely that the generated code
-    // could contain things that look like insertion points by accident.
-    //
-    // For example, the C++ code generator places the following line in the
-    // .pb.h files that it generates:
-    //   // @@protoc_insertion_point(namespace_scope)
-    // This line appears within the scope of the file's package namespace, but
-    // outside of any particular class.  Another plugin can then specify the
-    // insertion_point "namespace_scope" to generate additional classes or
-    // other declarations that should be placed in this scope.
-    //
-    // Note that if the line containing the insertion point begins with
-    // whitespace, the same whitespace will be added to every line of the
-    // inserted text.  This is useful for languages like Python, where
-    // indentation matters.  In these languages, the insertion point comment
-    // should be indented the same amount as any inserted code will need to be
-    // in order to work correctly in that context.
-    //
-    // The code generator that generates the initial file and the one which
-    // inserts into it must both run as part of a single invocation of protoc.
-    // Code generators are executed in the order in which they appear on the
-    // command line.
-    //
-    // If |insertion_point| is present, |name| must also be present.
+// 如果非空，表示命名文件應該已經存在，並且
+// 這裡的內容將在定義的插入處插入到該文件中
+// 觀點。此功能允許代碼生成器擴展輸出
+// 由另一個代碼生成器生成。原始生成器可以提供
+// 通過在文件中放置特殊註釋來插入點
+// 喜歡：
+// @@protoc_insertion_point(NAME)
+// 註釋可以在其前後有任意文本在行上，
+// 這允許它被放置在評論中。名稱應替換為
+// 命名點的標識符——這是其他生成器將使用的標識符
+// 作為插入點。此時插入的代碼將被放置
+// 在包含插入點的行的正上方（因此是多個
+// 對同一點的插入將按照它們添加的順序出現）。
+// 雙@ 旨在使生成的代碼不太可能
+// 可能偶然包含看起來像插入點的東西。
+//
+// 例如，C++ 代碼生成器將以下行放在
+// 它生成的 .pb.h 文件：
+// // @@protoc_insertion_point(namespace_scope)
+// 此行出現在文件的包命名空間範圍內，但是
+// 在任何特定類之外。然後另一個插件可以指定
+// insert_point "namespace_scope" 生成額外的類或
+// 應該放在這個範圍內的其他聲明。
+//
+// 注意如果包含插入點的行以
+// 空格，相同的空格將添加到每一行
+// 插入文本。這對於像 Python 這樣的語言很有用，其中
+// 縮進很重要。在這些語言中，插入點註釋
+// 應該縮進與任何插入的代碼需要的縮進量相同
+// 為了在該上下文中正常工作。
+//
+// 生成初始文件的代碼生成器和生成初始文件的代碼生成器
+// 插入到其中必須都作為 protoc 的單個調用的一部分運行。
+// 代碼生成器按照它們出現的順序執行
+// 命令行。
+//
+// 如果 |插入點|存在，|名稱|也必須在場。
     optional string insertion_point = 2;
 
-    // The file contents.
+   // 文件內容。
     optional string content = 15;
 
-    // Information describing the file content being inserted. If an insertion
-    // point is used, this information will be appropriately offset and inserted
-    // into the code generation metadata for the generated files.
+// 描述正在插入的文件內容的信息。如果插入
+// 使用點，該信息將被適當偏移並插入
+// 進入生成文件的代碼生成元數據。
     optional GeneratedCodeInfo generated_code_info = 16;
   }
   repeated File file = 15;

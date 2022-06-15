@@ -1,4 +1,4 @@
-// Package ctxreader brings context.Context to io.Reader
+// Package ctxreader 將語境帶到 io.讀者
 package ctxreader
 
 import (
@@ -14,14 +14,14 @@ type cancelableReader struct {
 	err error
 }
 
-// New returns a new reader that emits a context error through its r.Read() method
-// when ctx canceled.
+// New 返回一個新的閱讀器，該閱讀器通過其 r.Read() 方法發出上下文錯誤
+// 當 ctx 取消時。
 func New(ctx context.Context, r io.Reader) io.Reader {
 	return &cancelableReader{Reader: r, ctx: ctx}
 }
 
-// Read implements io.Reader and it stops blocking when reading is completed
-// or context is cancelled.
+// Read 實現 io.Reader 並在讀取完成時停止阻塞
+// 或上下文被取消。
 func (r *cancelableReader) Read(data []byte) (n int, err error) {
 	r.m.Lock()
 	defer r.m.Unlock()

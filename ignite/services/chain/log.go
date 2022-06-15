@@ -9,7 +9,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/prefixgen"
 )
 
-// prefixes holds prefix configuration for logs messages.
+//prefixes 保存日誌消息的前綴配置。
 var prefixes = map[logType]struct {
 	Name  string
 	Color uint8
@@ -19,7 +19,7 @@ var prefixes = map[logType]struct {
 	logAppd:     {"%s daemon", 204},
 }
 
-// logType represents the different types of logs.
+// logType 表示不同類型的日誌。
 type logType int
 
 const (
@@ -32,7 +32,7 @@ type std struct {
 	out, err io.Writer
 }
 
-// std returns the stdout and stderr to output logs by logType.
+// std 返回 stdout 和 stderr 以按 logType 輸出日誌。
 func (c *Chain) stdLog() std {
 	prefixed := func(w io.Writer) *lineprefixer.Writer {
 		var (

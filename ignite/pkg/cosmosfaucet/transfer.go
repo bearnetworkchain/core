@@ -12,10 +12,10 @@ import (
 	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
 )
 
-// transferMutex is a mutex used for keeping transfer requests in a queue so checking account balance and sending tokens is atomic
+// transferMutex 是一個互斥鎖，用於將傳輸請求保留在隊列中，因此檢查帳戶餘額和發送令牌是熊網幣的
 var transferMutex = &sync.Mutex{}
 
-// TotalTransferredAmount returns the total transferred amount from faucet account to toAccountAddress.
+// TotalTransferredAmount 返回從水龍頭賬戶轉賬到toAccountAddress的總金額.
 func (f Faucet) TotalTransferredAmount(ctx context.Context, toAccountAddress, denom string) (totalAmount uint64, err error) {
 	fromAccount, err := f.runner.ShowAccount(ctx, f.accountName)
 	if err != nil {
@@ -51,14 +51,14 @@ func (f Faucet) TotalTransferredAmount(ctx context.Context, toAccountAddress, de
 	return totalAmount, nil
 }
 
-// Transfer transfer amount of tokens from the faucet account to toAccountAddress.
+// Transfer 將代幣數量從水龍頭賬戶轉移到toAccountAddress。
 func (f *Faucet) Transfer(ctx context.Context, toAccountAddress string, coins sdk.Coins) error {
 	transferMutex.Lock()
 	defer transferMutex.Unlock()
 
 	var coinsStr []string
 
-	// check for each coin, the max transferred amount hasn't been reached
+	// 檢查每個硬幣，尚未達到最大轉賬金額
 	for _, c := range coins {
 		totalSent, err := f.TotalTransferredAmount(ctx, toAccountAddress, c.Denom)
 		if err != nil {
@@ -68,7 +68,7 @@ func (f *Faucet) Transfer(ctx context.Context, toAccountAddress string, coins sd
 		if f.coinsMax[c.Denom] != 0 {
 			if totalSent >= f.coinsMax[c.Denom] {
 				return fmt.Errorf(
-					"account has reached to the max. allowed amount (%d) for %q denom",
+					"帳戶已達到最大值。允許金額 (%d) 為了 %q denom",
 					f.coinsMax[c.Denom],
 					c.Denom,
 				)
@@ -76,7 +76,7 @@ func (f *Faucet) Transfer(ctx context.Context, toAccountAddress string, coins sd
 
 			if (totalSent + c.Amount.Uint64()) > f.coinsMax[c.Denom] {
 				return fmt.Errorf(
-					`ask less amount for %q denom. account is reaching to the limit (%d) that faucet can tolerate`,
+					`要求少一些 %q denom. 帳戶已達到上限 (%d) 那個水龍頭可以忍受`,
 					c.Denom,
 					f.coinsMax[c.Denom],
 				)
@@ -86,7 +86,7 @@ func (f *Faucet) Transfer(ctx context.Context, toAccountAddress string, coins sd
 		coinsStr = append(coinsStr, c.String())
 	}
 
-	// perform transfer for all coins
+	// 對所有硬幣進行轉賬
 	fromAccount, err := f.runner.ShowAccount(ctx, f.accountName)
 	if err != nil {
 		return err
@@ -96,6 +96,6 @@ func (f *Faucet) Transfer(ctx context.Context, toAccountAddress string, coins sd
 		return err
 	}
 
-	// wait for the send tx to be confirmed
+	// 等待發送 tx 被確認
 	return f.runner.WaitTx(ctx, txHash, time.Second, 30)
 }

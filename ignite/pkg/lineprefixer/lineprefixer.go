@@ -1,4 +1,4 @@
-// Package lineprefixer is a helpers to add prefixes to new lines.
+// Package lineprefixer 是為新行添加前綴的助手。
 package lineprefixer
 
 import (
@@ -6,15 +6,15 @@ import (
 	"io"
 )
 
-// Writer is a prefixed line writer.
+// Writer 是一個帶前綴的行 writer。
 type Writer struct {
 	prefix       func() string
 	w            io.Writer
 	shouldPrefix bool
 }
 
-// NewWriter returns a new Writer that adds prefixes to each line
-// written. It then writes prefixed data stream into w.
+// NewWriter 返回一個為每一行添加前綴的新作家
+// 書面。然後它將前綴數據流寫入 w。
 func NewWriter(w io.Writer, prefix func() string) *Writer {
 	return &Writer{
 		prefix:       prefix,
@@ -23,7 +23,7 @@ func NewWriter(w io.Writer, prefix func() string) *Writer {
 	}
 }
 
-// Write implements io.Writer.
+// Write 實現 io.Writer.
 func (p *Writer) Write(b []byte) (n int, err error) {
 	var (
 		blen         = len(b)

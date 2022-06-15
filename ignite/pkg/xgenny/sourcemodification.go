@@ -1,6 +1,6 @@
 package xgenny
 
-// SourceModification describes modified and created files in the source code after a run
+// SourceModification 描述運行後源代碼中修改和創建的文件
 type SourceModification struct {
 	modified map[string]struct{}
 	created  map[string]struct{}
@@ -13,7 +13,7 @@ func NewSourceModification() SourceModification {
 	}
 }
 
-// ModifiedFiles returns the modified files of the source modification
+// ModifiedFiles返回源修改的修改文件
 func (sm SourceModification) ModifiedFiles() (modifiedFiles []string) {
 	for modified := range sm.modified {
 		modifiedFiles = append(modifiedFiles, modified)
@@ -21,7 +21,7 @@ func (sm SourceModification) ModifiedFiles() (modifiedFiles []string) {
 	return
 }
 
-// CreatedFiles returns the created files of the source modification
+// CreatedFiles返回源修改創建的文件
 func (sm SourceModification) CreatedFiles() (createdFiles []string) {
 	for created := range sm.created {
 		createdFiles = append(createdFiles, created)
@@ -29,7 +29,7 @@ func (sm SourceModification) CreatedFiles() (createdFiles []string) {
 	return
 }
 
-// AppendModifiedFiles appends modified files in the source modification that are not already documented
+// AppendModifiedFiles在源修改中附加尚未記錄的修改文件
 func (sm *SourceModification) AppendModifiedFiles(modifiedFiles ...string) {
 	for _, modifiedFile := range modifiedFiles {
 		_, alreadyModified := sm.modified[modifiedFile]
@@ -40,7 +40,7 @@ func (sm *SourceModification) AppendModifiedFiles(modifiedFiles ...string) {
 	}
 }
 
-// AppendCreatedFiles appends a created files in the source modification that are not already documented
+// AppendCreatedFiles在尚未記錄的源修改中附加創建的文件
 func (sm *SourceModification) AppendCreatedFiles(createdFiles ...string) {
 	for _, createdFile := range createdFiles {
 		_, alreadyModified := sm.modified[createdFile]
@@ -51,7 +51,7 @@ func (sm *SourceModification) AppendCreatedFiles(createdFiles ...string) {
 	}
 }
 
-// Merge merges new source modification to an existing one
+// 合併將新的源修改合併到現有的修改
 func (sm *SourceModification) Merge(newSm SourceModification) {
 	sm.AppendModifiedFiles(newSm.ModifiedFiles()...)
 	sm.AppendCreatedFiles(newSm.CreatedFiles()...)

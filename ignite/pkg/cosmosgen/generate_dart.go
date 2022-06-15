@@ -80,7 +80,7 @@ func (g *dartGenerator) generateModule(ctx context.Context, plugin, appPath stri
 		return err
 	}
 
-	// reset destination dir.
+	// 重置目標目錄。
 	if err := os.RemoveAll(out); err != nil {
 		return err
 	}
@@ -88,7 +88,7 @@ func (g *dartGenerator) generateModule(ctx context.Context, plugin, appPath stri
 		return err
 	}
 
-	// generate grpc client and protobuf types.
+	// generate grpc 客戶端和 protobuf 類型。
 	if err := protoc.Generate(
 		ctx,
 		clientOut,
@@ -101,7 +101,7 @@ func (g *dartGenerator) generateModule(ctx context.Context, plugin, appPath stri
 		return err
 	}
 
-	// generate an export file to export all generated code through a single entrypoint.
+	// generate 一個導出文件，通過單個入口點導出所有生成的代碼。
 	generatedFiles, err := zglob.Glob(filepath.Join(clientOut, "**/*.dart"))
 	if err != nil {
 		return err
@@ -117,5 +117,5 @@ func (g *dartGenerator) generateModule(ctx context.Context, plugin, appPath stri
 	}
 
 	err = os.WriteFile(exportOut, exportContent.Bytes(), 0644)
-	return errors.Wrap(err, "could not create the Dart export file for module")
+	return errors.Wrap(err, "無法為模塊創建 Dart 導出文件")
 }

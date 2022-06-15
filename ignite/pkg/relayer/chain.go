@@ -22,84 +22,84 @@ const (
 )
 
 var (
-	errEndpointExistsWithDifferentChainID = errors.New("rpc endpoint already exists with a different chain id")
+	errEndpointExistsWithDifferentChainID = errors.New("Rpc端點已存在不同的Chain Id")
 )
 
-// Chain represents a chain in relayer.
+// Chain 表示中繼器中的一條鏈。
 type Chain struct {
-	// ID is id of the chain.
+	// ID 是鏈的 ID。
 	ID string
 
-	// accountName is account used on the chain.
+	// accountName 是鏈上使用的賬戶。
 	accountName string
 
-	// rpcAddress is the node address of tm.
+	// rpcAddress 是 tm 的節點地址。
 	rpcAddress string
 
-	// faucetAddress is the faucet address to get tokens for relayer accounts.
+	// faucetAddress 是獲取中繼者帳戶令牌的水龍頭地址。
 	faucetAddress string
 
-	// gasPrice is the gas price used when sending transactions to the chain
+	// gasPrice是向鏈發送交易時使用的 gas 價格
 	gasPrice string
 
-	// gasLimit is the gas limit used when sending transactions to the chain
+	// gasLimit是向鏈發送交易時使用的氣體限制
 	gasLimit int64
 
-	// addressPrefix is the address prefix of the chain.
+	// addressPrefix是鏈的地址前綴。
 	addressPrefix string
 
-	// clientID is the client id of the chain for relayer connection.
+	// clientID是中繼器連接的鏈的客戶端 ID。
 	clientID string
 
 	r Relayer
 }
 
-// Account represents an account in relayer.
+// Account 代表中繼器中的一個帳戶。
 type Account struct {
 	// Address of the account.
 	Address string `json:"address"`
 }
 
-// Option is used to configure Chain.
+// Option 用於配置鏈。
 type Option func(*Chain)
 
-// WithFaucet provides a faucet address for chain to get tokens from.
-// when it isn't provided.
+// WithFaucet 為鏈提供了一個水龍頭地址來獲取令牌。
+// 當它沒有提供時。
 func WithFaucet(address string) Option {
 	return func(c *Chain) {
 		c.faucetAddress = address
 	}
 }
 
-// WithGasPrice gives the gas price to use to send ibc transactions to the chain.
+// WithGasPrice 給出用於將 ibc 交易發送到鏈的 gas 價格。
 func WithGasPrice(gasPrice string) Option {
 	return func(c *Chain) {
 		c.gasPrice = gasPrice
 	}
 }
 
-// WithGasLimit gives the gas limit to use to send ibc transactions to the chain.
+// WithGasLimit 給出用於將 ibc 交易發送到鏈的氣體限制。
 func WithGasLimit(limit int64) Option {
 	return func(c *Chain) {
 		c.gasLimit = limit
 	}
 }
 
-// WithAddressPrefix configures the account key prefix used on the chain.
+// WithAddressPrefix 配置鏈上使用的帳戶密鑰前綴。
 func WithAddressPrefix(addressPrefix string) Option {
 	return func(c *Chain) {
 		c.addressPrefix = addressPrefix
 	}
 }
 
-// WithClientID configures the chain client id
+// WithClientID 配置鏈client id
 func WithClientID(clientID string) Option {
 	return func(c *Chain) {
 		c.clientID = clientID
 	}
 }
 
-// NewChain creates a new chain on relayer or uses the existing matching chain.
+// NewChain 在中繼器上創建新鍊或使用現有匹配鏈。
 func (r Relayer) NewChain(ctx context.Context, accountName, rpcAddress string, options ...Option) (
 	*Chain, cosmosaccount.Account, error) {
 	c := &Chain{
@@ -108,7 +108,7 @@ func (r Relayer) NewChain(ctx context.Context, accountName, rpcAddress string, o
 		r:           r,
 	}
 
-	// apply user options.
+	// 應用用戶選項。
 	for _, o := range options {
 		o(c)
 	}
@@ -125,7 +125,7 @@ func (r Relayer) NewChain(ctx context.Context, accountName, rpcAddress string, o
 	return c, account, nil
 }
 
-// TryRetrieve tries to receive some coins to the account and returns the total balance.
+// TryRetrieve嘗試將一些硬幣接收到帳戶並返​​回總餘額。
 func (c *Chain) TryRetrieve(ctx context.Context) (sdk.Coins, error) {
 	acc, err := c.r.ca.GetByName(c.accountName)
 	if err != nil {
@@ -140,7 +140,7 @@ func (c *Chain) TryRetrieve(ctx context.Context) (sdk.Coins, error) {
 	return c.r.balance(ctx, c.rpcAddress, c.accountName, c.addressPrefix)
 }
 
-// channelOptions represents options for configuring the IBC channel between two chains
+// channelOptions表示在兩條鏈之間配置 IBC 通道的選項
 type channelOptions struct {
 	sourcePort    string
 	sourceVersion string
@@ -149,7 +149,7 @@ type channelOptions struct {
 	ordering      string
 }
 
-// newChannelOptions returns default channel options
+// newChannelOptions返回默認通道選項
 func newChannelOptions() channelOptions {
 	return channelOptions{
 		sourcePort:    TransferPort,
@@ -160,46 +160,46 @@ func newChannelOptions() channelOptions {
 	}
 }
 
-// ChannelOption is used to configure relayer IBC connection
+// ChannelOption用於配置中繼器 IBC 連接
 type ChannelOption func(*channelOptions)
 
-// SourcePort configures the source port of the new channel
+// SourcePort配置新通道的源端口
 func SourcePort(port string) ChannelOption {
 	return func(c *channelOptions) {
 		c.sourcePort = port
 	}
 }
 
-// TargetPort configures the target port of the new channel
+// TargetPort配置新通道的目標端口
 func TargetPort(port string) ChannelOption {
 	return func(c *channelOptions) {
 		c.targetPort = port
 	}
 }
 
-// SourceVersion configures the source version of the new channel
+// SourceVersion 配置新通道的源版本
 func SourceVersion(version string) ChannelOption {
 	return func(c *channelOptions) {
 		c.sourceVersion = version
 	}
 }
 
-// TargetVersion configures the target version of the new channel
+// TargetVersion配置新通道的目標版本
 func TargetVersion(version string) ChannelOption {
 	return func(c *channelOptions) {
 		c.targetVersion = version
 	}
 }
 
-// Ordered sets the new channel as ordered
+// Ordered按順序設置新頻道
 func Ordered() ChannelOption {
 	return func(c *channelOptions) {
 		c.ordering = OrderingOrdered
 	}
 }
 
-// Connect connects dst chain to c chain and creates a path in between in offline mode.
-// it returns the path id on success otherwise, returns with a non-nil error.
+// Connect 將 dst 鏈連接到 c 鏈，並在離線模式下創建一條路徑。
+// 成功時返迴路徑 id，否則返回非零錯誤。
 func (c *Chain) Connect(dst *Chain, options ...ChannelOption) (id string, err error) {
 	channelOptions := newChannelOptions()
 
@@ -212,7 +212,7 @@ func (c *Chain) Connect(dst *Chain, options ...ChannelOption) (id string, err er
 		return "", err
 	}
 
-	// determine a unique path name from chain ids with incremental numbers. e.g.:
+	//從帶有遞增數字的鏈 id 中確定唯一的路徑名。例如。：
 	// - src-dst
 	// - src-dst-2
 	pathID := fmt.Sprintf("%s-%s", c.ID, dst.ID)
@@ -220,7 +220,7 @@ func (c *Chain) Connect(dst *Chain, options ...ChannelOption) (id string, err er
 	i := 2
 	for {
 		guess := pathID + suffix
-		if _, err := conf.PathByID(guess); err != nil { // guess is unique.
+		if _, err := conf.PathByID(guess); err != nil { //猜測是獨一無二的。
 			pathID = guess
 			break
 		}
@@ -252,7 +252,7 @@ func (c *Chain) Connect(dst *Chain, options ...ChannelOption) (id string, err er
 	return pathID, nil
 }
 
-// ensureChainSetup sets up the new or existing chain.
+// ensureChainSetup建立新的或現有的鏈。
 func (c *Chain) ensureChainSetup(ctx context.Context) error {
 	client, err := cosmosclient.New(ctx, cosmosclient.WithNodeAddress(c.rpcAddress))
 	if err != nil {

@@ -6,10 +6,10 @@ import (
 	"net/http"
 )
 
-//go:embed index.tpl
+//GO：嵌入 index.tpl
 var index embed.FS
 
-// Handler returns an http handler that servers OpenAPI console for an OpenAPI spec at specURL.
+// 處理程序返回一個 http 處理程序，該處理程序為 specURL 上的 OpenAPI 規範提供 OpenAPI 控制台服務。
 func Handler(title, specURL string) http.HandlerFunc {
 	t, _ := template.ParseFS(index, "index.tpl")
 

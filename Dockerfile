@@ -5,8 +5,8 @@
 #
 FROM golang:1.18.0-bullseye as base
 
-RUN sudo apt update && \
-    sudo apt-get install -y \
+RUN apt update && \
+    apt-get install -y \
          build-essential \
          ca-certificates \
          curl

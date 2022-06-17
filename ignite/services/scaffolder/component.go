@@ -11,9 +11,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ignite-hq/cli/ignite/pkg/multiformatname"
-	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
-	"github.com/ignite-hq/cli/ignite/templates/field/datatype"
+	"github.com/bearnetworkchain/core/ignite/pkg/multiformatname"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
+	"github.com/bearnetworkchain/core/ignite/templates/field/datatype"
 )
 
 const (

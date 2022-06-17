@@ -8,11 +8,11 @@ import (
 
 	"github.com/manifoldco/promptui"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/cliquiz"
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/clispinner"
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/entrywriter"
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/icons"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/cliquiz"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/clispinner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/entrywriter"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/icons"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
 )
 
 // 會話控制與用戶的命令行交互.

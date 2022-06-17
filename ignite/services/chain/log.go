@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ignite-hq/cli/ignite/pkg/lineprefixer"
-	"github.com/ignite-hq/cli/ignite/pkg/prefixgen"
+	"github.com/bearnetworkchain/core/ignite/pkg/lineprefixer"
+	"github.com/bearnetworkchain/core/ignite/pkg/prefixgen"
 )
 
 //prefixes 保存日誌消息的前綴配置。

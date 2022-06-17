@@ -8,8 +8,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/dirchange"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/dirchange"
 )
 
 const (

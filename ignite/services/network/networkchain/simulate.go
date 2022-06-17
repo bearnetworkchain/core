@@ -11,12 +11,12 @@ import (
 	"github.com/pelletier/go-toml"
 	"github.com/pkg/errors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/availableport"
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
-	"github.com/ignite-hq/cli/ignite/pkg/httpstatuschecker"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
-	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	"github.com/bearnetworkchain/core/ignite/pkg/availableport"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/httpstatuschecker"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
+	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
 )
 
 const (
@@ -94,9 +94,9 @@ func (c Chain) simulateChainStart(ctx context.Context) error {
 
 	// 常規鏈啟動
 	go func() {
-// 如果錯誤是驗證器設置為 nil，這意味著在應用請求後創世沒有被破壞
-// 創世紀已正確生成，但目前還沒有 gentxs
-// 所以我們不認為這是一個錯誤，使請求驗證無效
+		// 如果錯誤是驗證器設置為 nil，這意味著在應用請求後創世沒有被破壞
+		// 創世紀已正確生成，但目前還沒有 gentxs
+		// 所以我們不認為這是一個錯誤，使請求驗證無效
 		err := cmd.Start(ctx)
 		if err != nil && strings.Contains(err.Error(), ValidatorSetNilErrorMessage) {
 			err = nil

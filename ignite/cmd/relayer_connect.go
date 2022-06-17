@@ -7,9 +7,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cliui"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/relayer"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/relayer"
 )
 
 // NewRelayerConnect 返回一個新的中繼器連接命令以鏈接所有或部分中繼器路徑並啟動
@@ -57,8 +57,8 @@ func relayerConnectHandler(cmd *cobra.Command, args []string) (err error) {
 		return err
 	}
 
-// 如果沒有提供路徑 id，那麼我們連接所有路徑，否則，
-// 只連接指定的。
+	// 如果沒有提供路徑 id，那麼我們連接所有路徑，否則，
+	// 只連接指定的。
 	if len(ids) == 0 {
 		for _, path := range all {
 			use = append(use, path.ID)

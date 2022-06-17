@@ -6,8 +6,8 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	"github.com/tendermint/tendermint/crypto/ed25519"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
-	"github.com/ignite-hq/cli/ignite/pkg/xtime"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/xtime"
 )
 
 type (
@@ -50,7 +50,7 @@ func VerifyRequest(request Request) error {
 
 // VerifyAddValidatorRequest 驗證驗證器請求參數
 func VerifyAddValidatorRequest(req *launchtypes.RequestContent_GenesisValidator) error {
-// 如果這是一個添加驗證器請求
+	// 如果這是一個添加驗證器請求
 	var (
 		peer           = req.GenesisValidator.Peer
 		valAddress     = req.GenesisValidator.Address
@@ -64,8 +64,8 @@ func VerifyAddValidatorRequest(req *launchtypes.RequestContent_GenesisValidator)
 		return fmt.Errorf("無法解析 gentx %s", err.Error())
 	}
 
-// 將從 gentx 獲取的地址前綴更改為 SPN 上使用的地址前綴
-// 因為 SPN 上的所有鏈上存儲地址都使用 SPN 前綴
+	// 將從 gentx 獲取的地址前綴更改為 SPN 上使用的地址前綴
+	// 因為 SPN 上的所有鏈上存儲地址都使用 SPN 前綴
 	spnFetchedAddress, err := cosmosutil.ChangeAddressPrefix(info.DelegatorAddress, SPN)
 	if err != nil {
 		return err

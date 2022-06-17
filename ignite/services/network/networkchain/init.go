@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
 )
 
 // Init 通過構建二進製文件並運行 init 命令來初始化區塊鏈
@@ -87,7 +87,7 @@ func (c *Chain) initGenesis(ctx context.Context) error {
 			return err
 		}
 
-		// TODO: use validator moniker https://github.com/ignite-hq/cli/issues/1834
+		// TODO: use validator moniker https://github.com/bearnetworkchain/core/issues/1834
 		if err := cmd.Init(ctx, "moniker"); err != nil {
 			return err
 		}
@@ -113,7 +113,7 @@ func (c *Chain) checkGenesis(ctx context.Context) error {
 
 	return chainCmd.ValidateGenesis(ctx)
 
-// TODO: 使用 validate-genesis 對 genesis 進行靜態分析不會檢查 genesis 的完全有效性
-// 示例：不檢查 gentxs 格式
-// 要對創世進行完整的有效性檢查，我們必須嘗試使用示例賬戶啟動鏈
+	// TODO: 使用 validate-genesis 對 genesis 進行靜態分析不會檢查 genesis 的完全有效性
+	// 示例：不檢查 gentxs 格式
+	// 要對創世進行完整的有效性檢查，我們必須嘗試使用示例賬戶啟動鏈
 }

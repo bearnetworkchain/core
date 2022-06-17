@@ -9,7 +9,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
 )
 
 var (
@@ -93,8 +93,8 @@ func (r Runner) ImportAccount(ctx context.Context, name, keyFile, passphrase str
 		return Account{}, err
 	}
 
-// 將密碼寫為輸入
-// TODO: 管理密鑰環後端而不是測試
+	// 將密碼寫為輸入
+	// TODO: 管理密鑰環後端而不是測試
 	input := &bytes.Buffer{}
 	fmt.Fprintln(input, passphrase)
 

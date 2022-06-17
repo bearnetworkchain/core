@@ -3,8 +3,8 @@ package protocgendart
 import (
 	"fmt"
 
-	"github.com/ignite-hq/cli/ignite/pkg/localfs"
-	"github.com/ignite-hq/cli/ignite/pkg/protoc-gen-dart/data"
+	"github.com/bearnetworkchain/core/ignite/pkg/localfs"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoc-gen-dart/data"
 )
 
 // 插件的名稱。

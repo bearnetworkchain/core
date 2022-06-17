@@ -3,8 +3,8 @@ package networkchain
 import (
 	"path/filepath"
 
-	"github.com/ignite-hq/cli/ignite/pkg/confile"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/confile"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
 )
 
 const (

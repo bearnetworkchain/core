@@ -9,7 +9,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
+	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
 )
 
 // transferMutex 是一個互斥鎖，用於將傳輸請求保留在隊列中，因此檢查帳戶餘額和發送令牌是熊網幣的

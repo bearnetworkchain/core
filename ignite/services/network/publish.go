@@ -9,10 +9,10 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmoserror"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
-	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmoserror"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
 )
 
 // publishOptions 保存有關如何創建鏈的信息。
@@ -177,9 +177,9 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 			}
 			coins = append(coins, coin)
 		}
-// TODO 考慮遷移到 UpdateCampaign，但不確定，可能不相關。
-// 最好在一個 tx 中發送多條消息。
-// 考慮重構方法以實現更好的 API 和效率。
+		// TODO 考慮遷移到 UpdateCampaign，但不確定，可能不相關。
+		// 最好在一個 tx 中發送多條消息。
+		// 考慮重構方法以實現更好的 API 和效率。
 		msgMintVouchers := campaigntypes.NewMsgMintVouchers(
 			n.account.Address(networktypes.SPN),
 			campaignID,
@@ -191,7 +191,7 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 		}
 	}
 
-// 根據主網標誌初始化主網或測試網
+	// 根據主網標誌初始化主網或測試網
 	if o.mainnet {
 		launchID, err = n.InitializeMainnet(campaignID, c.SourceURL(), c.SourceHash(), chainID)
 		if err != nil {

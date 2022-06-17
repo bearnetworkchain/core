@@ -14,9 +14,9 @@ import (
 	rewardtypes "github.com/tendermint/spn/x/reward/types"
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosclient"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosclient"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
 )
 
 //go:generate mockery --name CosmosClient --case underscore

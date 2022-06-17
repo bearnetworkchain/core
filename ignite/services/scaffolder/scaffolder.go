@@ -7,17 +7,17 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ignite-hq/cli/ignite/chainconfig"
-	sperrors "github.com/ignite-hq/cli/ignite/errors"
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosgen"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
-	"github.com/ignite-hq/cli/ignite/pkg/gocmd"
-	"github.com/ignite-hq/cli/ignite/pkg/gomodule"
-	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
+	"github.com/bearnetworkchain/core/ignite/chainconfig"
+	sperrors "github.com/bearnetworkchain/core/ignite/errors"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosgen"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
+	"github.com/bearnetworkchain/core/ignite/pkg/gocmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/gomodule"
+	"github.com/bearnetworkchain/core/ignite/pkg/gomodulepath"
 )
 
 // Scaffolder是 Ignite CLI 應用程序腳手架。

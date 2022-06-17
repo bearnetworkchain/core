@@ -5,8 +5,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/module"
-	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/module"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
 )
 
 func TestVuexStoreModulePath(t *testing.T) {

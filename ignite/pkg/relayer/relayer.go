@@ -11,12 +11,12 @@ import (
 	banktypes "github.com/cosmos/cosmos-sdk/x/bank/types"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosclient"
-	"github.com/ignite-hq/cli/ignite/pkg/ctxticker"
-	tsrelayer "github.com/ignite-hq/cli/ignite/pkg/nodetime/programs/ts-relayer"
-	relayerconf "github.com/ignite-hq/cli/ignite/pkg/relayer/config"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosclient"
+	"github.com/bearnetworkchain/core/ignite/pkg/ctxticker"
+	tsrelayer "github.com/bearnetworkchain/core/ignite/pkg/nodetime/programs/ts-relayer"
+	relayerconf "github.com/bearnetworkchain/core/ignite/pkg/relayer/config"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
 )
 
 const (

@@ -3,7 +3,7 @@ package datatype
 import (
 	"fmt"
 
-	"github.com/ignite-hq/cli/ignite/pkg/multiformatname"
+	"github.com/bearnetworkchain/core/ignite/pkg/multiformatname"
 )
 
 var (

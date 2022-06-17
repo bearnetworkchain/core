@@ -14,9 +14,9 @@ import (
 	"github.com/cenkalti/backoff"
 	"github.com/pkg/errors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
+	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
 )
 
 // Start 啟動區塊鏈。

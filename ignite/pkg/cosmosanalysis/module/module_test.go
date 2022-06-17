@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
 )
 
 var testModule = Module{

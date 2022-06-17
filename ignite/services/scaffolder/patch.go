@@ -6,8 +6,8 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
-	modulecreate "github.com/ignite-hq/cli/ignite/templates/module/create"
+	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
+	modulecreate "github.com/bearnetworkchain/core/ignite/templates/module/create"
 )
 
 // supportSimulation 檢查 module_simulation.go 是否存在
@@ -66,7 +66,7 @@ func supportMsgServer(
 	appPath string,
 	opts *modulecreate.MsgServerOptions,
 ) ([]*genny.Generator, error) {
-// 檢查是否使用了約定
+	// 檢查是否使用了約定
 	msgServerDefined, err := isMsgServerDefined(appPath, opts.ModuleName)
 	if err != nil {
 		return nil, err

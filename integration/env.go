@@ -18,15 +18,15 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite-hq/cli/ignite/chainconfig"
-	"github.com/ignite-hq/cli/ignite/pkg/availableport"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosfaucet"
-	"github.com/ignite-hq/cli/ignite/pkg/gocmd"
-	"github.com/ignite-hq/cli/ignite/pkg/httpstatuschecker"
-	"github.com/ignite-hq/cli/ignite/pkg/xexec"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
+	"github.com/bearnetworkchain/core/ignite/chainconfig"
+	"github.com/bearnetworkchain/core/ignite/pkg/availableport"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosfaucet"
+	"github.com/bearnetworkchain/core/ignite/pkg/gocmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/httpstatuschecker"
+	"github.com/bearnetworkchain/core/ignite/pkg/xexec"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
 )
 
 const (

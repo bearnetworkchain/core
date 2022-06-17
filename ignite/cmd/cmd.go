@@ -13,17 +13,17 @@ import (
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 
-	"github.com/ignite-hq/cli/ignite/chainconfig"
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/cliui"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
-	"github.com/ignite-hq/cli/ignite/pkg/gitpod"
-	"github.com/ignite-hq/cli/ignite/pkg/goenv"
-	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
-	"github.com/ignite-hq/cli/ignite/services/chain"
-	"github.com/ignite-hq/cli/ignite/services/scaffolder"
-	"github.com/ignite-hq/cli/ignite/version"
+	"github.com/bearnetworkchain/core/ignite/chainconfig"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
+	"github.com/bearnetworkchain/core/ignite/pkg/gitpod"
+	"github.com/bearnetworkchain/core/ignite/pkg/goenv"
+	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
+	"github.com/bearnetworkchain/core/ignite/services/chain"
+	"github.com/bearnetworkchain/core/ignite/services/scaffolder"
+	"github.com/bearnetworkchain/core/ignite/version"
 )
 
 const (

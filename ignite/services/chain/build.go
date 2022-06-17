@@ -11,15 +11,15 @@ import (
 	"github.com/docker/docker/pkg/archive"
 	"github.com/pkg/errors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/checksum"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/dirchange"
-	"github.com/ignite-hq/cli/ignite/pkg/goanalysis"
-	"github.com/ignite-hq/cli/ignite/pkg/gocmd"
-	"github.com/ignite-hq/cli/ignite/pkg/xstrings"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/checksum"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/dirchange"
+	"github.com/bearnetworkchain/core/ignite/pkg/goanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/gocmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/xstrings"
 )
 
 const (
@@ -193,8 +193,8 @@ func (c *Chain) preBuild(ctx context.Context, cacheStorage cache.Storage) (build
 
 	fmt.Fprintln(c.stdLog().out, "📦 安裝熊網鏈依賴項...")
 
-// 我們在檢查校驗和更改之前做 mod tidy，因為 go.mod 經常被修改
-// 無論如何，mod verify 命令是昂貴的
+	// 我們在檢查校驗和更改之前做 mod tidy，因為 go.mod 經常被修改
+	// 無論如何，mod verify 命令是昂貴的
 	if err := gocmd.ModTidy(ctx, c.app.Path); err != nil {
 		return nil, err
 	}

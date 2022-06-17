@@ -14,16 +14,16 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/ignite-hq/cli/ignite/chainconfig"
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosfaucet"
-	"github.com/ignite-hq/cli/ignite/pkg/dirchange"
-	"github.com/ignite-hq/cli/ignite/pkg/localfs"
-	"github.com/ignite-hq/cli/ignite/pkg/xexec"
-	"github.com/ignite-hq/cli/ignite/pkg/xfilepath"
-	"github.com/ignite-hq/cli/ignite/pkg/xhttp"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
+	"github.com/bearnetworkchain/core/ignite/chainconfig"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosfaucet"
+	"github.com/bearnetworkchain/core/ignite/pkg/dirchange"
+	"github.com/bearnetworkchain/core/ignite/pkg/localfs"
+	"github.com/bearnetworkchain/core/ignite/pkg/xexec"
+	"github.com/bearnetworkchain/core/ignite/pkg/xfilepath"
+	"github.com/bearnetworkchain/core/ignite/pkg/xhttp"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
 )
 
 const (
@@ -168,7 +168,7 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 
 					var validationErr *chainconfig.ValidationError
 					if errors.As(err, &validationErr) {
-						fmt.Fprintln(c.stdLog().out, "請查看: https://github.com/ignite-hq/cli#configure")
+						fmt.Fprintln(c.stdLog().out, "請查看: https://github.com/bearnetworkchain/core#configure")
 					}
 
 					fmt.Fprintf(c.stdLog().out, "%s\n", infoColor("在重試之前等待修復..."))
@@ -262,8 +262,8 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 
 	dirCache := cache.New[[]byte](cacheStorage, serveDirchangeCacheNamespace)
 
-// 確定應用程序是否必須重置狀態
-// 如果必須重置狀態，那麼我們認為鏈沒有初始化
+	// 確定應用程序是否必須重置狀態
+	// 如果必須重置狀態，那麼我們認為鏈沒有初始化
 	isInit, err = c.IsInitialized()
 	if err != nil {
 		return err

@@ -9,8 +9,8 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/goenv"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/goenv"
 )
 
 // Runner 是運行命令的對象
@@ -86,8 +86,8 @@ func (r *Runner) Run(ctx context.Context, steps ...*step.Step) error {
 	}
 	g, ctx := errgroup.WithContext(ctx)
 	for _, step := range steps {
-// 複製 s 到一個新的變量來分配一個新的地址
-// 所以我們可以安全地在這個循環中產生的 goroutines 中使用它。
+		// 複製 s 到一個新的變量來分配一個新的地址
+		// 所以我們可以安全地在這個循環中產生的 goroutines 中使用它。
 		step := step
 		if err := ctx.Err(); err != nil {
 			return err
@@ -96,7 +96,7 @@ func (r *Runner) Run(ctx context.Context, steps ...*step.Step) error {
 			return err
 		}
 		runPostExecs := func(processErr error) error {
-// 如果上下文被取消，那麼我們可以忽略退出錯誤處理，因為它應該因為取消而退出。
+			// 如果上下文被取消，那麼我們可以忽略退出錯誤處理，因為它應該因為取消而退出。
 			var err error
 			ctxErr := ctx.Err()
 			if ctxErr != nil {

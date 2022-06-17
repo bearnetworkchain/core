@@ -10,7 +10,7 @@ import (
 	"github.com/goccy/go-yaml"
 	"github.com/imdario/mergo"
 
-	"github.com/ignite-hq/cli/ignite/pkg/xfilepath"
+	"github.com/bearnetworkchain/core/ignite/pkg/xfilepath"
 )
 
 var (
@@ -25,7 +25,7 @@ var (
 	// ErrCouldntLocateConfig 在源代碼中找不到 config.yml 時返回。
 	ErrCouldntLocateConfig = errors.New(
 		"找不到config.yml在你的鏈條中。請點擊鏈接" +
-			"how-to: https://github.com/ignite-hq/cli/blob/develop/docs/configure/index.md")
+			"how-to: https://github.com/bearnetworkchain/core/blob/develop/docs/configure/index.md")
 )
 
 // DefaultConf 保存默認配置。

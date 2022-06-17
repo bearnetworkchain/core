@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/app"
-	"github.com/ignite-hq/cli/ignite/pkg/gomodule"
-	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/app"
+	"github.com/bearnetworkchain/core/ignite/pkg/gomodule"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
 )
 
 // Msgs 是一個模塊導入路徑-SDK 消息對。
@@ -85,7 +85,7 @@ type moduleDiscoverer struct {
 // 2. 解析 proto 文件找到服務和消息
 // 3. 檢查 proto 服務是否在任何註冊的模塊中實現
 func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Module, error) {
-// 找出區塊鏈的基本 Go 導入路徑。
+	// 找出區塊鏈的基本 Go 導入路徑。
 	gm, err := gomodule.ParseAt(sourcePath)
 	if err != nil {
 		if err == gomodule.ErrGoModNotFound {
@@ -101,7 +101,7 @@ func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Mo
 
 	basegopath := gm.Module.Mod.Path
 
-// 只過濾掉這裡可能不相關的註冊模塊
+	// 只過濾掉這裡可能不相關的註冊模塊
 	potentialModules := make([]string, 0)
 	for _, m := range registeredModules {
 		if strings.HasPrefix(m, basegopath) {
@@ -119,7 +119,7 @@ func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Mo
 		registeredModules: potentialModules,
 	}
 
-// 查找屬於 x/ 下模塊​​的 proto 包。
+	// 查找屬於 x/ 下模塊​​的 proto 包。
 	pkgs, err := md.findModuleProtoPkgs(ctx)
 	if err != nil {
 		return nil, err
@@ -175,9 +175,9 @@ func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 	for _, msg := range msgs {
 		pkgmsg, err := pkg.MessageByName(msg)
 		if err != nil {
-// no msg found in the proto defs 對應於發現的 sdk 消息。
-// 如果找不到，不用擔心，這意味著它被使用了
-// 僅限內部使用，不開放供實際使用。
+			// no msg found in the proto defs 對應於發現的 sdk 消息。
+			// 如果找不到，不用擔心，這意味著它被使用了
+			// 僅限內部使用，不開放供實際使用。
 			continue
 		}
 
@@ -279,8 +279,8 @@ func (d *moduleDiscoverer) pkgIsFromRegisteredModule(pkg protoanalysis.Package) 
 				return false, err
 			}
 
-// 在某些情況下，模塊註冊在模塊的另一層子目錄中。
-// 全部: 在 proto 包中找到最近的子目錄。
+			// 在某些情況下，模塊註冊在模塊的另一層子目錄中。
+			// 全部: 在 proto 包中找到最近的子目錄。
 			if len(found) == 0 && strings.HasPrefix(rm, pkg.GoImportName) {
 				altImplRelPath := strings.TrimPrefix(pkg.GoImportName, d.basegopath)
 				altImplPath := filepath.Join(d.sourcePath, altImplRelPath)

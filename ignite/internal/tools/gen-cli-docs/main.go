@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 
-	ignitecmd "github.com/ignite-hq/cli/ignite/cmd"
+	ignitecmd "github.com/bearnetworkchain/core/ignite/cmd"
 )
 
 const head = `---
@@ -63,9 +63,9 @@ func generateCmd(cmd *cobra.Command, w io.Writer) error {
 		return err
 	}
 
-// 這裡我們將子標題改為粗體樣式。否則，這些標題將獲得
-// 打印在 docs.starport.network 的右側菜單中，這令人不快，因為
-// 我們只想看到所有可用命令的列表，沒有額外的噪音。
+	// 這裡我們將子標題改為粗體樣式。否則，這些標題將獲得
+	// 打印在 docs.starport.network 的右側菜單中，這令人不快，因為
+	// 我們只想看到所有可用命令的列表，沒有額外的噪音。
 	sc := bufio.NewScanner(b)
 	for sc.Scan() {
 		t := sc.Text()

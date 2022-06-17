@@ -12,10 +12,10 @@ import (
 	"github.com/blang/semver"
 	"github.com/google/go-github/v37/github"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/gitpod"
-	"github.com/ignite-hq/cli/ignite/pkg/xexec"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/gitpod"
+	"github.com/bearnetworkchain/core/ignite/pkg/xexec"
 )
 
 const (

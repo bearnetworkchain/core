@@ -8,10 +8,10 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/imdario/mergo"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosclient"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosfaucet"
-	relayerconfig "github.com/ignite-hq/cli/ignite/pkg/relayer/config"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosclient"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosfaucet"
+	relayerconfig "github.com/bearnetworkchain/core/ignite/pkg/relayer/config"
 )
 
 const (

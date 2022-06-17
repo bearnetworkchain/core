@@ -6,8 +6,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
 )
 
 //InstallDependencies 安裝 Cosmos 生態系統所需的 protoc 依賴項。

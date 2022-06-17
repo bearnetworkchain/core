@@ -7,12 +7,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmoserror"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
-	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
-	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmoserror"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
+	"github.com/bearnetworkchain/core/ignite/services/network/networkchain"
+	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
 )
 
 type joinOptions struct {

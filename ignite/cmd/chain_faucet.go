@@ -6,8 +6,8 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/spf13/cobra"
 
-	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
-	"github.com/ignite-hq/cli/ignite/services/chain"
+	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
+	"github.com/bearnetworkchain/core/ignite/services/chain"
 )
 
 // NewChainFaucet 創建一個新的水龍頭命令來向賬戶發送硬幣。

@@ -7,9 +7,9 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
-	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
-	"github.com/ignite-hq/cli/ignite/templates/typed"
+	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
+	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
+	"github.com/bearnetworkchain/core/ignite/templates/typed"
 )
 
 // NewStargate returns the generator to scaffold a empty message in a Stargate module

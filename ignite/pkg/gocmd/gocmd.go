@@ -8,9 +8,9 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/goenv"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/goenv"
 )
 
 const (

@@ -3,9 +3,9 @@ package ignitecmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cliui"
-	"github.com/ignite-hq/cli/ignite/pkg/yaml"
-	"github.com/ignite-hq/cli/ignite/services/network"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
+	"github.com/bearnetworkchain/core/ignite/pkg/yaml"
+	"github.com/bearnetworkchain/core/ignite/services/network"
 )
 
 // NewNetworkCampaignShow 返回一個新命令以在 Ignite 上顯示已發布的活動

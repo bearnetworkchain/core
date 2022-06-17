@@ -8,10 +8,10 @@ import (
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/clispinner"
-	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
-	"github.com/ignite-hq/cli/ignite/pkg/xgit"
-	"github.com/ignite-hq/cli/ignite/services/scaffolder"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/clispinner"
+	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
+	"github.com/bearnetworkchain/core/ignite/pkg/xgit"
+	"github.com/bearnetworkchain/core/ignite/services/scaffolder"
 )
 
 // 與組件腳手架相關的標誌

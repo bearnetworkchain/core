@@ -7,7 +7,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/ignite-hq/cli/ignite/pkg/xhttp"
+	"github.com/bearnetworkchain/core/ignite/pkg/xhttp"
 )
 
 type TransferRequest struct {

@@ -10,11 +10,11 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/lineprefixer"
-	"github.com/ignite-hq/cli/ignite/pkg/truncatedbuffer"
+	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/lineprefixer"
+	"github.com/bearnetworkchain/core/ignite/pkg/truncatedbuffer"
 )
 
 // Runner 提供對區塊鏈命令的高級訪問。
@@ -65,8 +65,8 @@ func New(ctx context.Context, chainCmd chaincmd.ChainCmd, options ...Option) (Ru
 
 	applyOptions(&runner, options)
 
-// 自動檢測鏈 id 並將其應用於 chaincmd 如果是 auto
-// 啟用檢測。
+	// 自動檢測鏈 id 並將其應用於 chaincmd 如果是 auto
+	// 啟用檢測。
 	if chainCmd.IsAutoChainIDDetectionEnabled() {
 		status, err := runner.Status(ctx)
 		if err != nil {
@@ -98,9 +98,9 @@ func (r Runner) Cmd() chaincmd.ChainCmd {
 }
 
 type runOptions struct {
-// WrappedStdErrMaxLen 確定打包錯誤日誌的最大長度
-// 此選項用於長時間運行的命令，以防止包含 stderr 的緩衝區變得太大
-// 0 可以用於沒有最大長度
+	// WrappedStdErrMaxLen 確定打包錯誤日誌的最大長度
+	// 此選項用於長時間運行的命令，以防止包含 stderr 的緩衝區變得太大
+	// 0 可以用於沒有最大長度
 	wrappedStdErrMaxLen int
 
 	// stdout 和 stderr 用於收集命令輸出的副本。
@@ -113,9 +113,9 @@ type runOptions struct {
 // run 執行命令。
 func (r Runner) run(ctx context.Context, runOptions runOptions, stepOptions ...step.Option) error {
 	var (
-// 我們使用截斷的緩衝區來防止內存洩漏
-// 這是因為 Stargate 應用當前正在向 StdErr 發送日誌
-// 因此，如果應用程序成功啟動，寫入的日誌會變得很長
+		// 我們使用截斷的緩衝區來防止內存洩漏
+		// 這是因為 Stargate 應用當前正在向 StdErr 發送日誌
+		// 因此，如果應用程序成功啟動，寫入的日誌會變得很長
 		errb = truncatedbuffer.NewTruncatedBuffer(runOptions.wrappedStdErrMaxLen)
 
 		// add optional prefixes to output streams.

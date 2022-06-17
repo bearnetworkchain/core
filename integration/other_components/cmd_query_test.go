@@ -7,8 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	envtest "github.com/ignite-hq/cli/integration"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	envtest "github.com/bearnetworkchain/core/integration"
 )
 
 func TestGenerateAnAppWithQuery(t *testing.T) {

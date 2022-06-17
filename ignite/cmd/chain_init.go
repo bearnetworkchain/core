@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/colors"
-	"github.com/ignite-hq/cli/ignite/services/chain"
+	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/colors"
+	"github.com/bearnetworkchain/core/ignite/services/chain"
 )
 
 func NewChainInit() *cobra.Command {

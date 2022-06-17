@@ -11,9 +11,9 @@ import (
 	"github.com/pkg/errors"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/module"
-	"github.com/ignite-hq/cli/ignite/pkg/protoc"
-	protocgendart "github.com/ignite-hq/cli/ignite/pkg/protoc-gen-dart"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/module"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoc"
+	protocgendart "github.com/bearnetworkchain/core/ignite/pkg/protoc-gen-dart"
 )
 
 var (

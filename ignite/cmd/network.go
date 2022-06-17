@@ -5,13 +5,13 @@ import (
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosclient"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
-	"github.com/ignite-hq/cli/ignite/pkg/gitpod"
-	"github.com/ignite-hq/cli/ignite/services/network"
-	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
-	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosclient"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/gitpod"
+	"github.com/bearnetworkchain/core/ignite/services/network"
+	"github.com/bearnetworkchain/core/ignite/services/network/networkchain"
+	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
 )
 
 var (
@@ -159,9 +159,9 @@ func getNetworkCosmosClient(cmd *cobra.Command) (cosmosclient.Client, error) {
 	}
 
 	keyringBackend := getKeyringBackend(cmd)
-// 在 Gitpod 上使用測試密鑰環後端，以防止提示輸入密鑰環密碼。
-// 這是因為 Gitpod 使用容器。
-// 當不在 Gitpod 上時，使用操作系統密鑰環後端，它只詢問一次密碼。
+	// 在 Gitpod 上使用測試密鑰環後端，以防止提示輸入密鑰環密碼。
+	// 這是因為 Gitpod 使用容器。
+	// 當不在 Gitpod 上時，使用操作系統密鑰環後端，它只詢問一次密碼。
 	if gitpod.IsOnGitpod() {
 		keyringBackend = cosmosaccount.KeyringTest
 	}
@@ -169,7 +169,7 @@ func getNetworkCosmosClient(cmd *cobra.Command) (cosmosclient.Client, error) {
 		cosmosOptions = append(cosmosOptions, cosmosclient.WithKeyringBackend(keyringBackend))
 	}
 
-// 在啟動時只初始化一次 cosmos 客戶端，以便spnclient在以下步驟中重用未鎖定的密鑰環。
+	// 在啟動時只初始化一次 cosmos 客戶端，以便spnclient在以下步驟中重用未鎖定的密鑰環。
 
 	if cosmos == nil {
 		client, err := cosmosclient.New(cmd.Context(), cosmosOptions...)

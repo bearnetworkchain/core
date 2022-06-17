@@ -6,14 +6,14 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/multiformatname"
-	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
-	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
-	"github.com/ignite-hq/cli/ignite/templates/field"
-	"github.com/ignite-hq/cli/ignite/templates/field/datatype"
-	"github.com/ignite-hq/cli/ignite/templates/message"
-	modulecreate "github.com/ignite-hq/cli/ignite/templates/module/create"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/multiformatname"
+	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
+	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
+	"github.com/bearnetworkchain/core/ignite/templates/field"
+	"github.com/bearnetworkchain/core/ignite/templates/field/datatype"
+	"github.com/bearnetworkchain/core/ignite/templates/message"
+	modulecreate "github.com/bearnetworkchain/core/ignite/templates/module/create"
 )
 
 // messageOptions表示消息腳手架的配置

@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cliui"
-	"github.com/ignite-hq/cli/ignite/pkg/yaml"
-	"github.com/ignite-hq/cli/ignite/services/network"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
+	"github.com/bearnetworkchain/core/ignite/pkg/yaml"
+	"github.com/bearnetworkchain/core/ignite/services/network"
 )
 
 // NewNetworkRequestShow 創建一個新的請求顯示命令來顯示
@@ -54,8 +54,8 @@ func networkRequestShowHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-// 將請求對象轉換為 YAML 以提高可讀性
-// 並將字節數組字段轉換為字符串。
+	// 將請求對象轉換為 YAML 以提高可讀性
+	// 並將字節數組字段轉換為字符串。
 	requestYaml, err := yaml.Marshal(cmd.Context(), request,
 		"$.Content.content.genesisValidator.genTx",
 		"$.Content.content.genesisValidator.consPubKey",

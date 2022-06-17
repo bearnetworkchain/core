@@ -12,20 +12,20 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	appanalysis "github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/app"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
-	"github.com/ignite-hq/cli/ignite/pkg/gocmd"
-	"github.com/ignite-hq/cli/ignite/pkg/multiformatname"
-	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
-	"github.com/ignite-hq/cli/ignite/pkg/validation"
-	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
-	"github.com/ignite-hq/cli/ignite/templates/field"
-	"github.com/ignite-hq/cli/ignite/templates/module"
-	modulecreate "github.com/ignite-hq/cli/ignite/templates/module/create"
-	moduleimport "github.com/ignite-hq/cli/ignite/templates/module/import"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	appanalysis "github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/app"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
+	"github.com/bearnetworkchain/core/ignite/pkg/gocmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/multiformatname"
+	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
+	"github.com/bearnetworkchain/core/ignite/pkg/validation"
+	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
+	"github.com/bearnetworkchain/core/ignite/templates/field"
+	"github.com/bearnetworkchain/core/ignite/templates/module"
+	modulecreate "github.com/bearnetworkchain/core/ignite/templates/module/create"
+	moduleimport "github.com/bearnetworkchain/core/ignite/templates/module/import"
 )
 
 const (
@@ -38,9 +38,9 @@ const (
 )
 
 var (
-// reservedNames 是 Cosmos-SDK 應用程序中定義的默認模塊的名稱，或者是默認查詢和 tx CLI 命名空間中使用的名稱
-// 新模塊的名稱不能等於保留名稱
-// 一個映射用於直接比較
+	// reservedNames 是 Cosmos-SDK 應用程序中定義的默認模塊的名稱，或者是默認查詢和 tx CLI 命名空間中使用的名稱
+	// 新模塊的名稱不能等於保留名稱
+	// 一個映射用於直接比較
 	reservedNames = map[string]struct{}{
 		"account":      {},
 		"auth":         {},
@@ -71,8 +71,8 @@ var (
 		"vesting":      {},
 	}
 
-// defaultStoreKeys 是 Cosmos-SDK 應用程序中定義的默認存儲鍵的名稱
-// 由於潛在的存儲鍵衝突，新模塊的名稱不能在其前綴中定義存儲鍵
+	// defaultStoreKeys 是 Cosmos-SDK 應用程序中定義的默認存儲鍵的名稱
+	// 由於潛在的存儲鍵衝突，新模塊的名稱不能在其前綴中定義存儲鍵
 	defaultStoreKeys = []string{
 		"acc",
 		"bank",
@@ -93,16 +93,16 @@ var (
 
 // moduleCreationOptions 包含用於創建新模塊的選項
 type moduleCreationOptions struct {
-// ibc 如果模塊是 ibc 模塊，則為 true
+	// ibc 如果模塊是 ibc 模塊，則為 true
 	ibc bool
 
-// params 參數列表
+	// params 參數列表
 	params []string
 
-// ibcChannelOrdering ibc 通道排序
+	// ibcChannelOrdering ibc 通道排序
 	ibcChannelOrdering string
 
-// 模塊依賴的依賴列表
+	// 模塊依賴的依賴列表
 	dependencies []modulecreate.Dependency
 }
 
@@ -157,12 +157,12 @@ func (s Scaffolder) CreateModule(
 	}
 	moduleName = mfName.LowerCase
 
-// 檢查模塊名是否有效
+	// 檢查模塊名是否有效
 	if err := checkModuleName(s.path, moduleName); err != nil {
 		return sm, err
 	}
 
-// 檢查模塊是否已經存在
+	// 檢查模塊是否已經存在
 	ok, err := moduleExists(s.path, moduleName)
 	if err != nil {
 		return sm, err
@@ -171,19 +171,19 @@ func (s Scaffolder) CreateModule(
 		return sm, fmt.Errorf("模塊 %v 已經存在", moduleName)
 	}
 
-// 應用選項
+	// 應用選項
 	var creationOpts moduleCreationOptions
 	for _, apply := range options {
 		apply(&creationOpts)
 	}
 
-// 使用關聯類型解析參數
+	// 使用關聯類型解析參數
 	params, err := field.ParseFields(creationOpts.params, checkForbiddenTypeIndex)
 	if err != nil {
 		return sm, err
 	}
 
-// 檢查依賴關係
+	// 檢查依賴關係
 	if err := checkDependencies(creationOpts.dependencies, s.path); err != nil {
 		return sm, err
 	}
@@ -199,14 +199,14 @@ func (s Scaffolder) CreateModule(
 		Dependencies: creationOpts.dependencies,
 	}
 
-// 來自 Cosmos SDK 版本的生成器
+	// 來自 Cosmos SDK 版本的生成器
 	g, err := modulecreate.NewStargate(opts)
 	if err != nil {
 		return sm, err
 	}
 	gens := []*genny.Generator{g}
 
-// 腳手架 IBC 模塊
+	// 腳手架 IBC 模塊
 	if opts.IsIBC {
 		g, err = modulecreate.NewIBC(tracer, opts)
 		if err != nil {
@@ -219,7 +219,7 @@ func (s Scaffolder) CreateModule(
 		return sm, err
 	}
 
-// 修改 app.go 註冊模塊
+	// 修改 app.go 註冊模塊
 	newSourceModification, runErr := xgenny.RunWithValidation(tracer, modulecreate.NewStargateAppModify(tracer, opts))
 	sm.Merge(newSourceModification)
 	var validationErr validation.Error
@@ -266,8 +266,8 @@ func (s Scaffolder) ImportModule(cacheStorage cache.Storage, tracer *placeholder
 		return sm, err
 	}
 
-// 導入特定版本的 ComsWasm
-// 注意（dshulyak）它必須在驗證後安裝
+	// 導入特定版本的 ComsWasm
+	// 注意（dshulyak）它必須在驗證後安裝
 	if err := s.installWasm(); err != nil {
 		return sm, err
 	}
@@ -284,7 +284,7 @@ func moduleExists(appPath string, moduleName string) (bool, error) {
 
 	_, err = os.Stat(absPath)
 	if os.IsNotExist(err) {
-// 模塊不存在
+		// 模塊不存在
 		return false, nil
 	}
 
@@ -293,12 +293,12 @@ func moduleExists(appPath string, moduleName string) (bool, error) {
 
 // checkModuleName 檢查名稱是否可以用作模塊名稱
 func checkModuleName(appPath, moduleName string) error {
-// 去關鍵字
+	// 去關鍵字
 	if token.Lookup(moduleName).IsKeyword() {
 		return fmt.Errorf("%s 是一個 Go 關鍵字", moduleName)
 	}
 
-// 檢查名稱是否為保留名稱
+	// 檢查名稱是否為保留名稱
 	if _, ok := reservedNames[moduleName]; ok {
 		return fmt.Errorf("%s 是保留名稱，不能用作模塊名稱", moduleName)
 	}
@@ -317,8 +317,8 @@ func checkModuleName(appPath, moduleName string) error {
 		}
 	}
 
-// 使用用戶定義的模塊檢查存儲鍵
-// 我們認為所有用戶定義的模塊都使用模塊名稱作為存儲鍵
+	// 使用用戶定義的模塊檢查存儲鍵
+	// 我們認為所有用戶定義的模塊都使用模塊名稱作為存儲鍵
 	entries, err := os.ReadDir(filepath.Join(appPath, moduleDir))
 	if os.IsNotExist(err) {
 		return nil

@@ -7,18 +7,18 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/multiformatname"
-	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
-	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
-	"github.com/ignite-hq/cli/ignite/templates/field"
-	"github.com/ignite-hq/cli/ignite/templates/field/datatype"
-	modulecreate "github.com/ignite-hq/cli/ignite/templates/module/create"
-	"github.com/ignite-hq/cli/ignite/templates/typed"
-	"github.com/ignite-hq/cli/ignite/templates/typed/dry"
-	"github.com/ignite-hq/cli/ignite/templates/typed/list"
-	maptype "github.com/ignite-hq/cli/ignite/templates/typed/map"
-	"github.com/ignite-hq/cli/ignite/templates/typed/singleton"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/multiformatname"
+	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
+	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
+	"github.com/bearnetworkchain/core/ignite/templates/field"
+	"github.com/bearnetworkchain/core/ignite/templates/field/datatype"
+	modulecreate "github.com/bearnetworkchain/core/ignite/templates/module/create"
+	"github.com/bearnetworkchain/core/ignite/templates/typed"
+	"github.com/bearnetworkchain/core/ignite/templates/typed/dry"
+	"github.com/bearnetworkchain/core/ignite/templates/typed/list"
+	maptype "github.com/bearnetworkchain/core/ignite/templates/typed/map"
+	"github.com/bearnetworkchain/core/ignite/templates/typed/singleton"
 )
 
 // AddTypeOption 配置 AddType 的選項。
@@ -125,7 +125,7 @@ func (s Scaffolder) AddType(
 	kind AddTypeKind,
 	options ...AddTypeOption,
 ) (sm xgenny.SourceModification, err error) {
-// 應用選項。
+	// 應用選項。
 	o := newAddTypeOptions(s.modpath.Package)
 	for _, apply := range append(options, AddTypeOption(kind)) {
 		apply(&o)
@@ -151,7 +151,7 @@ func (s Scaffolder) AddType(
 		signer = o.signer
 	}
 
-// 檢查並解析提供的字段
+	// 檢查並解析提供的字段
 	if err := checkCustomTypes(ctx, s.path, moduleName, o.fields); err != nil {
 		return sm, err
 	}
@@ -186,7 +186,7 @@ func (s Scaffolder) AddType(
 		}
 		gens []*genny.Generator
 	)
-// 檢查並支持 MsgServer 約定
+	// 檢查並支持 MsgServer 約定
 	gens, err = supportMsgServer(
 		gens,
 		tracer,
@@ -223,7 +223,7 @@ func (s Scaffolder) AddType(
 		return sm, err
 	}
 
-// 根據模型創建類型生成器
+	// 根據模型創建類型生成器
 	switch {
 	case o.isList:
 		g, err = list.NewStargate(tracer, opts)
@@ -238,7 +238,7 @@ func (s Scaffolder) AddType(
 		return sm, err
 	}
 
-// 運行生成
+	// 運行生成
 	gens = append(gens, g)
 	sm, err = xgenny.RunWithValidation(tracer, gens...)
 	if err != nil {

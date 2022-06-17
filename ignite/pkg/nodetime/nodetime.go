@@ -10,8 +10,8 @@ import (
 	"io"
 	"sync"
 
-	"github.com/ignite-hq/cli/ignite/pkg/localfs"
-	"github.com/ignite-hq/cli/ignite/pkg/nodetime/data"
+	"github.com/bearnetworkchain/core/ignite/pkg/localfs"
+	"github.com/bearnetworkchain/core/ignite/pkg/nodetime/data"
 )
 
 // 包含的 CLI 列表。

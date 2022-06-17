@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/localfs"
-	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
-	"github.com/ignite-hq/cli/ignite/pkg/protoc/data"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/localfs"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoc/data"
 )
 
 // Option配置 生成配置。
@@ -194,8 +194,8 @@ func searchFile(file protoanalysis.File, protoPath string, includePaths []string
 			guessedPath := filepath.Join(included, dep)
 			_, err := os.Stat(guessedPath)
 			if err == nil {
-// 找到依賴。
-// 如果它在 protoPath 下，它已經被發現，所以跳過它。
+				// 找到依賴。
+				// 如果它在 protoPath 下，它已經被發現，所以跳過它。
 				if !strings.HasPrefix(guessedPath, protoPath) {
 					discovered = append(discovered, guessedPath)
 

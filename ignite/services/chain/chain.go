@@ -10,14 +10,14 @@ import (
 	"github.com/gookit/color"
 	"github.com/tendermint/spn/pkg/chainid"
 
-	"github.com/ignite-hq/cli/ignite/chainconfig"
-	sperrors "github.com/ignite-hq/cli/ignite/errors"
-	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
-	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
-	"github.com/ignite-hq/cli/ignite/pkg/confile"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
-	"github.com/ignite-hq/cli/ignite/pkg/repoversion"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
+	"github.com/bearnetworkchain/core/ignite/chainconfig"
+	sperrors "github.com/bearnetworkchain/core/ignite/errors"
+	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
+	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
+	"github.com/bearnetworkchain/core/ignite/pkg/confile"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
+	"github.com/bearnetworkchain/core/ignite/pkg/repoversion"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
 )
 
 var (
@@ -79,8 +79,8 @@ type chainOptions struct {
 	// 如果未在配置中指定，則命令使用的密鑰環後端
 	keyringBackend chaincmd.KeyringBackend
 
-// isThirdPartyModuleCodegen 指示是否應該生成 proto 代碼
-// 對於第 3 方模塊。 SDK 模塊也被視為第 3 方。
+	// isThirdPartyModuleCodegen 指示是否應該生成 proto 代碼
+	// 對於第 3 方模塊。 SDK 模塊也被視為第 3 方。
 	isThirdPartyModuleCodegenEnabled bool
 
 	// 自定義配置文件的路徑

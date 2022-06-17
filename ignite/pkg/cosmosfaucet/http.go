@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
+	"github.com/bearnetworkchain/core/ignite/pkg/openapiconsole"
 )
 
 // ServeHTTP 實現 http.Handler 以通過 HTTP 公開 Faucet.Transfer() 的功能。

@@ -14,11 +14,11 @@ import (
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/randstr"
-	"github.com/ignite-hq/cli/ignite/pkg/xurl"
-	envtest "github.com/ignite-hq/cli/integration"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/randstr"
+	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
+	envtest "github.com/bearnetworkchain/core/integration"
 )
 
 func TestGetTxViaGRPCGateway(t *testing.T) {

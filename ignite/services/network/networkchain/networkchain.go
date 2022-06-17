@@ -9,16 +9,16 @@ import (
 	"github.com/go-git/go-git/v5"
 	"github.com/go-git/go-git/v5/plumbing"
 
-	sperrors "github.com/ignite-hq/cli/ignite/errors"
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
-	"github.com/ignite-hq/cli/ignite/pkg/checksum"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
-	"github.com/ignite-hq/cli/ignite/pkg/gitpod"
-	"github.com/ignite-hq/cli/ignite/services/chain"
-	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	sperrors "github.com/bearnetworkchain/core/ignite/errors"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
+	"github.com/bearnetworkchain/core/ignite/pkg/checksum"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/pkg/gitpod"
+	"github.com/bearnetworkchain/core/ignite/services/chain"
+	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
 )
 
 // Chain 代表一個網絡區塊鏈，並允許您與其源代碼和二進製文件進行交互。

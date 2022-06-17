@@ -13,10 +13,10 @@ import (
 	"github.com/pkg/errors"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cache"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
-	"github.com/ignite-hq/cli/ignite/pkg/events"
-	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/events"
+	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
 )
 
 // ResetGenesisTime 重置鏈創世時間

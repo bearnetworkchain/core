@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
-	"github.com/ignite-hq/cli/ignite/pkg/randstr"
-	"github.com/ignite-hq/cli/ignite/services/chain"
+	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/bearnetworkchain/core/ignite/pkg/randstr"
+	"github.com/bearnetworkchain/core/ignite/services/chain"
 )
 
 const (
@@ -54,8 +54,8 @@ func (c Chain) InitAccount(ctx context.Context, v chain.Validator, accountName s
 // ImportAccount 將一個賬戶從 Starport 導入到鏈中。
 // 我們首先將賬戶導出到臨時密鑰文件中，然後使用鏈 CLI 導入。
 func (c *Chain) ImportAccount(ctx context.Context, name string) (string, error) {
-// 鏈 CLI 的密鑰導入命令要求密鑰文件使用至少 8 個字符的密碼進行加密
-// 我們生成一個隨機密碼來導入賬戶
+	// 鏈 CLI 的密鑰導入命令要求密鑰文件使用至少 8 個字符的密碼進行加密
+	// 我們生成一個隨機密碼來導入賬戶
 	passphrase := randstr.Runes(passphraseLength)
 
 	// 將密鑰導出到臨時文件中。

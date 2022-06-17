@@ -7,8 +7,8 @@ import (
 	"github.com/otiai10/copy"
 	"github.com/pkg/errors"
 
-	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
-	"github.com/ignite-hq/cli/ignite/pkg/protoc"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
+	"github.com/bearnetworkchain/core/ignite/pkg/protoc"
 )
 
 var (
@@ -24,9 +24,9 @@ func (g *generator) generateGo() error {
 		return err
 	}
 
-// 創建了一個臨時目錄來定位生成的代碼，稍後只有其中一些會被移動到
-// 應用程序的源代碼。這也可以防止在應用程序的源代碼或其父目錄中存在剩余文件 -when
-// 直接在那裡執行的命令——在中斷的情況下。
+	// 創建了一個臨時目錄來定位生成的代碼，稍後只有其中一些會被移動到
+	// 應用程序的源代碼。這也可以防止在應用程序的源代碼或其父目錄中存在剩余文件 -when
+	// 直接在那裡執行的命令——在中斷的情況下。
 	tmp, err := os.MkdirTemp("", "")
 	if err != nil {
 		return err

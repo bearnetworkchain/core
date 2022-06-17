@@ -11,8 +11,8 @@ import (
 	"github.com/stretchr/testify/mock"
 	coretypes "github.com/tendermint/tendermint/rpc/core/types"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
-	"github.com/ignite-hq/cli/ignite/pkg/cosmosclient"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/bearnetworkchain/core/ignite/pkg/cosmosclient"
 )
 
 // CosmosClient 是 CosmosClient 類型的自動生成的模擬類型

@@ -5,8 +5,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cliui/clispinner"
-	"github.com/ignite-hq/cli/ignite/services/scaffolder"
+	"github.com/bearnetworkchain/core/ignite/pkg/cliui/clispinner"
+	"github.com/bearnetworkchain/core/ignite/services/scaffolder"
 )
 
 // NewScaffoldFlutter 為鏈構建了一個 Flutter 應用程序。

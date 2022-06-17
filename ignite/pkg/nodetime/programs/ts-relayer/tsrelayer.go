@@ -11,9 +11,9 @@ import (
 	"github.com/gorilla/rpc/v2/json2"
 	"golang.org/x/sync/errgroup"
 
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
-	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
-	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
+	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/bearnetworkchain/core/ignite/pkg/nodetime"
 )
 
 //Call 使用 args 調用 ts 中繼器包裝器庫中的方法，並從返回的值中填充回复。
@@ -45,8 +45,8 @@ func Call(ctx context.Context, method string, args, reply interface{}) error {
 		)
 	})
 
-// 在發出 jsonrpc 響應之前，其他進程可以將常規日誌打印到標準輸出。
-// 區分兩種類型並模擬打印常規日誌（如果有）。
+	// 在發出 jsonrpc 響應之前，其他進程可以將常規日誌打印到標準輸出。
+	// 區分兩種類型並模擬打印常規日誌（如果有）。
 	sc := bufio.NewScanner(resr)
 	for sc.Scan() {
 		err = json2.DecodeClientResponse(bytes.NewReader(sc.Bytes()), reply)

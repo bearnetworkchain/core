@@ -7,8 +7,8 @@ import (
 	"os"
 
 	ignitecmd "github.com/bearnetworkchain/core/ignite/cmd"
-	"github.com/bearnetworkchain/core/pkg/clictx"
-	"github.com/bearnetworkchain/core/pkg/validation"
+	"github.com/bearnetworkchain/core/ignite/pkg/clictx"
+	"github.com/bearnetworkchain/core/ignite/pkg/validation"
 )
 
 func main() {

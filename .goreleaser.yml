@@ -1,11 +1,11 @@
-project_name: ignite
+project_name: bnk
 builds:
   - main: ./ignite/cmd/ignite
     ldflags:
       - -s -w -X github.com/bearnetworkchain/core/version.Version={{.Tag}} -X github.com/bearnetworkchain/core/version.Date={{.Date}} -X github.com/bearnetworkchain/core/version.Head={{.FullCommit}}
     goos:
       - linux
-      - darwin
+      
     goarch:
       - amd64
-      - arm64
+      

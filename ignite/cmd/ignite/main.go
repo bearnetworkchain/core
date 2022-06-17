@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"os"
 
-	ignitecmd "github.com/ignite-hq/cli/ignite/cmd"
-	"github.com/ignite-hq/cli/ignite/pkg/clictx"
-	"github.com/ignite-hq/cli/ignite/pkg/validation"
+	ignitecmd "github.com/bearnetworkchain/core/ignite/cmd"
+	"github.com/bearnetworkchain/core/pkg/clictx"
+	"github.com/bearnetworkchain/core/pkg/validation"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 	err := ignitecmd.New().ExecuteContext(ctx)
 
 	if ctx.Err() == context.Canceled || err == context.Canceled {
-		fmt.Println("aborted")
+		fmt.Println("中止")
 		return
 	}
 

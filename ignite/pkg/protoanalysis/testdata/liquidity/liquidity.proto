@@ -89,7 +89,7 @@ message Params {
         (gogoproto.nullable)   = false,
         (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
         (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-            example: "[{\"denom\": \"uatom\", \"amount\": \"100000000\"}]",
+            example: "[{\"denom\": \"ubnkt\", \"amount\": \"100000000\"}]",
             format: "sdk.Coins"
         }
     ];
@@ -138,7 +138,7 @@ message Params {
     //        (gogoproto.nullable)   = false,
     //        (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
     //        (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-    //            example: "[{\"denom\": \"uatom\", \"amount\": \"50000\"}]",
+    //            example: "[{\"denom\": \"ubnkt\", \"amount\": \"50000\"}]",
     //            format: "sdk.Coins"
     //        }];
 }

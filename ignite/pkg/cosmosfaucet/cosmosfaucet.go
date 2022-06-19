@@ -11,60 +11,60 @@ import (
 )
 
 const (
-	// DefaultAccountName is the default account to transfer tokens from.
+	// DefaultAccountName 是從中轉移代幣的默認帳戶。
 	DefaultAccountName = "faucet"
 
-	// DefaultDenom is the default denomination to distribute.
-	DefaultDenom = "uatom"
+	// DefaultDenom 是分配的默認面額。
+	DefaultDenom = "ubnkt"
 
-	// DefaultAmount specifies the default amount to transfer to an account
-	// on each request.
+	// DefaultAmount 指定轉入賬戶的默認金額
+	// 在每個請求上。
 	DefaultAmount = 10000000
 
-	// DefaultMaxAmount specifies the maximum amount that can be tranffered to an
-	// account in all times.
+	// DefaultMaxAmount 指定可以轉移到的最大金額
+	// 隨時記賬。
 	DefaultMaxAmount = 100000000
 
-	// DefaultLimitRefreshWindow specifies the time after which the max amount limit
-	// is refreshed for an account [1 year]
+	// DefaultLimitRefreshWindow 指定最大數量限制之後的時間
+	// 為帳戶刷新 [1 年]
 	DefaultRefreshWindow = time.Hour * 24 * 365
 )
 
-// Faucet represents a faucet.
+// Faucet 代表水龍頭。
 type Faucet struct {
-	// runner used to intereact with blockchain's binary to transfer tokens.
+	// runner 用於與區塊鏈二進制交互以傳輸令牌。
 	runner chaincmdrunner.Runner
 
-	// chainID is the chain id of the chain that faucet is operating for.
+	// chainID 是個 chain id 水龍頭正在運行的鏈條。
 	chainID string
 
-	// accountName to transfer tokens from.
+	// accountName 從中轉移代幣。
 	accountName string
 
-	// accountMnemonic is the mnemonic of the account.
+	// accountMnemonic 是賬戶的助記詞。
 	accountMnemonic string
 
-	// coinType registered coin type number for HD derivation (BIP-0044).
+	// coinType 註冊硬幣類型號碼熱錢包推導 (BIP-0044).
 	coinType string
 
-	// coins keeps a list of coins that can be distributed by the faucet.
+	// coins 保留可以由水龍頭分配的硬幣列表。
 	coins sdk.Coins
 
-	// coinsMax is a denom-max pair.
-	// it holds the maximum amounts of coins that can be sent to a single account.
+	// coinsMax 是一個 denom-max 對。
+	// 它擁有可以發送到單個帳戶的最大數量的硬幣。
 	coinsMax map[string]uint64
 
 	limitRefreshWindow time.Duration
 
-	// openAPIData holds template data customizations for serving OpenAPI page & spec.
+	// openAPIData 保存用於服務 OpenAPI 頁面和規範的模板數據自定義。
 	openAPIData openAPIData
 }
 
-// Option configures the faucetOptions.
+// Option 配置水龍頭選項。
 type Option func(*Faucet)
 
-// Account provides the account information to transfer tokens from.
-// when mnemonic isn't provided, account assumed to be exists in the keyring.
+// Account 提供用於轉移代幣的賬戶信息。
+// 如果沒有提供助記詞，則假定帳戶存在於密鑰環中。
 func Account(name, mnemonic string, coinType string) Option {
 	return func(f *Faucet) {
 		f.accountName = name
@@ -73,12 +73,12 @@ func Account(name, mnemonic string, coinType string) Option {
 	}
 }
 
-// Coin adds a new coin to coins list to distribute by the faucet.
-// the first coin added to the list considered as the default coin during transfer requests.
+// Coin 將一個新的硬幣添加到硬幣列表中以通過水龍頭分發。
+// 添加到列表中的第一個硬幣在轉移請求期間被視為默認硬幣。
 //
-// amount is the amount of the coin can be distributed per request.
-// maxAmount is the maximum amount of the coin that can be sent to a single account.
-// denom is denomination of the coin to be distributed by the faucet.
+// amount 是每個請求可以分配的硬幣數量。
+// maxAmount 是可以發送到單個帳戶的最大硬幣數量。
+// denom 是要通過水龍頭分配的硬幣的面額。
 func Coin(amount, maxAmount uint64, denom string) Option {
 	return func(f *Faucet) {
 		f.coins = append(f.coins, sdk.NewCoin(denom, sdk.NewIntFromUint64(amount)))
@@ -86,28 +86,28 @@ func Coin(amount, maxAmount uint64, denom string) Option {
 	}
 }
 
-// RefreshWindow adds the duration to refresh the transfer limit to the faucet
+// RefreshWindow 將刷新傳輸限制的持續時間添加到水龍頭
 func RefreshWindow(refreshWindow time.Duration) Option {
 	return func(f *Faucet) {
 		f.limitRefreshWindow = refreshWindow
 	}
 }
 
-// ChainID adds chain id to faucet. faucet will automatically fetch when it isn't provided.
+// ChainID 添加 chain id 去水龍頭。 faucet 將在未提供時自動獲取。
 func ChainID(id string) Option {
 	return func(f *Faucet) {
 		f.chainID = id
 	}
 }
 
-// OpenAPI configures how to serve Open API page and and spec.
+// OpenAPI 配置如何提供 Open API 頁面和規範。
 func OpenAPI(apiAddress string) Option {
 	return func(f *Faucet) {
 		f.openAPIData.APIAddress = apiAddress
 	}
 }
 
-// New creates a new faucet with ccr (to access and use blockchain's CLI) and given options.
+// New 使用 ccr（訪問和使用區塊鏈的 CLI）和給定選項創建一個新水龍頭。
 func New(ctx context.Context, ccr chaincmdrunner.Runner, options ...Option) (Faucet, error) {
 	f := Faucet{
 		runner:      ccr,
@@ -128,7 +128,7 @@ func New(ctx context.Context, ccr chaincmdrunner.Runner, options ...Option) (Fau
 		RefreshWindow(DefaultRefreshWindow)(&f)
 	}
 
-	// import the account if mnemonic is provided.
+	// 如果提供助記詞，則導入帳戶.
 	if f.accountMnemonic != "" {
 		_, err := f.runner.AddAccount(ctx, f.accountName, f.accountMnemonic, f.coinType)
 		if err != nil && err != chaincmdrunner.ErrAccountAlreadyExists {

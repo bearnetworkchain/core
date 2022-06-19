@@ -26,17 +26,17 @@ const (
 const prefix = "v"
 
 var (
-	// Version is the semantic version of Ignite CLI.
+	// Version 是 Ignite CLI 的語義版本。
 	Version = versionDev
 
-	// Date is the build date of Ignite CLI.
+	// Date 是 Ignite CLI 的構建日期。
 	Date = "-"
 
-	// Head is the HEAD of the current branch.
+	// Head 是當前分支的 HEAD。
 	Head = "-"
 )
 
-// CheckNext checks whether there is a new version of Ignite CLI.
+// CheckNext 檢查是否有新版本的 Ignite CLI。
 func CheckNext(ctx context.Context) (isAvailable bool, version string, err error) {
 	if Version == versionDev || Version == versionNightly {
 		return false, "", nil
@@ -70,7 +70,7 @@ func CheckNext(ctx context.Context) (isAvailable bool, version string, err error
 	return isAvailable, *latest.TagName, nil
 }
 
-// Long generates a detailed version info.
+//Long 生成詳細的版本信息。
 func Long(ctx context.Context) string {
 	var (
 		w = &tabwriter.Writer{}
@@ -83,12 +83,12 @@ func Long(ctx context.Context) string {
 
 	w.Init(b, 0, 8, 0, '\t', 0)
 
-	write("Ignite CLI version", Version)
-	write("Ignite CLI build date", Date)
-	write("Ignite CLI source hash", Head)
+	write("熊網鏈版本", Version)
+	write("熊網鏈創建日期", Date)
+	write("熊網鏈哈希值", Head)
 
-	write("Your OS", runtime.GOOS)
-	write("Your arch", runtime.GOARCH)
+	write("熊網鏈系統", runtime.GOOS)
+	write("熊網鏈系統位元", runtime.GOARCH)
 
 	cmdOut := &bytes.Buffer{}
 
@@ -96,7 +96,7 @@ func Long(ctx context.Context) string {
 	if err != nil {
 		panic(err)
 	}
-	write("Your go version", strings.TrimSpace(cmdOut.String()))
+	write("Golang版本", strings.TrimSpace(cmdOut.String()))
 
 	unameCmd := "uname"
 	if xexec.IsCommandAvailable(unameCmd) {
@@ -104,15 +104,15 @@ func Long(ctx context.Context) string {
 
 		err := exec.Exec(ctx, []string{unameCmd, "-a"}, exec.StepOption(step.Stdout(cmdOut)))
 		if err == nil {
-			write("Your uname -a", strings.TrimSpace(cmdOut.String()))
+			write("熊網鏈系統詳細資訊 -a", strings.TrimSpace(cmdOut.String()))
 		}
 	}
 
 	if cwd, err := os.Getwd(); err == nil {
-		write("Your cwd", cwd)
+		write("建構路徑", cwd)
 	}
 
-	write("Is on Gitpod", gitpod.IsOnGitpod())
+	write("啟動線上GitPod", gitpod.IsOnGitpod())
 
 	w.Flush()
 

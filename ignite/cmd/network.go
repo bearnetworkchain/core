@@ -32,8 +32,8 @@ const (
 	spnNodeAddressNightly   = "https://rpc.nightly.starport.network:443"
 	spnFaucetAddressNightly = "https://faucet.nightly.starport.network"
 
-	spnNodeAddressLocal   = "http://192.168.1.188:26657"
-	spnFaucetAddressLocal = "http://192.168.1.188:4500"
+	spnNodeAddressLocal   = "http://0.0.0.0:26657"
+	spnFaucetAddressLocal = "http://0.0.0.0:4500"
 )
 
 // NewNetwork 創建一個包含其他一些子命令的新網絡命令

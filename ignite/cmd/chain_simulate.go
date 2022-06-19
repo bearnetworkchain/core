@@ -28,12 +28,12 @@ const (
 	flagSimappGenesisTime            = "genesisTime"
 )
 
-// NewChainSimulate creates a new simulation command to run the blockchain simulation.
+//NewChainSimulate 創建一個新的模擬命令來運行區塊鏈模擬。
 func NewChainSimulate() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "simulate",
-		Short: "Run simulation testing for the blockchain",
-		Long:  "Run simulation testing for the blockchain. It sends many randomized-input messages of each module to a simulated node and checks if invariants break",
+		Short: "對熊網區塊鏈進行模擬測試",
+		Long:  "對熊網區塊鏈進行模擬測試。 它將每個模塊的許多隨機輸入消息發送到模擬節點並檢查不變量是否存在",
 		Args:  cobra.NoArgs,
 		RunE:  chainSimulationHandler,
 	}
@@ -49,7 +49,7 @@ func chainSimulationHandler(cmd *cobra.Command, args []string) error {
 		config         = newConfigFromFlags(cmd)
 		appPath        = flagGetPath(cmd)
 	)
-	// create the chain with path
+	// 用路徑創建鏈
 	absPath, err := filepath.Abs(appPath)
 	if err != nil {
 		return err
@@ -72,7 +72,7 @@ func chainSimulationHandler(cmd *cobra.Command, args []string) error {
 	)
 }
 
-// newConfigFromFlags creates a simulation from the retrieved values of the flags.
+// newConfigFromFlags 根據檢索到的標誌值創建模擬。
 func newConfigFromFlags(cmd *cobra.Command) simulation.Config {
 	var (
 		genesis, _                = cmd.Flags().GetString(flagSimappGenesis)
@@ -109,22 +109,22 @@ func newConfigFromFlags(cmd *cobra.Command) simulation.Config {
 
 func simappFlags(c *cobra.Command) {
 	// config fields
-	c.Flags().String(flagSimappGenesis, "", "custom simulation genesis file; cannot be used with params file")
-	c.Flags().String(flagSimappParams, "", "custom simulation params file which overrides any random params; cannot be used with genesis")
-	c.Flags().String(flagSimappExportParamsPath, "", "custom file path to save the exported params JSON")
-	c.Flags().Int(flagSimappExportParamsHeight, 0, "height to which export the randomly generated params")
-	c.Flags().String(flagSimappExportStatePath, "", "custom file path to save the exported app state JSON")
-	c.Flags().String(flagSimappExportStatsPath, "", "custom file path to save the exported simulation statistics JSON")
-	c.Flags().Int64(flagSimappSeed, 42, "simulation random seed")
-	c.Flags().Int(flagSimappInitialBlockHeight, 1, "initial block to start the simulation")
-	c.Flags().Int(flagSimappNumBlocks, 200, "number of new blocks to simulate from the initial block height")
-	c.Flags().Int(flagSimappBlockSize, 30, "operations per block")
-	c.Flags().Bool(flagSimappLean, false, "lean simulation log output")
-	c.Flags().Bool(flagSimappSimulateEveryOperation, false, "run slow invariants every operation")
-	c.Flags().Bool(flagSimappPrintAllInvariants, false, "print all invariants if a broken invariant is found")
+	c.Flags().String(flagSimappGenesis, "", "自定義模擬創世紀文件； 不能與 params 文件一起使用")
+	c.Flags().String(flagSimappParams, "", "覆蓋任何隨機參數的自定義模擬參數文件； 不能與創世紀一起使用")
+	c.Flags().String(flagSimappExportParamsPath, "", "用於保存導出參數 JSON 的自定義文件路徑")
+	c.Flags().Int(flagSimappExportParamsHeight, 0, "將隨機生成的參數導出到的高度")
+	c.Flags().String(flagSimappExportStatePath, "", "用於保存導出的應用程序狀態 JSON 的自定義文件路徑")
+	c.Flags().String(flagSimappExportStatsPath, "", "自定義文件路徑以保存導出的模擬統計信息 JSON")
+	c.Flags().Int64(flagSimappSeed, 42, "模擬隨機種子")
+	c.Flags().Int(flagSimappInitialBlockHeight, 1, "開始模擬的創世塊")
+	c.Flags().Int(flagSimappNumBlocks, 200, "從初始塊高度模擬的新塊數")
+	c.Flags().Int(flagSimappBlockSize, 30, "每個塊的操作")
+	c.Flags().Bool(flagSimappLean, false, "精確模擬日誌輸出")
+	c.Flags().Bool(flagSimappSimulateEveryOperation, false, "每次操作都運行緩慢的不變量")
+	c.Flags().Bool(flagSimappPrintAllInvariants, false, "如果找到損壞的不變量，則打印所有不變量")
 
 	// simulation flags
-	c.Flags().BoolP(flagSimappVerbose, "v", false, "verbose log output")
-	c.Flags().Uint(flagSimappPeriod, 0, "run slow invariants only once every period assertions")
-	c.Flags().Int64(flagSimappGenesisTime, 0, "override genesis UNIX time instead of using a random UNIX time")
+	c.Flags().BoolP(flagSimappVerbose, "v", false, "詳細日誌輸出")
+	c.Flags().Uint(flagSimappPeriod, 0, "每個週期斷言只運行一次慢速不變量")
+	c.Flags().Int64(flagSimappGenesisTime, 0, "覆蓋創世 UNIX 時間，而不是使用隨機的 UNIX 時間")
 }

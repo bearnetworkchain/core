@@ -12,13 +12,13 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/relayer"
 )
 
-// NewRelayerConnect returns a new relayer connect command to link all or some relayer paths and start
-// relaying txs in between.
-// if not paths are specified, all paths are linked.
+// NewRelayerConnect 返回一個新的中繼器連接命令以鏈接所有或部分中繼器路徑並啟動
+// 在兩者之間中繼 txs。
+// 如果未指定路徑，則鏈接所有路徑。
 func NewRelayerConnect() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "connect [<path>,...]",
-		Short: "Link chains associated with paths and start relaying tx packets in between",
+		Short: "與路徑關聯的鏈接鏈並開始在其間中繼 tx 數據包",
 		RunE:  relayerConnectHandler,
 	}
 
@@ -57,8 +57,8 @@ func relayerConnectHandler(cmd *cobra.Command, args []string) (err error) {
 		return err
 	}
 
-	// if no path ids provided, then we connect all of them otherwise,
-	// only connect the specified ones.
+	// 如果沒有提供路徑 id，那麼我們連接所有路徑，否則，
+	// 只連接指定的。
 	if len(ids) == 0 {
 		for _, path := range all {
 			use = append(use, path.ID)
@@ -78,11 +78,11 @@ func relayerConnectHandler(cmd *cobra.Command, args []string) (err error) {
 
 	if len(use) == 0 {
 		session.StopSpinner()
-		session.Println("No chains found to connect.")
+		session.Println("未找到可連接的鏈.")
 		return nil
 	}
 
-	session.StartSpinner("Creating links between chains...")
+	session.StartSpinner("在鏈之間創建鏈接...")
 
 	if err := r.Link(cmd.Context(), use...); err != nil {
 		return err
@@ -95,7 +95,7 @@ func relayerConnectHandler(cmd *cobra.Command, args []string) (err error) {
 	}
 
 	for _, id := range use {
-		session.StartSpinner("Loading...")
+		session.StartSpinner("正在加載...")
 
 		path, err := r.GetPath(cmd.Context(), id)
 		if err != nil {
@@ -114,7 +114,7 @@ func relayerConnectHandler(cmd *cobra.Command, args []string) (err error) {
 		session.Print(buf.String())
 	}
 
-	if err := printSection(session, "Listening and relaying packets between chains..."); err != nil {
+	if err := printSection(session, "在鏈之間監聽及中繼數據包..."); err != nil {
 		return err
 	}
 

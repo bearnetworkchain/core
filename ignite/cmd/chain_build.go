@@ -18,20 +18,18 @@ const (
 	flagReleasePrefix  = "release.prefix"
 )
 
-// NewChainBuild returns a new build command to build a blockchain app.
+// NewChainBuild 返回一個新的構建命令來構建區塊鏈應用程序。
 func NewChainBuild() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "build",
 		Short: "Build a node binary",
-		Long: `By default, build your node binaries
-and add the binaries to your $(go env GOPATH)/bin path.
+		Long: `默認情況下，構建您的節點二進製文件並將二進製文件添加到您的 $(go env GOPATH)/bin 路徑。
+要為發布構建二進製文件，請使用 --release 標誌。 
+應用程序二進製文件為一個或多個指定的發布目標構建在應用程序下的 release/ 目錄中資源。 
+使用 GOOS:GOARCH 構建標籤指定發布目標。
+如果未指定可選的 --release.targets，則會為您當前的環境創建一個二進製文件。
 
-To build binaries for a release, use the --release flag. The app binaries
-for one or more specified release targets are built in a release/ dir under the app's
-source. Specify the release targets with GOOS:GOARCH build tags.
-If the optional --release.targets is not specified, a binary is created for your current environment.
-
-Sample usages:
+示例用法：
 	- ignite chain build
 	- ignite chain build --release -t linux:amd64 -t darwin:amd64 -t darwin:arm64`,
 		Args: cobra.NoArgs,

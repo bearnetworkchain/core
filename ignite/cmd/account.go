@@ -22,9 +22,9 @@ const (
 func NewAccount() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "account [command]",
-		Short: "Commands for managing accounts",
-		Long: `Commands for managing accounts. An account is a pair of a private key and a public key.
-Ignite CLI uses accounts to interact with the Ignite blockchain, use an IBC relayer, and more.`,
+		Short: "用於管理帳戶的命令",
+		Long: `用於管理帳戶的命令。 帳戶是一對私鑰和公鑰。
+		Ignite CLI使用賬戶與Ignite區塊鏈交互，使用IBC中繼器等.`,
 		Aliases: []string{"a"},
 		Args:    cobra.ExactArgs(1),
 	}
@@ -49,7 +49,7 @@ func printAccounts(cmd *cobra.Command, accounts ...cosmosaccount.Account) error 
 
 func flagSetKeyringBackend() *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
-	fs.String(flagKeyringBackend, "test", "Keyring backend to store your account keys")
+	fs.String(flagKeyringBackend, "test", "密鑰環後端存儲您的帳戶密鑰")
 	return fs
 }
 
@@ -76,7 +76,7 @@ func getFrom(cmd *cobra.Command) string {
 
 func flagSetAccountImportExport() *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
-	fs.Bool(flagNonInteractive, false, "Do not enter into interactive mode")
+	fs.Bool(flagNonInteractive, false, "不要進入交互模式")
 	fs.String(flagPassphrase, "", "Account passphrase")
 	return fs
 }

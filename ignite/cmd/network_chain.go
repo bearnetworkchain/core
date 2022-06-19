@@ -4,12 +4,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// NewNetworkChain creates a new chain command that holds some other
-// sub commands related to launching a network for a chain.
+// NewNetworkChain 創建一個新的鏈命令，其中包含一些其他的
+// 與為鏈啟動網絡相關的子命令。
 func NewNetworkChain() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "chain",
-		Short: "Build networks",
+		Short: "建立網絡",
 	}
 
 	c.AddCommand(

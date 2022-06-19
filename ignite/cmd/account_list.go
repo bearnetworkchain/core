@@ -9,7 +9,7 @@ import (
 func NewAccountList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list",
-		Short: "Show a list of all accounts",
+		Short: "顯示所有帳戶的列表",
 		RunE:  accountListHandler,
 	}
 

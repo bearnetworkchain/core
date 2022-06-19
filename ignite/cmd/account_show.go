@@ -9,7 +9,7 @@ import (
 func NewAccountShow() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "show [name]",
-		Short: "Show detailed information about a particular account",
+		Short: "顯示有關特定帳戶的詳細信息",
 		Args:  cobra.ExactArgs(1),
 		RunE:  accountShowHandler,
 	}

@@ -12,13 +12,13 @@ import (
 func NewGenerateOpenAPI() *cobra.Command {
 	return &cobra.Command{
 		Use:   "openapi",
-		Short: "Generate generates an OpenAPI spec for your chain from your config.yml",
+		Short: "從您的鏈中生成一個OpenAPI規範的config.yml",
 		RunE:  generateOpenAPIHandler,
 	}
 }
 
 func generateOpenAPIHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("Generating...")
+	s := clispinner.New().SetText("產生中...")
 	defer s.Stop()
 
 	c, err := newChainWithHomeFlags(cmd)
@@ -36,7 +36,7 @@ func generateOpenAPIHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	s.Stop()
-	fmt.Println("⛏️  Generated OpenAPI spec.")
+	fmt.Println("⛏️  生成OpenAPI規範.")
 
 	return nil
 }

@@ -9,11 +9,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network"
 )
 
-// NewNetworkClientCreate connects the monitoring modules of launched chains with SPN
+// NewNetworkClientCreate 將已啟動鏈的監控模塊與 SPN 連接起來
 func NewNetworkClientCreate() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "create [launch-id] [node-api-url]",
-		Short: "Connect the monitoring modules of launched chains with SPN",
+		Short: "將已啟動鏈的監控模塊與 SPN 連接",
 		Args:  cobra.ExactArgs(2),
 		RunE:  networkClientCreateHandler,
 	}
@@ -62,6 +62,6 @@ func networkClientCreateHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	session.StopSpinner()
-	session.Printf("%s Client created: %s\n", icons.Info, clientID)
+	session.Printf("%s 客戶端創建: %s\n", icons.Info, clientID)
 	return nil
 }

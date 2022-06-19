@@ -24,23 +24,23 @@ const (
 	flagRequireRegistration = "require-registration"
 )
 
-// NewScaffoldModule returns the command to scaffold a Cosmos SDK module
+// NewScaffoldModule 返回為 Cosmos SDK 模塊搭建基架的命令
 func NewScaffoldModule() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "module [name]",
-		Short: "Scaffold a Cosmos SDK module",
-		Long:  "Scaffold a new Cosmos SDK module in the `x` directory",
+		Short: "搭建一個 Cosmos SDK 模塊",
+		Long:  "在 `x` 目錄中搭建一個新的 Cosmos SDK 模塊",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  scaffoldModuleHandler,
 	}
 
 	flagSetPath(c)
 	flagSetClearCache(c)
-	c.Flags().StringSlice(flagDep, []string{}, "module dependencies (e.g. --dep account,bank)")
+	c.Flags().StringSlice(flagDep, []string{}, "模塊依賴項（例如 --dep account,bank）")
 	c.Flags().Bool(flagIBC, false, "scaffold an IBC module")
-	c.Flags().String(flagIBCOrdering, "none", "channel ordering of the IBC module [none|ordered|unordered]")
-	c.Flags().Bool(flagRequireRegistration, false, "if true command will fail if module can't be registered")
-	c.Flags().StringSlice(flagParams, []string{}, "scaffold module params")
+	c.Flags().String(flagIBCOrdering, "none", "IBC 模塊的通道排序 [none|ordered|unordered]")
+	c.Flags().Bool(flagRequireRegistration, false, "如果模塊無法註冊，如果 true 命令將失敗")
+	c.Flags().StringSlice(flagParams, []string{}, "腳手架模塊參數")
 
 	return c
 }
@@ -50,7 +50,7 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 		name    = args[0]
 		appPath = flagGetPath(cmd)
 	)
-	s := clispinner.New().SetText("Scaffolding...")
+	s := clispinner.New().SetText("創建中,請耐心等待...")
 	defer s.Stop()
 
 	ibcModule, err := cmd.Flags().GetBool(flagIBC)
@@ -81,12 +81,12 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 		scaffolder.WithParams(params),
 	}
 
-	// Check if the module must be an IBC module
+	// 檢查模塊是否必須是 IBC 模塊
 	if ibcModule {
 		options = append(options, scaffolder.WithIBCChannelOrdering(ibcOrdering), scaffolder.WithIBC())
 	}
 
-	// Get module dependencies
+	// 獲取模塊依賴
 	dependencies, err := cmd.Flags().GetStringSlice(flagDep)
 	if err != nil {
 		return err
@@ -94,7 +94,7 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 	if len(dependencies) > 0 {
 		var formattedDependencies []modulecreate.Dependency
 
-		// Parse the provided dependencies
+		// 解析提供的依賴項
 		for _, dependency := range dependencies {
 			var formattedDependency modulecreate.Dependency
 
@@ -105,7 +105,7 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 			case 2:
 				formattedDependency = modulecreate.NewDependency(splitted[0], splitted[1])
 			default:
-				return fmt.Errorf("dependency %s is invalid, must have <depName> or <depName>.<depKeeperName>", dependency)
+				return fmt.Errorf("依賴 %s 無效，必須有 <depName> or <depName>.<depKeeperName>", dependency)
 			}
 			formattedDependencies = append(formattedDependencies, formattedDependency)
 		}
@@ -113,7 +113,7 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	var msg bytes.Buffer
-	fmt.Fprintf(&msg, "\n🎉 Module created %s.\n\n", name)
+	fmt.Fprintf(&msg, "\n🎉 創建好模塊 %s.\n\n", name)
 
 	sc, err := newApp(appPath)
 	if err != nil {
@@ -125,7 +125,7 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 	if err != nil {
 		var validationErr validation.Error
 		if !requireRegistration && errors.As(err, &validationErr) {
-			fmt.Fprintf(&msg, "Can't register module '%s'.\n", name)
+			fmt.Fprintf(&msg, "無法註冊模塊 '%s'.\n", name)
 			fmt.Fprintln(&msg, validationErr.ValidationInfo())
 		} else {
 			return err
@@ -147,18 +147,18 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// in previously scaffolded apps gov keeper is defined below the scaffolded module keeper definition
-// therefore we must warn the user to manually move the definition if it's the case
+// 在之前搭建的應用程序中，gov keeper 定義在腳手架模塊 keeper 定義的下方
+// 因此，如果是這種情況，我們必須警告用戶手動移動定義
 // https://github.com/ignite-hq/cli/issues/818#issuecomment-865736052
-const govWarning = `⚠️ If your app has been scaffolded with Ignite CLI 0.16.x or below
-Please make sure that your module keeper definition is defined after gov module keeper definition in app/app.go:
+const govWarning = `⚠️ 如果您的應用程序是使用 Ignite CLI 0.16.x 或更低版本搭建的
+請確保您的模塊管理員定義是在 gov 模塊管理員定義之後定義的 app/app.go:
 
 app.GovKeeper = ...
 ...
-[your module keeper definition]
+[你的模塊管理員定義]
 `
 
-// dependencyWarning is used to print a warning if gov is provided as a dependency
+// 如果 gov 作為依賴項提供，dependencyWarning 用於打印警告
 func dependencyWarning(dependencies []string) {
 	for _, dep := range dependencies {
 		if dep == "gov" {

@@ -17,7 +17,7 @@ func main() {
 	err := ignitecmd.New().ExecuteContext(ctx)
 
 	if ctx.Err() == context.Canceled || err == context.Canceled {
-		fmt.Println("aborted")
+		fmt.Println("中止")
 		return
 	}
 

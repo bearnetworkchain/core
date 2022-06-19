@@ -12,15 +12,15 @@ const (
 	flagMetadata = "metadata"
 )
 
-// NewNetworkCampaignPublish returns a new command to publish a new campaigns on Ignite.
+// NewNetworkCampaignPublish 返回一個用於在 Ignite 上發布新活動的新命令。
 func NewNetworkCampaignPublish() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "create [name] [total-supply]",
-		Short: "Create a campaign",
+		Short: "創建一個活動",
 		Args:  cobra.ExactArgs(2),
 		RunE:  networkCampaignPublishHandler,
 	}
-	c.Flags().String(flagMetadata, "", "Add a metada to the chain")
+	c.Flags().String(flagMetadata, "", "將元數據添加到鏈中")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 	c.Flags().AddFlagSet(flagSetHome())
@@ -54,5 +54,5 @@ func networkCampaignPublishHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s Campaign ID: %d \n", icons.Bullet, campaignID)
+	return session.Printf("%s 活動ID: %d \n", icons.Bullet, campaignID)
 }

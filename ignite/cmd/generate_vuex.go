@@ -12,7 +12,7 @@ import (
 func NewGenerateVuex() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "vuex",
-		Short: "Generate Vuex store for you chain's frontend from your config.yml",
+		Short: "從您的鏈前端生成一個Vuex儲藏config.yml",
 		RunE:  generateVuexHandler,
 	}
 	c.Flags().AddFlagSet(flagSetProto3rdParty(""))
@@ -20,7 +20,7 @@ func NewGenerateVuex() *cobra.Command {
 }
 
 func generateVuexHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("Generating...")
+	s := clispinner.New().SetText("產生中...")
 	defer s.Stop()
 
 	c, err := newChainWithHomeFlags(cmd, chain.EnableThirdPartyModuleCodegen())
@@ -38,7 +38,7 @@ func generateVuexHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	s.Stop()
-	fmt.Println("⛏️  Generated vuex stores.")
+	fmt.Println("⛏️  生成Vuex儲藏.")
 
 	return nil
 }

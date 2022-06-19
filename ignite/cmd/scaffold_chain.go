@@ -14,49 +14,54 @@ const (
 	flagNoDefaultModule = "no-module"
 )
 
-// NewScaffoldChain creates new command to scaffold a Comos-SDK based blockchain.
+// NewScaffoldChain 創建新命令來構建基於 Comos-SDK 的區塊鏈。
 func NewScaffoldChain() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "chain [name]",
-		Short: "Fully-featured Cosmos SDK blockchain",
-		Long: `Create a new application-specific Cosmos SDK blockchain.
+		Short: "功能齊全的 Cosmos SDK 區塊鏈",
+		Long: `創建一個新的特定於應用程序的 Cosmos SDK 區塊鏈.
 
-For example, the following command will create a blockchain called "hello" in the "hello/" directory:
+例如，以下命令將創建一個名為"hello"目錄:
 
   ignite scaffold chain hello
 
-A project name can be a simple name or a URL. The name will be used as the Go module path for the project. Examples of project names:
+項目名稱可以是簡單名稱或 URL。該名稱將用作項目的 Go 模塊路徑。項目名稱示例:
 
   ignite scaffold chain foo
   ignite scaffold chain foo/bar
   ignite scaffold chain example.org/foo
   ignite scaffold chain github.com/username/foo
 		
-A new directory with source code files will be created in the current directory. To use a different path use the "--path" flag.
+將在當前目錄中創建一個包含源代碼文件的新目錄。要使用不同的路徑，請使用 "--path" flag.
 
-Most of the logic of your blockchain is written in custom modules. Each module effectively encapsulates an independent piece of functionality. Following the Cosmos SDK convention, custom modules are stored inside the "x/" directory. By default, Ignite creates a module with a name that matches the name of the project. To create a blockchain without a default module use the "--no-module" flag. Additional modules can be added after a project is created with "ignite scaffold module" command.
+區塊鏈的大部分邏輯都是用自定義模塊編寫的。每個模塊都有效地封裝了一個獨立的功能。按照 Cosmos SDK 約定，自定義模塊存儲在“x/”目錄中。
+默認情況下，Ignite 創建一個名稱與項目名稱匹配的模塊。要創建沒有默認模塊的區塊鏈，請使用“--no-module”標誌。
+使用“ignite 腳手架模塊”創建項目後可以添加其他模塊"命令.
 
-Account addresses on Cosmos SDK-based blockchains have string prefixes. For example, the Cosmos Hub blockchain uses the default "cosmos" prefix, so that addresses look like this: "cosmos12fjzdtqfrrve7zyg9sv8j25azw2ua6tvu07ypf". To use a custom address prefix use the "--address-prefix" flag. For example:
+基於 Cosmos SDK 的區塊鏈上的賬戶地址具有字符串前綴。
+例如,Cosmos Hub 區塊鏈使用默認"cosmos"前輟, 所以地址看起來像這樣: "cosmos12fjzdtqfrrve7zyg9sv8j25azw2ua6tvu07ypf". 
+要使用自定義地址前綴，請使用 "--address-prefix" flag. 例如:
 
   ignite scaffold chain foo --address-prefix bar
 
-By default when compiling a blockchain's source code Ignite creates a cache to speed up the build process. To clear the cache when building a blockchain use the "--clear-cache" flag. It is very unlikely you will ever need to use this flag.
+默認情況下，在編譯區塊鏈的源代碼時，Ignite 會創建一個緩存以加快構建過程. 
+要在構建區塊鏈時清除緩存，請使用 "--clear-cache" flag. 您不太可能需要使用它flag.
 
-The blockchain is using the Cosmos SDK modular blockchain framework. Learn more about Cosmos SDK on https://docs.cosmos.network`,
+區塊鏈使用 Cosmos SDK 模塊化區塊鏈框架. 了解有關 Cosmos SDK 的更多信息 https://docs.cosmos.network`,
 		Args: cobra.ExactArgs(1),
 		RunE: scaffoldChainHandler,
 	}
 
 	flagSetClearCache(c)
 	c.Flags().AddFlagSet(flagSetAccountPrefixes())
-	c.Flags().StringP(flagPath, "p", ".", "Create a project in a specific path")
-	c.Flags().Bool(flagNoDefaultModule, false, "Create a project without a default module")
+	c.Flags().StringP(flagPath, "p", ".", "在特定路徑中創建項目")
+	c.Flags().Bool(flagNoDefaultModule, false, "創建一個沒有默認模塊的項目")
 
 	return c
 }
 
 func scaffoldChainHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("Scaffolding...")
+	s := clispinner.New().SetText("創建中,請耐心等待...")
 	defer s.Stop()
 
 	var (
@@ -84,13 +89,13 @@ func scaffoldChainHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	message := `
-⭐️ Successfully created a new blockchain '%[1]v'.
-👉 Get started with the following commands:
+⭐️ 成功創建新區塊鏈 '%[1]v'.
+👉 開始使用以下命令:
 
  %% cd %[1]v
  %% ignite chain serve
 
-Documentation: https://docs.ignite.com
+文檔: https://docs.ignite.com
 `
 	fmt.Printf(message, path)
 

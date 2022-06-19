@@ -18,12 +18,12 @@ var (
 	campaignVestingAccSummaryHeader  = []string{"Vesting Account", "Total Shares", "Vesting", "End Time"}
 )
 
-// NewNetworkCampaignAccount creates a new campaign account command that holds some other
-// sub commands related to account for a campaign.
+// NewNetworkCampaignAccount 創建一個新的活動帳戶命令，其中包含其他一些
+// 與活動帳戶相關的子命令。
 func NewNetworkCampaignAccount() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "account",
-		Short: "Handle campaign accounts",
+		Short: "處理活動帳戶",
 	}
 	c.AddCommand(
 		newNetworkCampaignAccountList(),
@@ -34,7 +34,7 @@ func NewNetworkCampaignAccount() *cobra.Command {
 func newNetworkCampaignAccountList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list [campaign-id]",
-		Short: "Show all mainnet and mainnet vesting of the campaign",
+		Short: "顯示活動的所有主網和主網歸屬",
 		Args:  cobra.ExactArgs(1),
 		RunE:  newNetworkCampaignAccountListHandler,
 	}
@@ -54,7 +54,7 @@ func newNetworkCampaignAccountListHandler(cmd *cobra.Command, args []string) err
 		return err
 	}
 
-	// get all campaign accounts
+	// 獲取所有活動帳戶
 	mainnetAccs, vestingAccs, err := getAccounts(cmd.Context(), n, campaignID)
 	if err != nil {
 		return err
@@ -62,7 +62,7 @@ func newNetworkCampaignAccountListHandler(cmd *cobra.Command, args []string) err
 
 	if len(mainnetAccs)+len(vestingAccs) == 0 {
 		session.StopSpinner()
-		return session.Printf("%s %s\n", icons.Info, "no campaign account found")
+		return session.Printf("%s %s\n", icons.Info, "未找到活動中帳戶")
 	}
 
 	mainnetAccEntries := make([][]string, 0)
@@ -94,7 +94,7 @@ func newNetworkCampaignAccountListHandler(cmd *cobra.Command, args []string) err
 	return nil
 }
 
-// getAccounts get all campaign mainnet and vesting accounts.
+// getAccounts 獲取所有活動主網和歸屬賬戶。
 func getAccounts(
 	ctx context.Context,
 	n network.Network,
@@ -104,20 +104,20 @@ func getAccounts(
 	[]networktypes.MainnetVestingAccount,
 	error,
 ) {
-	// start serving components.
+	// 開始服務組件。
 	g, ctx := errgroup.WithContext(ctx)
 	var (
 		mainnetAccs []networktypes.MainnetAccount
 		vestingAccs []networktypes.MainnetVestingAccount
 		err         error
 	)
-	// get all campaign mainnet accounts
+	// 獲取所有競選主網賬戶
 	g.Go(func() error {
 		mainnetAccs, err = n.MainnetAccounts(ctx, campaignID)
 		return err
 	})
 
-	// get all campaign vesting accounts
+	// 獲取所有競選歸屬賬戶
 	g.Go(func() error {
 		vestingAccs, err = n.MainnetVestingAccounts(ctx, campaignID)
 		return err

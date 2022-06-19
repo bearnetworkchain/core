@@ -13,21 +13,21 @@ const (
 	flagPaginated = "paginated"
 )
 
-// NewScaffoldQuery command creates a new type command to scaffold queries
+//NewScaffoldQuery 命令創建一個新的類型命令來構建查詢
 func NewScaffoldQuery() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "query [name] [request_field1] [request_field2] ...",
-		Short: "Query to get data from the blockchain",
+		Short: "查詢從區塊鏈獲取數據",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  queryHandler,
 	}
 
 	flagSetPath(c)
 	flagSetClearCache(c)
-	c.Flags().String(flagModule, "", "Module to add the query into. Default: app's main module")
-	c.Flags().StringSliceP(flagResponse, "r", []string{}, "Response fields")
-	c.Flags().StringP(flagDescription, "d", "", "Description of the command")
-	c.Flags().Bool(flagPaginated, false, "Define if the request can be paginated")
+	c.Flags().String(flagModule, "", "將查詢添加到的模塊。默認值：應用程序的主模塊")
+	c.Flags().StringSliceP(flagResponse, "r", []string{}, "響應字段")
+	c.Flags().StringP(flagDescription, "d", "", "命令說明")
+	c.Flags().Bool(flagPaginated, false, "定義請求是否可以分頁")
 
 	return c
 }
@@ -35,28 +35,28 @@ func NewScaffoldQuery() *cobra.Command {
 func queryHandler(cmd *cobra.Command, args []string) error {
 	appPath := flagGetPath(cmd)
 
-	s := clispinner.New().SetText("Scaffolding...")
+	s := clispinner.New().SetText("創建中,請耐心等候...")
 	defer s.Stop()
 
-	// Get the module to add the type into
+	// 獲取要添加類型的模塊
 	module, err := cmd.Flags().GetString(flagModule)
 	if err != nil {
 		return err
 	}
 
-	// Get request fields
+	// 獲取請求字段
 	resFields, err := cmd.Flags().GetStringSlice(flagResponse)
 	if err != nil {
 		return err
 	}
 
-	// Get description
+	// 獲取描述
 	desc, err := cmd.Flags().GetString(flagDescription)
 	if err != nil {
 		return err
 	}
 	if desc == "" {
-		// Use a default description
+		// 使用默認描述
 		desc = fmt.Sprintf("Query %s", args[0])
 	}
 
@@ -88,7 +88,7 @@ func queryHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Println(modificationsStr)
-	fmt.Printf("\n🎉 Created a query `%[1]v`.\n\n", args[0])
+	fmt.Printf("\n🎉 創建了一個查詢 `%[1]v`.\n\n", args[0])
 
 	return nil
 }

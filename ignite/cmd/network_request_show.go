@@ -11,12 +11,12 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network"
 )
 
-// NewNetworkRequestShow creates a new request show command to show
-// requests details for a chain
+// NewNetworkRequestShow 創建一個新的請求顯示命令來顯示
+// 請求鏈的詳細信息
 func NewNetworkRequestShow() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "show [launch-id] [request-id]",
-		Short: "Show pending requests details",
+		Short: "顯示待處理的請求詳細信息",
 		RunE:  networkRequestShowHandler,
 		Args:  cobra.ExactArgs(2),
 	}
@@ -32,13 +32,13 @@ func networkRequestShowHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// parse request ID
+	// 解析請求ID
 	requestID, err := strconv.ParseUint(args[1], 10, 64)
 	if err != nil {
 		return errors.Wrap(err, "error parsing requestID")
@@ -54,8 +54,8 @@ func networkRequestShowHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// convert the request object to YAML to be more readable
-	// and convert the byte array fields to string.
+	// 將請求對象轉換為 YAML 以提高可讀性
+	// 並將字節數組字段轉換為字符串。
 	requestYaml, err := yaml.Marshal(cmd.Context(), request,
 		"$.Content.content.genesisValidator.genTx",
 		"$.Content.content.genesisValidator.consPubKey",

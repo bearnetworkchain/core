@@ -9,12 +9,12 @@ import (
 
 const flagOut = "out"
 
-// NewNetworkChainShow creates a new chain show
-// command to show a chain details on SPN.
+// NewNetworkChainShow 創建一個新的鏈秀
+// 命令顯示 SPN 上的鏈詳細信息。
 func NewNetworkChainShow() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "show",
-		Short: "Show details of a chain",
+		Short: "顯示熊網鏈的詳細信息",
 	}
 	c.AddCommand(
 		newNetworkChainShowInfo(),

@@ -32,26 +32,26 @@ const (
 	spnNodeAddressNightly   = "https://rpc.nightly.starport.network:443"
 	spnFaucetAddressNightly = "https://faucet.nightly.starport.network"
 
-	spnNodeAddressLocal   = "http://0.0.0.0:26657"
-	spnFaucetAddressLocal = "http://0.0.0.0:4500"
+	spnNodeAddressLocal   = "http://192.168.1.188:26657"
+	spnFaucetAddressLocal = "http://192.168.1.188:4500"
 )
 
-// NewNetwork creates a new network command that holds some other sub commands
-// related to creating a new network collaboratively.
+// NewNetwork 創建一個包含其他一些子命令的新網絡命令
+// 與協作創建新網絡有關。
 func NewNetwork() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "network [command]",
 		Aliases: []string{"n"},
-		Short:   "Launch a blockchain network in production",
+		Short:   "在生產中啟動區塊鏈網絡",
 		Args:    cobra.ExactArgs(1),
 		Hidden:  true,
 	}
 
 	// configure flags.
-	c.PersistentFlags().BoolVar(&local, flagLocal, false, "Use local SPN network")
-	c.PersistentFlags().BoolVar(&nightly, flagNightly, false, "Use nightly SPN network")
-	c.PersistentFlags().StringVar(&spnNodeAddress, flagSPNNodeAddress, spnNodeAddressNightly, "SPN node address")
-	c.PersistentFlags().StringVar(&spnFaucetAddress, flagSPNFaucetAddress, spnFaucetAddressNightly, "SPN faucet address")
+	c.PersistentFlags().BoolVar(&local, flagLocal, false, "使用本地 SPN 網絡")
+	c.PersistentFlags().BoolVar(&nightly, flagNightly, false, "使用夜間 SPN 網絡")
+	c.PersistentFlags().StringVar(&spnNodeAddress, flagSPNNodeAddress, spnNodeAddressNightly, "SPN 節點地址")
+	c.PersistentFlags().StringVar(&spnFaucetAddress, flagSPNFaucetAddress, spnFaucetAddressNightly, "SPN水龍頭地址")
 
 	// add sub commands.
 	c.AddCommand(
@@ -87,7 +87,7 @@ func CollectEvents(ev events.Bus) NetworkBuilderOption {
 
 func flagSetSPNAccountPrefixes() *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
-	fs.String(flagAddressPrefix, networktypes.SPN, "Account address prefix")
+	fs.String(flagAddressPrefix, networktypes.SPN, "賬戶地址前綴")
 	return fs
 }
 
@@ -128,7 +128,7 @@ func (n NetworkBuilder) Network(options ...network.Option) (network.Network, err
 	if from != "" {
 		account, err = cosmos.AccountRegistry.GetByName(getFrom(n.cmd))
 		if err != nil {
-			return network.Network{}, errors.Wrap(err, "make sure that this account exists, use 'ignite account -h' to manage accounts")
+			return network.Network{}, errors.Wrap(err, "確保此帳戶存在，使用 'ignite account -h' 管理帳戶")
 		}
 	}
 
@@ -138,9 +138,9 @@ func (n NetworkBuilder) Network(options ...network.Option) (network.Network, err
 }
 
 func getNetworkCosmosClient(cmd *cobra.Command) (cosmosclient.Client, error) {
-	// check preconfigured networks
+	// 檢查預配置的網絡
 	if nightly && local {
-		return cosmosclient.Client{}, errors.New("local and nightly networks can't both be specified in the same command, specify local or nightly")
+		return cosmosclient.Client{}, errors.New("local 和 nightly 網絡不能在同一個命令中同時指定，請指定 local 或 nightly")
 	}
 	if local {
 		spnNodeAddress = spnNodeAddressLocal
@@ -159,10 +159,9 @@ func getNetworkCosmosClient(cmd *cobra.Command) (cosmosclient.Client, error) {
 	}
 
 	keyringBackend := getKeyringBackend(cmd)
-	// use test keyring backend on Gitpod in order to prevent prompting for keyring
-	// password. This happens because Gitpod uses containers.
-	//
-	// when not on Gitpod, OS keyring backend is used which only asks password once.
+	// 在 Gitpod 上使用測試密鑰環後端，以防止提示輸入密鑰環密碼。
+	// 這是因為 Gitpod 使用容器。
+	// 當不在 Gitpod 上時，使用操作系統密鑰環後端，它只詢問一次密碼。
 	if gitpod.IsOnGitpod() {
 		keyringBackend = cosmosaccount.KeyringTest
 	}
@@ -170,8 +169,8 @@ func getNetworkCosmosClient(cmd *cobra.Command) (cosmosclient.Client, error) {
 		cosmosOptions = append(cosmosOptions, cosmosclient.WithKeyringBackend(keyringBackend))
 	}
 
-	// init cosmos client only once on start in order to spnclient to
-	// reuse unlocked keyring in the following steps.
+	// 在啟動時只初始化一次 cosmos 客戶端，以便spnclient在以下步驟中重用未鎖定的密鑰環。
+
 	if cosmos == nil {
 		client, err := cosmosclient.New(cmd.Context(), cosmosOptions...)
 		if err != nil {

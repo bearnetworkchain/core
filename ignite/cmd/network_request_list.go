@@ -14,12 +14,12 @@ import (
 
 var requestSummaryHeader = []string{"ID", "Status", "Type", "Content"}
 
-// NewNetworkRequestList creates a new request list command to list
-// requests for a chain
+// NewNetworkRequestList 創建一個新的請求列表命令來列出
+// 請求鏈
 func NewNetworkRequestList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list [launch-id]",
-		Short: "List all pending requests",
+		Short: "列出所有待處理的請求",
 		RunE:  networkRequestListHandler,
 		Args:  cobra.ExactArgs(1),
 	}
@@ -40,7 +40,7 @@ func networkRequestListHandler(cmd *cobra.Command, args []string) error {
 
 	addressPrefix := getAddressPrefix(cmd)
 
-	// parse launch ID
+	// 解析啟動 ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
@@ -61,7 +61,7 @@ func networkRequestListHandler(cmd *cobra.Command, args []string) error {
 	return renderRequestSummaries(requests, session, addressPrefix)
 }
 
-// renderRequestSummaries writes into the provided out, the list of summarized requests
+// renderRequestSummaries 寫入提供的輸出，匯總請求列表
 func renderRequestSummaries(
 	requests []networktypes.Request,
 	session cliui.Session,
@@ -76,7 +76,7 @@ func renderRequestSummaries(
 		)
 		switch req := request.Content.Content.(type) {
 		case *launchtypes.RequestContent_GenesisAccount:
-			requestType = "Add Genesis Account"
+			requestType = "添加創世紀賬戶"
 
 			address, err := cosmosutil.ChangeAddressPrefix(
 				req.GenesisAccount.Address,
@@ -90,7 +90,7 @@ func renderRequestSummaries(
 				address,
 				req.GenesisAccount.Coins.String())
 		case *launchtypes.RequestContent_GenesisValidator:
-			requestType = "Add Genesis Validator"
+			requestType = "添加創世紀驗證器"
 			peer, err := network.PeerAddress(req.GenesisValidator.Peer)
 			if err != nil {
 				return err
@@ -109,15 +109,15 @@ func renderRequestSummaries(
 				address,
 				req.GenesisValidator.SelfDelegation.String())
 		case *launchtypes.RequestContent_VestingAccount:
-			requestType = "Add Vesting Account"
+			requestType = "添加歸屬賬戶"
 
-			// parse vesting options
+			// 解析歸屬選項
 			var vestingCoins string
 			dv := req.VestingAccount.VestingOptions.GetDelayedVesting()
 			if dv == nil {
-				vestingCoins = "unrecognized vesting option"
+				vestingCoins = "無法識別的歸屬選項"
 			} else {
-				vestingCoins = fmt.Sprintf("%s (vesting: %s)", dv.TotalBalance, dv.Vesting)
+				vestingCoins = fmt.Sprintf("%s (歸屬: %s)", dv.TotalBalance, dv.Vesting)
 			}
 
 			address, err := cosmosutil.ChangeAddressPrefix(
@@ -133,7 +133,7 @@ func renderRequestSummaries(
 				vestingCoins,
 			)
 		case *launchtypes.RequestContent_ValidatorRemoval:
-			requestType = "Remove Validator"
+			requestType = "移除驗證器"
 
 			address, err := cosmosutil.ChangeAddressPrefix(
 				req.ValidatorRemoval.ValAddress,
@@ -145,7 +145,7 @@ func renderRequestSummaries(
 
 			content = address
 		case *launchtypes.RequestContent_AccountRemoval:
-			requestType = "Remove Account"
+			requestType = "刪除帳戶"
 
 			address, err := cosmosutil.ChangeAddressPrefix(
 				req.AccountRemoval.Address,

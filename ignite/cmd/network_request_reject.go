@@ -9,13 +9,13 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network"
 )
 
-// NewNetworkRequestReject 創建一個新的請求拒絕
-// 拒絕鏈請求的命令.
+// NewNetworkRequestReject creates a new request reject
+// command to reject requests for a chain.
 func NewNetworkRequestReject() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "reject [launch-id] [number<,...>]",
 		Aliases: []string{"accept"},
-		Short:   "拒絕請求",
+		Short:   "Reject requests",
 		RunE:    networkRequestRejectHandler,
 		Args:    cobra.ExactArgs(2),
 	}
@@ -34,13 +34,13 @@ func networkRequestRejectHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	//解析啟動 ID
+	// parse launch ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// 獲取請求ID列表
+	// Get the list of request ids
 	ids, err := numbers.ParseList(args[1])
 	if err != nil {
 		return err
@@ -51,7 +51,7 @@ func networkRequestRejectHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 提交被拒絕的請求
+	// Submit the rejected requests
 	reviewals := make([]network.Reviewal, 0)
 	for _, id := range ids {
 		reviewals = append(reviewals, network.RejectRequest(id))
@@ -62,5 +62,5 @@ func networkRequestRejectHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s 要求(s) %s 被拒絕\n", icons.OK, numbers.List(ids, "#"))
+	return session.Printf("%s Request(s) %s rejected\n", icons.OK, numbers.List(ids, "#"))
 }

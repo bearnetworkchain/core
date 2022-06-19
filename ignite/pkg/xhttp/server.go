@@ -7,10 +7,10 @@ import (
 	"time"
 )
 
-// ShutdownTimeout是等待所有請求完成的超時時間。
+// ShutdownTimeout is the timeout for waiting all requests to complete.
 const ShutdownTimeout = time.Minute
 
-// Serve啟動 s 服務器並在 ctx 取消後將其關閉。
+// Serve starts s server and shutdowns it once the ctx is cancelled.
 func Serve(ctx context.Context, s *http.Server) error {
 	go func() {
 		<-ctx.Done()

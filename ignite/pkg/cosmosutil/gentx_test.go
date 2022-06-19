@@ -27,10 +27,10 @@ func TestParseGentx(t *testing.T) {
 			name:      "parse gentx file 1",
 			gentxPath: "testdata/gentx1.json",
 			wantInfo: cosmosutil.GentxInfo{
-				DelegatorAddress: "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+				DelegatorAddress: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
 				PubKey:           ed25519.PubKey(pk1),
 				SelfDelegation: sdk.Coin{
-					Denom:  "bnkt",
+					Denom:  "stake",
 					Amount: sdk.NewInt(95000000),
 				},
 				Memo: "9b1f4adbfb0c0b513040d914bfb717303c0eaa71@192.168.0.148:26656",
@@ -39,20 +39,20 @@ func TestParseGentx(t *testing.T) {
 			name:      "parse gentx file 2",
 			gentxPath: "testdata/gentx2.json",
 			wantInfo: cosmosutil.GentxInfo{
-				DelegatorAddress: "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+				DelegatorAddress: "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
 				PubKey:           ed25519.PubKey(pk2),
 				SelfDelegation: sdk.Coin{
-					Denom:  "bnkt",
+					Denom:  "stake",
 					Amount: sdk.NewInt(95000000),
 				},
 				Memo: "a412c917cb29f73cc3ad0592bbd0152fe0e690bd@192.168.0.148:26656",
 			},
 		}, {
-			name:      "解析無效文件",
+			name:      "parse invalid file",
 			gentxPath: "testdata/gentx_invalid.json",
 			wantErr:   true,
 		}, {
-			name:      "找不到文件",
+			name:      "not found file",
 			gentxPath: "testdata/gentx_not_found.json",
 			wantErr:   true,
 		},

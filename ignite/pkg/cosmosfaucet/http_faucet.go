@@ -11,11 +11,11 @@ import (
 )
 
 type TransferRequest struct {
-	//AccountAddress 請求硬幣。
+	// AccountAddress to request for coins.
 	AccountAddress string `json:"address"`
 
-	// 請求的硬幣。
-	// 未提供此選項時使用的默認選項。
+	// Coins that are requested.
+	// default ones used when this one isn't provided.
 	Coins []string `json:"coins"`
 }
 
@@ -33,20 +33,20 @@ type TransferResponse struct {
 func (f Faucet) faucetHandler(w http.ResponseWriter, r *http.Request) {
 	var req TransferRequest
 
-	// 將請求解碼為 req。
+	// decode request into req.
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		responseError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	// 確定要轉移的硬幣。
+	// determine coins to transfer.
 	coins, err := f.coinsFromRequest(req)
 	if err != nil {
 		responseError(w, http.StatusBadRequest, err)
 		return
 	}
 
-	// 嘗試執行傳輸
+	// try performing the transfer
 	if err := f.Transfer(r.Context(), req.AccountAddress, coins); err != nil {
 		if err == context.Canceled {
 			return
@@ -57,13 +57,13 @@ func (f Faucet) faucetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// FaucetInfoResponse是水龍頭信息負載。
+// FaucetInfoResponse is the faucet info payload.
 type FaucetInfoResponse struct {
-	// IsAFaucet 表示這是一個水龍頭端點。
-	// 對自動發現有用。
+	// IsAFaucet indicates that this is a faucet endpoint.
+	// useful for auto discoveries.
 	IsAFaucet bool `json:"is_a_faucet"`
 
-	// ChainID 是 chain id 水龍頭正在運行的鏈條。
+	// ChainID is chain id of the chain that faucet is running for.
 	ChainID string `json:"chain_id"`
 }
 
@@ -74,7 +74,7 @@ func (f Faucet) faucetInfoHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// coinsFromRequest 從轉移請求中確定要轉移的代幣。
+// coinsFromRequest determines tokens to transfer from transfer request.
 func (f Faucet) coinsFromRequest(req TransferRequest) (sdk.Coins, error) {
 	if len(req.Coins) == 0 {
 		return f.coins, nil

@@ -1,7 +1,7 @@
-// Package gomodulepath i實現用於操作 Go 模塊路徑的函數。
-// 路徑通常定義為域名和包含用戶和路徑的路徑
-// 存儲庫名稱，例如“github.com/username/reponame”，但 Go 也允許其他模塊
-// 名稱，例如“domain.com/name”、“name”、“namespace/name”或類似的變體。
+// Package gomodulepath implements functions for the manipulation of Go module paths.
+// Paths are typically defined as a domain name and a path containing the user and
+// repository names, e.g. "github.com/username/reponame", but Go also allows other module
+// names like "domain.com/name", "name", "namespace/name", or similar variants.
 package gomodulepath
 
 import (
@@ -19,30 +19,30 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/gomodule"
 )
 
-//Path 表示 Go 模塊的路徑。
+// Path represents a Go module's path.
 type Path struct {
-	// Path 是 Go 模塊的完整路徑。
-	// 例如：github.tsum / ignite-hya / tsli.
+	// Path is Go module's full path.
+	// e.g.: github.com/ignite-hq/cli.
 	RawPath string
 
-	// Root 是 Go 模塊的根目錄名。
-	// 例如：github.com/ignite-hq/cli 的 cli。
+	// Root is the root directory name of Go module.
+	// e.g.: cli for github.com/ignite-hq/cli.
 	Root string
 
-	// Package是可以使用的Go模塊的默認包名
-	// 承載模塊的主要功能。
-	// 例如：github.com/ignite-hq/cli 的 cli。
+	// Package is the default package name for the Go module that can be used
+	// to host main functionality of the module.
+	// e.g.: cli for github.com/ignite-hq/cli.
 	Package string
 }
 
-// Parse將 rawpath 解析為模塊 Path。
+// Parse parses rawpath into a module Path.
 func Parse(rawpath string) (Path, error) {
 	if err := validateRawPath(rawpath); err != nil {
 		return Path{}, err
 	}
 	rootName := root(rawpath)
-	// 包名不能包含“-”所以優雅地刪除它們
-	// 如果他們在場。
+	// package name cannot contain "-" so gracefully remove them
+	// if they present.
 	packageName := stripNonAlphaNumeric(rootName)
 	if err := validatePackageName(packageName); err != nil {
 		return Path{}, err
@@ -56,7 +56,7 @@ func Parse(rawpath string) (Path, error) {
 	return p, nil
 }
 
-// ParseAt 解析應用程序的 Go 模塊路徑位於路徑中。
+// ParseAt parses Go module path of an app resides at path.
 func ParseAt(path string) (Path, error) {
 	parsed, err := gomodule.ParseAt(path)
 	if err != nil {
@@ -65,7 +65,7 @@ func ParseAt(path string) (Path, error) {
 	return Parse(parsed.Module.Mod.Path)
 }
 
-// Find 在當前路徑和父路徑中搜索 Go 模塊，直到找到它。
+// Find search the Go module in the current and parent paths until finding it.
 func Find(path string) (parsed Path, appPath string, err error) {
 	for len(path) != 0 && path != "." && path != "/" {
 		parsed, err = ParseAt(path)
@@ -75,10 +75,10 @@ func Find(path string) (parsed Path, appPath string, err error) {
 		}
 		return parsed, path, err
 	}
-	return Path{}, "", errors.Wrap(gomodule.ErrGoModNotFound, "找不到您應用的根目錄")
+	return Path{}, "", errors.Wrap(gomodule.ErrGoModNotFound, "could not locate your app's root dir")
 }
 
-// ExtractAppPath 從 Go 模塊路徑中提取應用程序模塊路徑。
+// ExtractAppPath extracts the app module path from a Go module path.
 func ExtractAppPath(path string) string {
 	if path == "" {
 		return ""
@@ -86,18 +86,18 @@ func ExtractAppPath(path string) string {
 
 	items := strings.Split(path, "/")
 
-	// 如果假定為域名，則刪除第一個路徑項
+	// Remove the first path item if it is assumed to be a domain name
 	if len(items) > 1 && strings.Contains(items[0], ".") {
 		items = items[1:]
 	}
 
 	count := len(items)
 	if count == 1 {
-		// Go 模塊路徑是單個名稱
+		// The Go module path is a single name
 		return items[0]
 	}
 
-	// 路徑中的最後兩項定義命名空間和應用名稱
+	// The last two items in the path define the namespace and app name
 	return strings.Join(items[count-2:], "/")
 }
 
@@ -106,13 +106,13 @@ func hasDomainNamePrefix(path string) bool {
 		return false
 	}
 
-	// TODO：我們應該使用正則表達式而不是簡單的檢查嗎？
+	// TODO: should we use a regexp instead of the simplistic check ?
 	name, _, _ := strings.Cut(path, "/")
 	return strings.Contains(name, ".")
 }
 
 func validateRawPath(path string) error {
-	// 原始路徑應該是 URI、單個名稱或路徑
+	// A raw path should be either a URI, a single name or a path
 	if hasDomainNamePrefix(path) {
 		return validateURIPath(path)
 	}
@@ -121,14 +121,14 @@ func validateRawPath(path string) error {
 
 func validateURIPath(path string) error {
 	if err := module.CheckPath(path); err != nil {
-		return fmt.Errorf("應用名稱是無效的GO模塊名稱: %w", err)
+		return fmt.Errorf("app name is an invalid go module name: %w", err)
 	}
 	return nil
 }
 
 func validateNamePath(path string) error {
 	if err := module.CheckImportPath(path); err != nil {
-		return fmt.Errorf("應用名稱是無效的GO模塊名稱: %w", err)
+		return fmt.Errorf("app name is an invalid go module name: %w", err)
 	}
 	return nil
 }
@@ -137,9 +137,9 @@ func validatePackageName(name string) error {
 	fset := token.NewFileSet()
 	src := fmt.Sprintf("package %s", name)
 	if _, err := parser.ParseFile(fset, "", src, parser.PackageClauseOnly); err != nil {
-		// 解析器錯誤在這裡非常低，所以讓我們對用戶完全地隱藏它。
-
-		return errors.New("應用名稱是無效的GO包名稱")
+		// parser error is very low level here so let's hide it from the user
+		// completely.
+		return errors.New("app name is an invalid go package name")
 	}
 	return nil
 }
@@ -147,7 +147,7 @@ func validatePackageName(name string) error {
 func root(path string) string {
 	sp := strings.Split(path, "/")
 	name := sp[len(sp)-1]
-	if semver.IsValid(name) { //省略版本。
+	if semver.IsValid(name) { // omit versions.
 		name = sp[len(sp)-2]
 	}
 	return name

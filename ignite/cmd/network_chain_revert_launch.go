@@ -8,12 +8,12 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
 )
 
-// NewNetworkChainRevertLaunch 創建一個新的鏈恢復啟動命令
-// 恢復已啟動的鏈。
+// NewNetworkChainRevertLaunch creates a new chain revert launch command
+// to revert a launched chain.
 func NewNetworkChainRevertLaunch() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "revert-launch [launch-id]",
-		Short: "恢復以協調者身份啟動網絡",
+		Short: "Revert launch a network as a coordinator",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainRevertLaunchHandler,
 	}
@@ -33,7 +33,7 @@ func networkChainRevertLaunchHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析啟動 ID
+	// parse launch ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err

@@ -11,17 +11,17 @@ const (
 	flagRemainingTime = "remaining-time"
 )
 
-// NewNetworkChainLaunch 創建一個新的鏈啟動命令來啟動
-// 作為網絡協調者。
+// NewNetworkChainLaunch creates a new chain launch command to launch
+// the network as a coordinator.
 func NewNetworkChainLaunch() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "launch [launch-id]",
-		Short: "作為協調者啟動網絡",
+		Short: "Launch a network as a coordinator",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainLaunchHandler,
 	}
 
-	c.Flags().Duration(flagRemainingTime, 0, "熊網鏈有效啟動前的持續時間（以秒為單位）")
+	c.Flags().Duration(flagRemainingTime, 0, "Duration of time in seconds before the chain is effectively launched")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 
@@ -37,7 +37,7 @@ func networkChainLaunchHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析啟動 ID
+	// parse launch ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err

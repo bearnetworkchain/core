@@ -44,8 +44,8 @@ func generateOpenAPISpec(g *generator) error {
 
 	var hasAnySpecChanged bool
 
-	// gen 為其源代碼位於 src 的模塊生成規範。
-	// 並為其添加所需的 swaggercombine 配置。
+	// gen generates a spec for a module where it's source code resides at src.
+	// and adds needed swaggercombine configure for it.
 	gen := func(src string, m module.Module) (err error) {
 		dir, err := os.MkdirTemp("", "gen-openapi-module-spec")
 		if err != nil {
@@ -100,9 +100,9 @@ func generateOpenAPISpec(g *generator) error {
 		return conf.AddSpec(strcase.ToCamel(m.Pkg.Name), specPath)
 	}
 
-	// 為每個模塊生成規範並將它們保存在文件系統中
-	// 在將它們的路徑和配置添加到 swaggercombine.Config 之後，我們可以將它們組合起來
-	// 進入單個規範。
+	// generate specs for each module and persist them in the file system
+	// after add their path and config to swaggercombine.Config so we can combine them
+	// into a single spec.
 
 	add := func(src string, modules []module.Module) error {
 		for _, m := range modules {
@@ -114,7 +114,7 @@ func generateOpenAPISpec(g *generator) error {
 		return nil
 	}
 
-	// protoc openapi 生成器在並發運行時表現得很奇怪，所以不要在這裡使用 goroutines。
+	// protoc openapi generator acts weird on conccurrent run, so do not use goroutines here.
 	if err := add(g.appPath, g.appModules); err != nil {
 		return err
 	}
@@ -126,7 +126,7 @@ func generateOpenAPISpec(g *generator) error {
 	}
 
 	if !hasAnySpecChanged {
-		// 如果生成的輸出已更改
+		// In case the generated output has been changed
 		changed, err := dirchange.HasDirChecksumChanged(specCache, out, g.appPath, out)
 		if err != nil {
 			return err
@@ -139,13 +139,13 @@ func generateOpenAPISpec(g *generator) error {
 
 	sort.Slice(conf.APIs, func(a, b int) bool { return conf.APIs[a].ID < conf.APIs[b].ID })
 
-	// 確保存在目錄。
+	// ensure out dir exists.
 	outDir := filepath.Dir(out)
 	if err := os.MkdirAll(outDir, 0766); err != nil {
 		return err
 	}
 
-	// 將規格合二為一併保存到外面。
+	// combine specs into one and save to out.
 	if err := swaggercombine.Combine(g.ctx, conf, out); err != nil {
 		return err
 	}

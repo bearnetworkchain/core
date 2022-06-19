@@ -25,8 +25,8 @@ const (
 )
 
 var (
-	defaultCoins = []string{"10token", "1bnkt"}
-	maxCoins     = []string{"102token", "100000000bnkt"}
+	defaultCoins = []string{"10token", "1stake"}
+	maxCoins     = []string{"102token", "100000000stake"}
 )
 
 func TestRequestCoinsFromFaucet(t *testing.T) {
@@ -72,9 +72,9 @@ func TestRequestCoinsFromFaucet(t *testing.T) {
 	checkAccountBalance(t, ctx, cosmosClient, addr, defaultCoins)
 
 	// the faucet can send a specified amount of coins
-	_, err = faucetClient.Transfer(ctx, cosmosfaucet.NewTransferRequest(addr, []string{"20token", "2bnkt"}))
+	_, err = faucetClient.Transfer(ctx, cosmosfaucet.NewTransferRequest(addr, []string{"20token", "2stake"}))
 	require.NoError(t, err)
-	checkAccountBalance(t, ctx, cosmosClient, addr, []string{"30token", "3bnkt"})
+	checkAccountBalance(t, ctx, cosmosClient, addr, []string{"30token", "3stake"})
 
 	// faucet request fails on malformed coins
 	_, err = faucetClient.Transfer(ctx, cosmosfaucet.NewTransferRequest(addr, []string{"no-token"}))
@@ -100,7 +100,7 @@ func TestRequestCoinsFromFaucet(t *testing.T) {
 		})
 	}
 	require.NoError(t, g.Wait())
-	checkAccountBalance(t, ctx, cosmosClient, addr, []string{"100token", "10bnkt"})
+	checkAccountBalance(t, ctx, cosmosClient, addr, []string{"100token", "10stake"})
 }
 
 func checkAccountBalance(t *testing.T, ctx context.Context, c cosmosclient.Client, accAddr string, coins []string) {

@@ -318,7 +318,7 @@ message BaseReq {
   [(gogoproto.nullable) = false,
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      example: "[{\"denom\": \"ubnkt\", \"amount\": \"10\"}]",
+      example: "[{\"denom\": \"uatom\", \"amount\": \"10\"}]",
       format: "sdk.Coins"
     }
   ];
@@ -329,7 +329,7 @@ message BaseReq {
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.DecCoins",
     (gogoproto.nullable)     = false,
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      example: "[{\"denom\": \"ubnkt\", \"amount\": \"0.1\"}]",
+      example: "[{\"denom\": \"uatom\", \"amount\": \"0.1\"}]",
       format: "sdk.DecCoins"
     }
   ];
@@ -368,7 +368,7 @@ message Fee {
   [(gogoproto.nullable) = false,
     (gogoproto.castrepeated) = "github.com/cosmos/cosmos-sdk/types.Coins",
     (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      example: "[{\"denom\": \"ubnkt\", \"amount\": \"10\"}]",
+      example: "[{\"denom\": \"uatom\", \"amount\": \"10\"}]",
       format: "sdk.Coins"
     }
   ];

@@ -1,7 +1,7 @@
 package cosmosfaucet
 
 import (
-	_ "embed" // 用於嵌入 openapi 資產。
+	_ "embed" // used for embedding openapi assets.
 	"html/template"
 	"net/http"
 )
@@ -10,7 +10,7 @@ const (
 	fileNameOpenAPISpec = "openapi/openapi.yml.tmpl"
 )
 
-//go:嵌入openapi/openapi.yml.tmpl
+//go:embed openapi/openapi.yml.tmpl
 var bytesOpenAPISpec []byte
 
 var tmplOpenAPISpec = template.Must(template.New(fileNameOpenAPISpec).Parse(string(bytesOpenAPISpec)))

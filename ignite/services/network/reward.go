@@ -11,11 +11,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// SetReward設置連鎖獎勵
+// SetReward set a chain reward
 func (n Network) SetReward(launchID uint64, lastRewardHeight int64, coins sdk.Coins) error {
 	n.ev.Send(events.New(
 		events.StatusOngoing,
-		fmt.Sprintf("設置獎勵 %s 到鏈 %d 在高度 %d",
+		fmt.Sprintf("Setting reward %s to the chain %d at height %d",
 			coins.String(),
 			launchID,
 			lastRewardHeight,
@@ -41,13 +41,13 @@ func (n Network) SetReward(launchID uint64, lastRewardHeight int64, coins sdk.Co
 	if setRewardRes.PreviousCoins.Empty() {
 		n.ev.Send(events.New(
 			events.StatusDone,
-			"獎勵池為空",
+			"The reward pool was empty",
 			events.Icon(icons.Info),
 		))
 	} else {
 		n.ev.Send(events.New(events.StatusDone,
 			fmt.Sprintf(
-				"以前的獎勵池 %s 在高度 %d 被覆蓋",
+				"Previous reward pool %s at height %d is overwritten",
 				coins.String(),
 				lastRewardHeight,
 			),
@@ -56,10 +56,10 @@ func (n Network) SetReward(launchID uint64, lastRewardHeight int64, coins sdk.Co
 	}
 
 	if setRewardRes.NewCoins.Empty() {
-		n.ev.Send(events.New(events.StatusDone, "獎勵池被移除"))
+		n.ev.Send(events.New(events.StatusDone, "The reward pool is removed"))
 	} else {
 		n.ev.Send(events.New(events.StatusDone, fmt.Sprintf(
-			"%s 將分發給高度的驗證者 %d. 這條鏈 %d 現在是一個激勵測試網",
+			"%s will be distributed to validators at height %d. The chain %d is now an incentivized testnet",
 			coins.String(),
 			lastRewardHeight,
 			launchID,

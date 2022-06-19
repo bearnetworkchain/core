@@ -8,33 +8,33 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 )
 
-// CosmosApp 實現了基於 Cosmos SDK 的應用程序的常用方法
-// 特定的區塊鏈。
+// CosmosApp implements the common methods for a Cosmos SDK-based application
+// specific blockchain.
 type CosmosApp interface {
-	// 應用程序的指定名稱.
+	// The assigned name of the app.
 	Name() string
 
-// 應用程序類型編解碼器。
-// 注意：這應該在退回之前密封。
+	// The application types codec.
+	// NOTE: This should be sealed before being returned.
 	LegacyAmino() *codec.LegacyAmino
 
-	// 應用程序更新每個開始塊。
+	// Application updates every begin block.
 	BeginBlocker(ctx sdk.Context, req abci.RequestBeginBlock) abci.ResponseBeginBlock
 
-	// 應用程序更新每個結束塊。
+	// Application updates every end block.
 	EndBlocker(ctx sdk.Context, req abci.RequestEndBlock) abci.ResponseEndBlock
 
-	// 鏈（即應用程序）初始化時的應用程序更新.
+	// Application update at chain (i.e app) initialization.
 	InitChainer(ctx sdk.Context, req abci.RequestInitChain) abci.ResponseInitChain
 
-	// 在給定高度加載應用程序.
+	// Loads the app at a given height.
 	LoadHeight(height int64) error
 
-	// 導出創世文件的應用程序狀態。
+	// Exports the state of the application for a genesis file.
 	ExportAppStateAndValidators(
 		forZeroHeight bool, jailAllowedAddrs []string,
 	) (types.ExportedApp, error)
 
-	// 所有註冊的模塊賬號地址.
+	// All the registered module account addreses.
 	ModuleAccountAddrs() map[string]bool
 }

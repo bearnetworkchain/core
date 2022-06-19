@@ -1,4 +1,4 @@
-// Package gacli 是 Google Analytics 的客戶端，用於發送提示類型 = 事件的數據點。
+// Package gacli is a client for Google Analyrics to send data points for hint-type=event.
 package gacli
 
 import (
@@ -10,20 +10,20 @@ const (
 	endpoint = "https://www.google-analytics.com/collect"
 )
 
-// 客戶端是分析客戶端。
+// Client is an analytics client.
 type Client struct {
 	gaid string
 }
 
-// New 使用 Segment 為 Segment.io 創建一個新的分析客戶端
-// 端點和訪問密鑰。
+// New creates a new analytics client for Segment.io with Segment's
+// endpoint and access key.
 func New(gaid string) *Client {
 	return &Client{
 		gaid: gaid,
 	}
 }
 
-// Metric 表示一個數據點。
+// Metric represents a data point.
 type Metric struct {
 	Category string
 	Action   string
@@ -33,7 +33,7 @@ type Metric struct {
 	Version  string
 }
 
-// Send 將指標發送到 GA。
+// Send sends metrics to GA.
 func (c *Client) Send(metric Metric) error {
 	v := url.Values{
 		"v":   {"1"},

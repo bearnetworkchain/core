@@ -21,7 +21,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// Chain 代表一個網絡區塊鏈，並允許您與其源代碼和二進製文件進行交互。
+// Chain represents a network blockchain and lets you interact with its source code and binary.
 type Chain struct {
 	id       string
 	launchID uint64
@@ -46,20 +46,20 @@ type Chain struct {
 	ar    cosmosaccount.Registry
 }
 
-//SourceOption 設置區塊鏈的來源。
+// SourceOption sets the source for blockchain.
 type SourceOption func(*Chain)
 
-//選項設置其他初始化選項。
+// Option sets other initialization options.
 type Option func(*Chain)
 
-//SourceRemote 將遠程上的默認分支設置為區塊鏈的源。
+// SourceRemote sets the default branch on a remote as source for the blockchain.
 func SourceRemote(url string) SourceOption {
 	return func(c *Chain) {
 		c.url = url
 	}
 }
 
-// SourceRemoteBranch將遠程分支設置為區塊鏈的源。
+// SourceRemoteBranch sets the branch on a remote as source for the blockchain.
 func SourceRemoteBranch(url, branch string) SourceOption {
 	return func(c *Chain) {
 		c.url = url
@@ -67,7 +67,7 @@ func SourceRemoteBranch(url, branch string) SourceOption {
 	}
 }
 
-// SourceRemoteTag將遠程標籤設置為區塊鏈的源。
+// SourceRemoteTag sets the tag on a remote as source for the blockchain.
 func SourceRemoteTag(url, tag string) SourceOption {
 	return func(c *Chain) {
 		c.url = url
@@ -75,7 +75,7 @@ func SourceRemoteTag(url, tag string) SourceOption {
 	}
 }
 
-// SourceRemoteHash使用遠程哈希作為區塊鏈的來源。
+// SourceRemoteHash uses a remote hash as source for the blockchain.
 func SourceRemoteHash(url, hash string) SourceOption {
 	return func(c *Chain) {
 		c.url = url
@@ -83,7 +83,7 @@ func SourceRemoteHash(url, hash string) SourceOption {
 	}
 }
 
-// SourceLaunch返回用於從啟動初始化鏈的源選項
+// SourceLaunch returns a source option for initializing a chain from a launch
 func SourceLaunch(launch networktypes.ChainLaunch) SourceOption {
 	return func(c *Chain) {
 		c.id = launch.ChainID
@@ -97,35 +97,35 @@ func SourceLaunch(launch networktypes.ChainLaunch) SourceOption {
 	}
 }
 
-// WithHome為初始化的區塊鏈提供特定的主路徑。
+// WithHome provides a specific home path for the blockchain for the initialization.
 func WithHome(path string) Option {
 	return func(c *Chain) {
 		c.home = path
 	}
 }
 
-// WithKeyringBackend提供用於初始化區塊鏈的密鑰環後端
+// WithKeyringBackend provides the keyring backend to use to initialize the blockchain
 func WithKeyringBackend(keyringBackend chaincmd.KeyringBackend) Option {
 	return func(c *Chain) {
 		c.keyringBackend = keyringBackend
 	}
 }
 
-// WithGenesisFromURL為鏈區塊鏈的初始創世提供創世 URL
+// WithGenesisFromURL provides a genesis url for the initial genesis of the chain blockchain
 func WithGenesisFromURL(genesisURL string) Option {
 	return func(c *Chain) {
 		c.genesisURL = genesisURL
 	}
 }
 
-// CollectEvents從鏈中收集事件。
+// CollectEvents collects events from the chain.
 func CollectEvents(ev events.Bus) Option {
 	return func(c *Chain) {
 		c.ev = ev
 	}
 }
 
-// New initializes來自源和選項的網絡區塊鏈。
+// New initializes a network blockchain from source and options.
 func New(ctx context.Context, ar cosmosaccount.Registry, source SourceOption, options ...Option) (*Chain, error) {
 	c := &Chain{
 		ar: ar,
@@ -135,15 +135,15 @@ func New(ctx context.Context, ar cosmosaccount.Registry, source SourceOption, op
 		apply(c)
 	}
 
-	c.ev.Send(events.New(events.StatusOngoing, "獲取源代碼"))
+	c.ev.Send(events.New(events.StatusOngoing, "Fetching the source code"))
 
 	var err error
 	if c.path, c.hash, err = fetchSource(ctx, c.url, c.ref, c.hash); err != nil {
 		return nil, err
 	}
 
-	c.ev.Send(events.New(events.StatusDone, "已獲取源代碼"))
-	c.ev.Send(events.New(events.StatusOngoing, "設置區塊鏈"))
+	c.ev.Send(events.New(events.StatusDone, "Source code fetched"))
+	c.ev.Send(events.New(events.StatusOngoing, "Setting up the blockchain"))
 
 	chainOption := []chain.Option{
 		chain.ID(c.id),
@@ -151,8 +151,8 @@ func New(ctx context.Context, ar cosmosaccount.Registry, source SourceOption, op
 		chain.LogLevel(chain.LogSilent),
 	}
 
-	// 在 Gitpod 上使用測試密鑰環後端，以防止提示輸入密鑰環密碼。這是因為 Gitpod 使用容器。
-
+	// use test keyring backend on Gitpod in order to prevent prompting for keyring
+	// password. This happens because Gitpod uses containers.
 	if gitpod.IsOnGitpod() {
 		c.keyringBackend = chaincmd.KeyringBackendTest
 	}
@@ -169,7 +169,7 @@ func New(ctx context.Context, ar cosmosaccount.Registry, source SourceOption, op
 	}
 
 	c.chain = chain
-	c.ev.Send(events.New(events.StatusDone, "區塊鏈設置"))
+	c.ev.Send(events.New(events.StatusDone, "Blockchain set up"))
 
 	return c, nil
 }
@@ -253,9 +253,9 @@ func (c Chain) NodeID(ctx context.Context) (string, error) {
 	return nodeID, nil
 }
 
-// Build 構建鏈源，還檢查源是否已經構建
+// Build builds chain sources, also checks if source was already built
 func (c *Chain) Build(ctx context.Context, cacheStorage cache.Storage) (binaryName string, err error) {
-	// 如果鏈已經發布並且有啟動 ID 檢查二進制緩存
+	// if chain was already published and has launch id check binary cache
 	if c.launchID != 0 {
 		if binaryName, err = c.chain.Binary(); err != nil {
 			return "", err
@@ -273,16 +273,16 @@ func (c *Chain) Build(ctx context.Context, cacheStorage cache.Storage) (binaryNa
 		}
 	}
 
-	c.ev.Send(events.New(events.StatusOngoing, "構建鏈的二進製文件"))
+	c.ev.Send(events.New(events.StatusOngoing, "Building the chain's binary"))
 
-	// 構建二進制
+	// build binary
 	if binaryName, err = c.chain.Build(ctx, cacheStorage, ""); err != nil {
 		return "", err
 	}
 
-	c.ev.Send(events.New(events.StatusDone, "鏈的二進制構建"))
+	c.ev.Send(events.New(events.StatusDone, "Chain's binary built"))
 
-	// 為啟動 ID 緩存構建的二進製文件
+	// cache built binary for launch id
 	if c.launchID != 0 {
 		if err := c.CacheBinary(c.launchID); err != nil {
 			return "", nil
@@ -292,7 +292,7 @@ func (c *Chain) Build(ctx context.Context, cacheStorage cache.Storage) (binaryNa
 	return binaryName, nil
 }
 
-// CacheBinary 緩存與啟動 ID 關聯的最後構建的鏈二進製文件
+// CacheBinary caches last built chain binary associated with launch id
 func (c *Chain) CacheBinary(launchID uint64) error {
 	binaryName, err := c.chain.Binary()
 	if err != nil {
@@ -306,7 +306,7 @@ func (c *Chain) CacheBinary(launchID uint64) error {
 	return cacheBinaryForLaunchID(launchID, binaryChecksum, c.hash)
 }
 
-// fetchSource從 url 獲取鏈源並返回保存源的臨時路徑
+// fetchSource fetches the chain source from url and returns a temporary path where source is saved
 func fetchSource(
 	ctx context.Context,
 	url string,
@@ -319,17 +319,17 @@ func fetchSource(
 		return "", "", err
 	}
 
-	// ensure鏈源路徑存在
+	// ensure the path for chain source exists
 	if err := os.MkdirAll(path, 0755); err != nil {
 		return "", "", err
 	}
 
-	// prepare克隆選項。
+	// prepare clone options.
 	gitoptions := &git.CloneOptions{
 		URL: url,
 	}
 
-	// clone指定時的 ref，由鏈協調器在創建時使用。
+	// clone the ref when specified, this is used by chain coordinators on create.
 	if ref != "" {
 		gitoptions.ReferenceName = ref
 		gitoptions.SingleBranch = true
@@ -341,8 +341,8 @@ func fetchSource(
 	if customHash != "" {
 		hash = customHash
 
-		// 指定時結帳到某個哈希值。驗證器使用它來確保使用
-		// 區塊鏈的鎖定版本。
+		// checkout to a certain hash when specified. this is used by validators to make sure to use
+		// the locked version of the blockchain.
 		wt, err := repo.Worktree()
 		if err != nil {
 			return "", "", err
@@ -358,7 +358,7 @@ func fetchSource(
 			return "", "", err
 		}
 	} else {
-		// 當沒有提供特定的哈希值時。獲取 HEAD
+		// when no specific hash is provided. HEAD is fetched
 		ref, err := repo.Head()
 		if err != nil {
 			return "", "", err

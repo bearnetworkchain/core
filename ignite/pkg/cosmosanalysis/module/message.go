@@ -1,7 +1,7 @@
 package module
 
-// 消息實現是 sdk.Msg 實現所需的方法列表
-// 全部（低優先級）：從底層sdk的源代碼中動態獲取這些。
+// messageImplementation is the list of methods needed for a sdk.Msg implementation
+// TODO(low priority): dynamically get these from the source code of underlying version of the sdk.
 var messageImplementation = []string{
 	"Route",
 	"Type",

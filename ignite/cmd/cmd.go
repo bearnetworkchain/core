@@ -37,24 +37,25 @@ const (
 	cacheFileName       = "ignite_cache.db"
 )
 
-//New 為 `Ignite CLI` 創建一個新的根命令及其子命令。
+// New creates a new root command for `Ignite CLI` with its sub commands.
 func New() *cobra.Command {
 	cobra.EnableCommandSorting = false
 
 	c := &cobra.Command{
 		Use:   "ignite",
-		Short: "Ignite CLI 提供了搭建、測試、構建和啟動區塊鏈所需的一切",
-		Long: `Ignite CLI 是一個使用 Cosmos SDK 創建主權區塊鏈的工具最流行的模塊化區塊鏈框架。 
-		Ignite CLI 提供了搭建、測試、構建和啟動區塊鏈所需的一切。
+		Short: "Ignite CLI offers everything you need to scaffold, test, build, and launch your blockchain",
+		Long: `Ignite CLI is a tool for creating sovereign blockchains built with Cosmos SDK, the world’s
+most popular modular blockchain framework. Ignite CLI offers everything you need to scaffold,
+test, build, and launch your blockchain.
 
-		首先，創建一個區塊鏈：
+To get started, create a blockchain:
 
-ignite scaffold chain bnk`,
+ignite scaffold chain github.com/username/mars`,
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			// 僅當沒有執行 shell 完成腳本時才檢查新版本
-			// 當有新版本可用時，生成以避免對標準輸出的無效輸出
+			// Check for new versions only when shell completion scripts are not being
+			// generated to avoid invalid output to stdout when a new version is available
 			if cmd.Use != "completions" {
 				checkNewVersion(cmd.Context())
 			}
@@ -86,7 +87,7 @@ func logLevel(cmd *cobra.Command) chain.LogLvl {
 }
 
 func flagSetPath(cmd *cobra.Command) {
-	cmd.PersistentFlags().StringP(flagPath, "p", ".", "應用程序路徑")
+	cmd.PersistentFlags().StringP(flagPath, "p", ".", "path of the app")
 }
 
 func flagGetPath(cmd *cobra.Command) (path string) {
@@ -96,13 +97,13 @@ func flagGetPath(cmd *cobra.Command) (path string) {
 
 func flagSetHome() *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
-	fs.String(flagHome, "", "用於區塊鏈的主目錄")
+	fs.String(flagHome, "", "Home directory used for blockchains")
 	return fs
 }
 
 func flagNetworkFrom() *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
-	fs.String(flagFrom, cosmosaccount.DefaultAccount, "用於向 SPN 發送交易的帳戶名稱")
+	fs.String(flagFrom, cosmosaccount.DefaultAccount, "Account name to use for sending transactions to SPN")
 	return fs
 }
 
@@ -113,7 +114,7 @@ func getHome(cmd *cobra.Command) (home string) {
 
 func flagSetYes() *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
-	fs.BoolP(flagYes, "y", false, "用交互式回答 是/否 問題")
+	fs.BoolP(flagYes, "y", false, "Answers interactive yes/no questions with yes")
 	return fs
 }
 
@@ -125,7 +126,7 @@ func getYes(cmd *cobra.Command) (ok bool) {
 func flagSetProto3rdParty(additionalInfo string) *flag.FlagSet {
 	fs := flag.NewFlagSet("", flag.ContinueOnError)
 
-	info := "為您的鏈中使用第三方模塊,啟用原型代碼生成"
+	info := "Enables proto code generation for 3rd party modules used in your chain"
 	if additionalInfo != "" {
 		info += ". " + additionalInfo
 	}
@@ -140,7 +141,7 @@ func flagGetProto3rdParty(cmd *cobra.Command) bool {
 }
 
 func flagSetClearCache(cmd *cobra.Command) {
-	cmd.PersistentFlags().Bool(flagClearCache, false, "清除構建緩存（高級）")
+	cmd.PersistentFlags().Bool(flagClearCache, false, "Clear the build cache (advanced)")
 }
 
 func flagGetClearCache(cmd *cobra.Command) bool {
@@ -149,7 +150,7 @@ func flagGetClearCache(cmd *cobra.Command) bool {
 }
 
 func newChainWithHomeFlags(cmd *cobra.Command, chainOption ...chain.Option) (*chain.Chain, error) {
-	// 檢查是否提供定制HOME
+	// Check if custom home is provided
 	if home := getHome(cmd); home != "" {
 		chainOption = append(chainOption, chain.HomePath(home))
 	}
@@ -172,10 +173,10 @@ var (
 )
 
 func sourceModificationToString(sm xgenny.SourceModification) (string, error) {
-	// 獲取文件名並添加前綴
+	// get file names and add prefix
 	var files []string
 	for _, modified := range sm.ModifiedFiles() {
-		// 從當前目錄獲取應用程序的相對路徑
+		// get the relative app path from the current directory
 		relativePath, err := relativePath(modified)
 		if err != nil {
 			return "", err
@@ -183,7 +184,7 @@ func sourceModificationToString(sm xgenny.SourceModification) (string, error) {
 		files = append(files, modifyPrefix+relativePath)
 	}
 	for _, created := range sm.CreatedFiles() {
-		// 從當前目錄獲取應用程序的相對路徑
+		// get the relative app path from the current directory
 		relativePath, err := relativePath(created)
 		if err != nil {
 			return "", err
@@ -191,7 +192,7 @@ func sourceModificationToString(sm xgenny.SourceModification) (string, error) {
 		files = append(files, createPrefix+relativePath)
 	}
 
-	// 對不帶前綴的文件名進行排序
+	// sort filenames without prefix
 	sort.Slice(files, func(i, j int) bool {
 		s1 := removePrefix(files[i])
 		s2 := removePrefix(files[j])
@@ -206,24 +207,24 @@ func deprecated() []*cobra.Command {
 	return []*cobra.Command{
 		{
 			Use:        "app",
-			Deprecated: "使用 `ignite scaffold chain`.",
+			Deprecated: "use `ignite scaffold chain` instead.",
 		},
 		{
 			Use:        "build",
-			Deprecated: "使用 `ignite chain build`.",
+			Deprecated: "use `ignite chain build` instead.",
 		},
 		{
 			Use:        "serve",
-			Deprecated: "使用 `ignite chain serve`.",
+			Deprecated: "use `ignite chain serve` instead.",
 		},
 		{
 			Use:        "faucet",
-			Deprecated: "使用 `ignite chain faucet`.",
+			Deprecated: "use `ignite chain faucet` instead.",
 		},
 	}
 }
 
-// relativePath 返回當前目錄的相對應用路徑
+// relativePath return the relative app path from the current directory
 func relativePath(appPath string) (string, error) {
 	pwd, err := os.Getwd()
 	if err != nil {
@@ -252,14 +253,14 @@ func checkNewVersion(ctx context.Context) {
 	fmt.Printf(`·
 · 🛸 Ignite CLI %s is available!
 ·
-· 要升級您的 Ignite CLI 版本，請參閱升級文檔: https://docs.ignite.com/guide/install.html#upgrading-your-ignite-cli-installation
+· To upgrade your Ignite CLI version, see the upgrade doc: https://docs.ignite.com/guide/install.html#upgrading-your-ignite-cli-installation
 ·
 ··
 
 `, next)
 }
 
-// newApp 創建一個新的腳手架應用
+// newApp create a new scaffold app
 func newApp(appPath string) (scaffolder.Scaffolder, error) {
 	sc, err := scaffolder.App(appPath)
 	if err != nil {
@@ -268,8 +269,8 @@ func newApp(appPath string) (scaffolder.Scaffolder, error) {
 
 	if sc.Version.LT(cosmosver.StargateFortyFourVersion) {
 		return sc, fmt.Errorf(
-			`⚠️ 你的鏈已經使用舊版本的 Cosmos SDK 搭建了腳手架: %[1]v.
-			請按照遷移指南將您的鏈升級到最新版本:
+			`⚠️ Your chain has been scaffolded with an old version of Cosmos SDK: %[1]v.
+Please, follow the migration guide to upgrade your chain to the latest version:
 
 https://docs.ignite.com/migration`, sc.Version.String(),
 		)

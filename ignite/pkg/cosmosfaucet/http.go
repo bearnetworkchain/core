@@ -9,8 +9,8 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/openapiconsole"
 )
 
-// ServeHTTP 實現 http.Handler 以通過 HTTP 公開 Faucet.Transfer() 的功能。
-// request/響應有效載荷與 allinbits 的先前實現兼容/cosmos-faucet.
+// ServeHTTP implements http.Handler to expose the functionality of Faucet.Transfer() via HTTP.
+// request/response payloads are compatible with the previous implementation at allinbits/cosmos-faucet.
 func (f Faucet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	router := mux.NewRouter()
 

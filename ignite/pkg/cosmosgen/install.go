@@ -10,16 +10,16 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
 )
 
-//InstallDependencies 安裝 Cosmos 生態系統所需的 protoc 依賴項。
+// InstallDependencies installs protoc dependencies needed by Cosmos ecosystem.
 func InstallDependencies(ctx context.Context, appPath string) error {
 	plugins := []string{
-		// 安裝 gocosmos 插件。
+		// installs the gocosmos plugin.
 		"github.com/regen-network/cosmos-proto/protoc-gen-gocosmos",
 
-		// 安裝 Go 代碼生成插件。
+		// install Go code generation plugin.
 		"github.com/golang/protobuf/protoc-gen-go",
 
-		// 安裝 grpc-gateway 插件。
+		// install grpc-gateway plugins.
 		"github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway",
 		"github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger",
 		"github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2",

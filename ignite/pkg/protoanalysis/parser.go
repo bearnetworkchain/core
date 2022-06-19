@@ -13,13 +13,13 @@ import (
 
 const optionGoPkg = "go_package"
 
-// parser 解析 proto 包。
+// parser parses proto packages.
 type parser struct {
 	packages []*pkg
 }
 
-// parse 解析fs中與pattern匹配的proto文件並返回
-// proto 包的低級表示。
+// parse parses proto files in the fs that matches with pattern and returns
+// the low level representations of proto packages.
 func parse(ctx context.Context, path, pattern string) ([]*pkg, error) {
 	pr := &parser{}
 
@@ -40,24 +40,24 @@ func parse(ctx context.Context, path, pattern string) ([]*pkg, error) {
 	return pr.packages, nil
 }
 
-// pkg 代表一個原型包。
+// pkg represents a proto package.
 type pkg struct {
-	// 原型包的名稱。
+	// name of the proto package.
 	name string
 
-	// fs 中 proto 包的目錄。
+	// directory of the proto package in the fs.
 	dir string
 
-	// files 是構造 proto 包的 proto 文件列表。
+	// files is a list of proto files that construct a proto package.
 	files []file
 }
 
-// file 表示已解析的 proto 文件。
+// file represents a parsed proto file.
 type file struct {
-	// fs 中 proto 文件的路徑。
+	// path of the proto file in the fs.
 	path string
 
-	// 解析的數據。
+	// parsed data.
 	pkg      *proto.Package
 	imports  []string // imported protos.
 	options  []*proto.Option

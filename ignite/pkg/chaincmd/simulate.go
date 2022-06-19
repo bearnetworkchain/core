@@ -34,10 +34,10 @@ const (
 	optionGoSimappBench = "-bench=^BenchmarkSimulation"
 )
 
-// SimappOption 對於模擬命令
+// SimappOption for the SimulateCommand
 type SimappOption func([]string) []string
 
-// SimappWithGenesis 為 simapp 命令提供創世紀選項
+// SimappWithGenesis provides genesis option for the simapp command
 func SimappWithGenesis(genesis string) SimappOption {
 	return func(command []string) []string {
 		if len(genesis) > 0 {
@@ -47,7 +47,7 @@ func SimappWithGenesis(genesis string) SimappOption {
 	}
 }
 
-// SimappWithParams 為 simapp 命令提供 params 選項
+// SimappWithParams provides params option for the simapp command
 func SimappWithParams(params string) SimappOption {
 	return func(command []string) []string {
 		if len(params) > 0 {
@@ -57,7 +57,7 @@ func SimappWithParams(params string) SimappOption {
 	}
 }
 
-// SimappWithExportParamsPath 為 simapp 命令提供輸出 Params路徑選項
+// SimappWithExportParamsPath provides exportParamsPath option for the simapp command
 func SimappWithExportParamsPath(exportParamsPath string) SimappOption {
 	return func(command []string) []string {
 		if len(exportParamsPath) > 0 {
@@ -67,7 +67,7 @@ func SimappWithExportParamsPath(exportParamsPath string) SimappOption {
 	}
 }
 
-// SimappWithExportParamsHeight 為 simapp 命令提供輸出 Params 高度選項
+// SimappWithExportParamsHeight provides exportParamsHeight option for the simapp command
 func SimappWithExportParamsHeight(exportParamsHeight int) SimappOption {
 	return func(command []string) []string {
 		if exportParamsHeight > 0 {
@@ -81,7 +81,7 @@ func SimappWithExportParamsHeight(exportParamsHeight int) SimappOption {
 	}
 }
 
-// SimappWithExportStatePath 提供導出狀態路徑 simapp 命令的選項
+// SimappWithExportStatePath provides exportStatePath option for the simapp command
 func SimappWithExportStatePath(exportStatePath string) SimappOption {
 	return func(command []string) []string {
 		if len(exportStatePath) > 0 {
@@ -91,7 +91,7 @@ func SimappWithExportStatePath(exportStatePath string) SimappOption {
 	}
 }
 
-// SimappWithExportStatsPath 為 simapp 命令提供導出統計路徑選項
+// SimappWithExportStatsPath provides exportStatsPath option for the simapp command
 func SimappWithExportStatsPath(exportStatsPath string) SimappOption {
 	return func(command []string) []string {
 		if len(exportStatsPath) > 0 {
@@ -101,35 +101,35 @@ func SimappWithExportStatsPath(exportStatsPath string) SimappOption {
 	}
 }
 
-// SimappWithSeed 為 simapp 命令提供種子選項
+// SimappWithSeed provides seed option for the simapp command
 func SimappWithSeed(seed int64) SimappOption {
 	return func(command []string) []string {
 		return append(command, optionSimappSeed, strconv.FormatInt(seed, 10))
 	}
 }
 
-// SimappWithInitialBlockHeight 為 simapp 命令提供初始塊高度選項
+// SimappWithInitialBlockHeight provides initialBlockHeight option for the simapp command
 func SimappWithInitialBlockHeight(initialBlockHeight int) SimappOption {
 	return func(command []string) []string {
 		return append(command, optionSimappInitialBlockHeight, strconv.Itoa(initialBlockHeight))
 	}
 }
 
-// SimappWithNumBlocks 為 simapp 命令提供塊數選項
+// SimappWithNumBlocks provides numBlocks option for the simapp command
 func SimappWithNumBlocks(numBlocks int) SimappOption {
 	return func(command []string) []string {
 		return append(command, optionSimappNumBlocks, strconv.Itoa(numBlocks))
 	}
 }
 
-// SimappWithBlockSize 為 simapp 命令提供塊大小選項
+// SimappWithBlockSize provides blockSize option for the simapp command
 func SimappWithBlockSize(blockSize int) SimappOption {
 	return func(command []string) []string {
 		return append(command, optionSimappBlockSize, strconv.Itoa(blockSize))
 	}
 }
 
-// SimappWithLean 為 simapp 命令提供精益選項
+// SimappWithLean provides lean option for the simapp command
 func SimappWithLean(lean bool) SimappOption {
 	return func(command []string) []string {
 		if lean {
@@ -139,7 +139,7 @@ func SimappWithLean(lean bool) SimappOption {
 	}
 }
 
-// SimappWithCommit 為 simapp 命令提供提交選項
+// SimappWithCommit provides commit option for the simapp command
 func SimappWithCommit(commit bool) SimappOption {
 	return func(command []string) []string {
 		if commit {
@@ -149,7 +149,7 @@ func SimappWithCommit(commit bool) SimappOption {
 	}
 }
 
-// SimappWithSimulateEveryOperation 為 simapp 命令提供模擬每個操作選項
+// SimappWithSimulateEveryOperation provides simulateEveryOperation option for the simapp command
 func SimappWithSimulateEveryOperation(simulateEveryOperation bool) SimappOption {
 	return func(command []string) []string {
 		if simulateEveryOperation {
@@ -159,7 +159,7 @@ func SimappWithSimulateEveryOperation(simulateEveryOperation bool) SimappOption 
 	}
 }
 
-// SimappWithPrintAllInvariants 為 simapp 命令提供打印所有不變量選項
+// SimappWithPrintAllInvariants provides printAllInvariants option for the simapp command
 func SimappWithPrintAllInvariants(printAllInvariants bool) SimappOption {
 	return func(command []string) []string {
 		if printAllInvariants {
@@ -169,7 +169,7 @@ func SimappWithPrintAllInvariants(printAllInvariants bool) SimappOption {
 	}
 }
 
-// SimappWithEnable 為 simapp 命令提供啟用選項
+// SimappWithEnable provides enable option for the simapp command
 func SimappWithEnable(enable bool) SimappOption {
 	return func(command []string) []string {
 		if enable {
@@ -179,7 +179,7 @@ func SimappWithEnable(enable bool) SimappOption {
 	}
 }
 
-// SimappWithVerbose 為 simapp 命令提供詳細選項
+// SimappWithVerbose provides verbose option for the simapp command
 func SimappWithVerbose(verbose bool) SimappOption {
 	return func(command []string) []string {
 		if verbose {
@@ -189,21 +189,21 @@ func SimappWithVerbose(verbose bool) SimappOption {
 	}
 }
 
-// SimappWithPeriod 為 simapp 命令提供句點選項
+// SimappWithPeriod provides period option for the simapp command
 func SimappWithPeriod(period uint) SimappOption {
 	return func(command []string) []string {
 		return append(command, optionSimappPeriod, strconv.Itoa(int(period)))
 	}
 }
 
-// SimappWithGenesisTime 為 simapp 命令提供創世時間選項
+// SimappWithGenesisTime provides genesisTime option for the simapp command
 func SimappWithGenesisTime(genesisTime int64) SimappOption {
 	return func(command []string) []string {
 		return append(command, optionSimappGenesisTime, strconv.Itoa(int(genesisTime)))
 	}
 }
 
-// SimulationCommand 返回用於 simapp 測試的 cli 命令
+// SimulationCommand returns the cli command for simapp tests
 func SimulationCommand(appPath string, options ...SimappOption) step.Option {
 	command := []string{
 		commandGoTest,
@@ -213,7 +213,7 @@ func SimulationCommand(appPath string, options ...SimappOption) step.Option {
 		filepath.Join(appPath, "app"),
 	}
 
-	// 應用用戶提供的選項
+	// Apply the options provided by the user
 	for _, applyOption := range options {
 		command = applyOption(command)
 	}

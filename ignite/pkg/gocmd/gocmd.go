@@ -14,19 +14,19 @@ import (
 )
 
 const (
-	// CommandInstall 表示執行“安裝”命令。
+	// CommandInstall represents go "install" command.
 	CommandInstall = "install"
 
-	// CommandBuild 代表 go "build" 命令。
+	// CommandBuild represents go "build" command.
 	CommandBuild = "build"
 
-	// CommandMod 代表 go "mod" 命令。
+	// CommandMod represents go "mod" command.
 	CommandMod = "mod"
 
-	// CommandModTidy 代表 go mod "tidy" 命令。
+	// CommandModTidy represents go mod "tidy" command.
 	CommandModTidy = "tidy"
 
-	// CommandModVerify 代表 go mod "verify" 命令。
+	// CommandModVerify represents go mod "verify" command.
 	CommandModVerify = "verify"
 )
 
@@ -42,7 +42,7 @@ const (
 	EnvGOARCH = "GOARCH"
 )
 
-// Name 返回要使用的 Go 二進製文件的名稱。
+// Name returns the name of Go binary to use.
 func Name() string {
 	custom := os.Getenv("GONAME")
 	if custom != "" {
@@ -51,17 +51,17 @@ func Name() string {
 	return "go"
 }
 
-// ModTidy 在帶有選項的路徑上運行 go mod tidy。
+// ModTidy runs go mod tidy on path with options.
 func ModTidy(ctx context.Context, path string, options ...exec.Option) error {
 	return exec.Exec(ctx, []string{Name(), CommandMod, CommandModTidy}, append(options, exec.StepOption(step.Workdir(path)))...)
 }
 
-// ModVerify 在帶有選項的路徑上運行 go mod verify。
+// ModVerify runs go mod verify on path with options.
 func ModVerify(ctx context.Context, path string, options ...exec.Option) error {
 	return exec.Exec(ctx, []string{Name(), CommandMod, CommandModVerify}, append(options, exec.StepOption(step.Workdir(path)))...)
 }
 
-// BuildPath 在帶有選項的 cmd 文件夾上運行 go install。
+// BuildPath runs go install on cmd folder with options.
 func BuildPath(ctx context.Context, output, binary, path string, flags []string, options ...exec.Option) error {
 	binaryOutput, err := binaryPath(output, binary)
 	if err != nil {
@@ -77,7 +77,7 @@ func BuildPath(ctx context.Context, output, binary, path string, flags []string,
 	return exec.Exec(ctx, command, append(options, exec.StepOption(step.Workdir(path)))...)
 }
 
-// BuildAll 在帶有選項的路徑上運行 go build ./...。
+// BuildAll runs go build ./... on path with options.
 func BuildAll(ctx context.Context, out, path string, flags []string, options ...exec.Option) error {
 	command := []string{
 		Name(),
@@ -89,7 +89,7 @@ func BuildAll(ctx context.Context, out, path string, flags []string, options ...
 	return exec.Exec(ctx, command, append(options, exec.StepOption(step.Workdir(path)))...)
 }
 
-// InstallAll 在帶有選項的路徑上運行 go install ./...。
+// InstallAll runs go install ./... on path with options.
 func InstallAll(ctx context.Context, path string, flags []string, options ...exec.Option) error {
 	command := []string{
 		Name(),
@@ -100,32 +100,32 @@ func InstallAll(ctx context.Context, path string, flags []string, options ...exe
 	return exec.Exec(ctx, command, append(options, exec.StepOption(step.Workdir(path)))...)
 }
 
-// Ldflags 返回一個組合ldflags 從設置 flags.
+// Ldflags returns a combined ldflags set from flags.
 func Ldflags(flags ...string) string {
 	return strings.Join(flags, " ")
 }
 
-// BuildTarget 構建一個 GOOS:GOARCH 對。
+// BuildTarget builds a GOOS:GOARCH pair.
 func BuildTarget(goos, goarch string) string {
 	return fmt.Sprintf("%s:%s", goos, goarch)
 }
 
-// ParseTarget 解析 GOOS:GOARCH 對。
+// ParseTarget parses GOOS:GOARCH pair.
 func ParseTarget(t string) (goos, goarch string, err error) {
 	parsed := strings.Split(t, ":")
 	if len(parsed) != 2 {
-		return "", "", errors.New("無效的 Go 目標，預期為 GOOS:GOARCH 格式")
+		return "", "", errors.New("invalid Go target, expected in GOOS:GOARCH format")
 	}
 
 	return parsed[0], parsed[1], nil
 }
 
-// PackageLiteral 返回 go get 的包部分的字符串表示[package].
+// PackageLiteral returns the string representation of package part of go get [package].
 func PackageLiteral(path, version string) string {
 	return fmt.Sprintf("%s@%s", path, version)
 }
 
-// binaryPath 確定二進製文件所在的路徑。
+// binaryPath determines the path where binary will be located at.
 func binaryPath(output, binary string) (string, error) {
 	if output != "" {
 		outputAbs, err := filepath.Abs(output)

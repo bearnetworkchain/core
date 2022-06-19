@@ -7,15 +7,15 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/protoc-gen-dart/data"
 )
 
-// 插件的名稱。
+// Name of the plugin.
 const Name = "protoc-gen-dart"
 
-// BinaryPath 返回插件的二進制路徑。
+// BinaryPath returns the binary path for the plugin.
 func BinaryPath() (path string, cleanup func(), err error) {
 	return localfs.SaveBytesTemp(data.Binary(), Name, 0755)
 }
 
-// 標誌返回二進制名稱-二進制路徑格式以傳遞給 protoc --plugin。
+// Flag returns the binary name-binary path format to pass to protoc --plugin.
 func Flag() (flag string, cleanup func(), err error) {
 	path, cleanup, err := BinaryPath()
 	flag = fmt.Sprintf("%s=%s", Name, path)

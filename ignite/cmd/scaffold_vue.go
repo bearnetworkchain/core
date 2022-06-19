@@ -9,22 +9,22 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// NewScaffoldVue 為鏈搭建了一個 Vue.js 應用程序。
+// NewScaffoldVue scaffolds a Vue.js app for a chain.
 func NewScaffoldVue() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "vue",
-		Short: "Vue 3 網頁應用程序模板",
+		Short: "Vue 3 web app template",
 		Args:  cobra.NoArgs,
 		RunE:  scaffoldVueHandler,
 	}
 
-	c.Flags().StringP(flagPath, "p", "./vue", "腳手架內容的路徑 Vue.js 應用程序")
+	c.Flags().StringP(flagPath, "p", "./vue", "path to scaffold content of the Vue.js app")
 
 	return c
 }
 
 func scaffoldVueHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("創建中,請稍等一下...")
+	s := clispinner.New().SetText("Scaffolding...")
 	defer s.Stop()
 
 	path := flagGetPath(cmd)
@@ -33,7 +33,7 @@ func scaffoldVueHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	s.Stop()
-	fmt.Printf("\n🎉 搭建一個 Vue.js 應用程序.\n\n")
+	fmt.Printf("\n🎉 Scaffold a Vue.js app.\n\n")
 
 	return nil
 }

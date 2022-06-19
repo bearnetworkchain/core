@@ -13,8 +13,8 @@ import (
 	"github.com/spf13/pflag"
 )
 
-// 當第二個答案與第一個答案不同時，返回錯誤確認失敗。
-var ErrConfirmationFailed = errors.New("未能確認，你的答案不一樣")
+// ErrConfirmationFailed is returned when second answer is not the same with first one.
+var ErrConfirmationFailed = errors.New("failed to confirm, your answers were different")
 
 // Question holds information on what to ask to user and where
 // the answer stored at.
@@ -27,38 +27,38 @@ type Question struct {
 	required      bool
 }
 
-// 選項配置問題。
+// Option configures Question.
 type Option func(*Question)
 
-// DefaultAnswer 設置問題的默認答案。
+// DefaultAnswer sets a default answer to Question.
 func DefaultAnswer(answer interface{}) Option {
 	return func(q *Question) {
 		q.defaultAnswer = answer
 	}
 }
 
-// 必填項將答案標記為必填項。
+// Required marks the answer as required.
 func Required() Option {
 	return func(q *Question) {
 		q.required = true
 	}
 }
 
-//HideAnswer 隱藏答案以防止機密信息洩露。
+// HideAnswer hides the answer to prevent secret information being leaked.
 func HideAnswer() Option {
 	return func(q *Question) {
 		q.hidden = true
 	}
 }
 
-// GetConfirmation 提示確認給定的答案。
+// GetConfirmation prompts confirmation for the given answer.
 func GetConfirmation() Option {
 	return func(q *Question) {
 		q.shouldConfirm = true
 	}
 }
 
-// NewQuestion 創建一個新問題。
+// NewQuestion creates a new question.
 func NewQuestion(question string, answer interface{}, options ...Option) Question {
 	q := Question{
 		question: question,
@@ -107,7 +107,7 @@ func ask(q Question) error {
 	}
 
 	if q.required && !isValid() {
-		fmt.Println("此信息為必填項，請重試:")
+		fmt.Println("This information is required, please retry:")
 
 		if err := ask(q); err != nil {
 			return err
@@ -117,7 +117,7 @@ func ask(q Question) error {
 	return nil
 }
 
-//提出問題並收集答案。
+// Ask asks questions and collect answers.
 func Ask(question ...Question) (err error) {
 	defer func() {
 		if err == terminal.InterruptErr {
@@ -140,7 +140,7 @@ func Ask(question ...Question) (err error) {
 			if q.hidden {
 				options = append(options, HideAnswer())
 			}
-			if err := ask(NewQuestion("確認 "+q.question, &secondAnswer, options...)); err != nil {
+			if err := ask(NewQuestion("Confirm "+q.question, &secondAnswer, options...)); err != nil {
 				return err
 			}
 
@@ -154,21 +154,21 @@ func Ask(question ...Question) (err error) {
 	return nil
 }
 
-// Flag 表示一個 cmd 標誌。
+// Flag represents a cmd flag.
 type Flag struct {
 	Name       string
 	IsRequired bool
 }
 
-// NewFlag 創建一個新的 flag.
+// NewFlag creates a new flag.
 func NewFlag(name string, isRequired bool) Flag {
 	return Flag{name, isRequired}
 }
 
-// ValuesFromFlagsOrAsk 返回 map[string]string 中的標誌值，其中 map's
-// key是flag的名字，value是flag的值。
-// 提供時，通過命令收集值，否則通過提示向用戶詢問。
-// 提示時用作消息的標題。
+// ValuesFromFlagsOrAsk returns values of flags within map[string]string where map's
+// key is the name of the flag and value is flag's value.
+// when provided, values are collected through command otherwise they're asked to user by prompting.
+// title used as a message while prompting.
 func ValuesFromFlagsOrAsk(fset *pflag.FlagSet, title string, flags ...Flag) (values map[string]string, err error) {
 	values = make(map[string]string)
 
@@ -178,7 +178,7 @@ func ValuesFromFlagsOrAsk(fset *pflag.FlagSet, title string, flags ...Flag) (val
 	for _, f := range flags {
 		flag := fset.Lookup(f.Name)
 		if flag == nil {
-			return nil, fmt.Errorf("flag %q 沒有定義", f.Name)
+			return nil, fmt.Errorf("flag %q is not defined", f.Name)
 		}
 		if value, _ := fset.GetString(f.Name); value != "" {
 			values[f.Name] = value

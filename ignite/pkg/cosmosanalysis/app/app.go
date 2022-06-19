@@ -17,7 +17,7 @@ var appImplementation = []string{
 	"RegisterTendermintService",
 }
 
-// CheckKeeper 在應用程序結構中檢查是否存在具有提供的名稱的門將
+// CheckKeeper checks for the existence of the keeper with the provided name in the app structure
 func CheckKeeper(path, keeperName string) error {
 	// find app type
 	appImpl, err := cosmosanalysis.FindImplementation(path, appImplementation)
@@ -25,11 +25,11 @@ func CheckKeeper(path, keeperName string) error {
 		return err
 	}
 	if len(appImpl) != 1 {
-		return errors.New("app.go 應該包含一個應用程序")
+		return errors.New("app.go should contain a single app")
 	}
 	appTypeName := appImpl[0]
 
-	// 檢查模塊的 app 結構
+	// Inspect the module for app struct
 	var found bool
 	fileSet := token.NewFileSet()
 	pkgs, err := parser.ParseDir(fileSet, path, nil, 0)
@@ -39,7 +39,7 @@ func CheckKeeper(path, keeperName string) error {
 	for _, pkg := range pkgs {
 		for _, f := range pkg.Files {
 			ast.Inspect(f, func(n ast.Node) bool {
-				// 尋找結構方法。
+				// look for struct methods.
 				appType, ok := n.(*ast.TypeSpec)
 				if !ok || appType.Name.Name != appTypeName {
 					return true
@@ -50,7 +50,7 @@ func CheckKeeper(path, keeperName string) error {
 					return true
 				}
 
-				// 搜索 keeper 特定字段
+				// Search for the keeper specific field
 				for _, field := range appStruct.Fields.List {
 					for _, fieldName := range field.Names {
 						if fieldName.Name == keeperName {
@@ -66,17 +66,17 @@ func CheckKeeper(path, keeperName string) error {
 	}
 
 	if !found {
-		return fmt.Errorf("應用程序不包含 %s", keeperName)
+		return fmt.Errorf("app doesn't contain %s", keeperName)
 	}
 	return nil
 }
 
-// FindRegisteredModules 查找 App 中所有已註冊的模塊
-// 它通過檢查導入的模塊是否已在應用程序中註冊並檢查其查詢客戶端是否已註冊來查找激活的模塊
-// 它通過以下方式實現：
-// 1. 映射出所有導入和命名導入
-// 2. 尋找對 module.NewBasicManager 的調用並找到在那裡註冊的模塊
-// 3.尋找RegisterAPIRoutes的實現，找到調用其RegisterGRPCGatewayRoutes的模塊
+// FindRegisteredModules looks for all the registered modules in the App
+// It finds activated modules by checking if imported modules are registered in the app and also checking if their query clients are registered
+// It does so by:
+// 1. Mapping out all the imports and named imports
+// 2. Looking for the call to module.NewBasicManager and finds the modules registered there
+// 3. Looking for the implementation of RegisterAPIRoutes and find the modules that call their RegisterGRPCGatewayRoutes
 func FindRegisteredModules(chainRoot string) ([]string, error) {
 	appFilePath, err := cosmosanalysis.FindAppFilePath(chainRoot)
 	if err != nil {
@@ -184,7 +184,7 @@ func findBasicManagerModule(pkgs map[string]string) (string, error) {
 		}
 	}
 
-	return "", errors.New("沒有找到 Basic Manager 的模塊")
+	return "", errors.New("no module for BasicManager was found")
 }
 
 func findRegisterAPIRoutersRegistrations(n ast.Node) []string {

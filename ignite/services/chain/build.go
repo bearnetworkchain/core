@@ -29,7 +29,7 @@ const (
 	buildDirchangeCacheNamespace = "build.dirchange"
 )
 
-//Build 構建並安裝應用程序二進製文件。
+// Build builds and installs app binaries.
 func (c *Chain) Build(ctx context.Context, cacheStorage cache.Storage, output string) (binaryName string, err error) {
 	if err := c.setup(); err != nil {
 		return "", err
@@ -73,9 +73,9 @@ func (c *Chain) build(ctx context.Context, cacheStorage cache.Storage, output st
 	return gocmd.BuildPath(ctx, output, binary, path, buildFlags)
 }
 
-// BuildRelease 為發布構建二進製文件。目標是一個列表
-// GOOS:GOARCH 提供時。當沒有提供目標時，它默認為您的系統。
-// 前綴用作包含每個目標的 tarball 的前綴。
+// BuildRelease builds binaries for a release. targets is a list
+// of GOOS:GOARCH when provided. It defaults to your system when no targets provided.
+// prefix is used as prefix to tarballs containing each target.
 func (c *Chain) BuildRelease(ctx context.Context, cacheStorage cache.Storage, output, prefix string, targets ...string) (releasePath string, err error) {
 	if prefix == "" {
 		prefix = c.app.Name
@@ -84,7 +84,7 @@ func (c *Chain) BuildRelease(ctx context.Context, cacheStorage cache.Storage, ou
 		targets = []string{gocmd.BuildTarget(runtime.GOOS, runtime.GOARCH)}
 	}
 
-	//準備構建。
+	// prepare for build.
 	if err := c.setup(); err != nil {
 		return "", err
 	}
@@ -107,7 +107,7 @@ func (c *Chain) BuildRelease(ctx context.Context, cacheStorage cache.Storage, ou
 	releasePath = output
 	if releasePath == "" {
 		releasePath = filepath.Join(c.app.Path, releaseDir)
-		// 重置發布目錄。
+		// reset the release dir.
 		if err := os.RemoveAll(releasePath); err != nil {
 			return "", err
 		}
@@ -118,7 +118,7 @@ func (c *Chain) BuildRelease(ctx context.Context, cacheStorage cache.Storage, ou
 	}
 
 	for _, t := range targets {
-		//為目標構建二進製文件，將其壓縮並保存在發布目錄下。
+		// build binary for a target, tarball it and save it under the release dir.
 		goos, goarch, err := gocmd.ParseTarget(t)
 		if err != nil {
 			return "", err
@@ -163,7 +163,7 @@ func (c *Chain) BuildRelease(ctx context.Context, cacheStorage cache.Storage, ou
 
 	checksumPath := filepath.Join(releasePath, releaseChecksumKey)
 
-	// 創建一個 checksum.txt 並返回釋放目錄的路徑。
+	// create a checksum.txt and return with the path to release dir.
 	return releasePath, checksum.Sum(releasePath, checksumPath)
 }
 
@@ -191,10 +191,10 @@ func (c *Chain) preBuild(ctx context.Context, cacheStorage cache.Storage) (build
 		gocmd.FlagLdflags, gocmd.Ldflags(ldFlags...),
 	}
 
-	fmt.Fprintln(c.stdLog().out, "📦 安裝熊網鏈依賴項...")
+	fmt.Fprintln(c.stdLog().out, "📦 Installing dependencies...")
 
-	// 我們在檢查校驗和更改之前做 mod tidy，因為 go.mod 經常被修改
-	// 無論如何，mod verify 命令是昂貴的
+	// We do mod tidy before checking for checksum changes, because go.mod gets modified often
+	// and the mod verify command is the expensive one anyway
 	if err := gocmd.ModTidy(ctx, c.app.Path); err != nil {
 		return nil, err
 	}
@@ -215,7 +215,7 @@ func (c *Chain) preBuild(ctx context.Context, cacheStorage cache.Storage) (build
 		}
 	}
 
-	fmt.Fprintln(c.stdLog().out, "🛠️  構建熊網鏈...")
+	fmt.Fprintln(c.stdLog().out, "🛠️  Building the blockchain...")
 
 	return buildFlags, nil
 }
@@ -232,7 +232,7 @@ func (c *Chain) discoverMain(path string) (pkgPath string, err error) {
 
 	path, err = goanalysis.DiscoverOneMain(path)
 	if err == goanalysis.ErrMultipleMainPackagesFound {
-		return "", errors.Wrap(err, "請在config.yml檔案中的build.main部份指定鏈主包的路徑")
+		return "", errors.Wrap(err, "specify the path to your chain's main package in your config.yml>build.main")
 	}
 	return path, err
 }

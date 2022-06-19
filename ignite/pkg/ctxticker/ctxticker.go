@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-// Do 每 d 調用一次 fn 直到 ctx 取消或 fn 返回一個非零錯誤。
+// Do calls fn every d until ctx canceled or fn returns with a non-nil error.
 func Do(ctx context.Context, d time.Duration, fn func() error) error {
 	ticker := time.NewTicker(d)
 	defer ticker.Stop()
@@ -23,7 +23,7 @@ func Do(ctx context.Context, d time.Duration, fn func() error) error {
 	}
 }
 
-// DoNow 與 Do 相同，只是它在開始時對 fn 進行 +1 調用。
+// DoNow is same as Do except it makes +1 call to fn on start.
 func DoNow(ctx context.Context, d time.Duration, fn func() error) error {
 	if err := fn(); err != nil {
 		return err

@@ -15,28 +15,28 @@ const (
 	flagAck = "ack"
 )
 
-// NewScaffoldPacket 在模塊中創建一個新數據包
+// NewScaffoldPacket creates a new packet in the module
 func NewScaffoldPacket() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "packet [packetName] [field1] [field2] ... --module [moduleName]",
-		Short: "發送 IBC 數據包的消息",
-		Long:  "在特定的啟用 IBC 的 Cosmos SDK 模塊中搭建 IBC 數據包",
+		Short: "Message for sending an IBC packet",
+		Long:  "Scaffold an IBC packet in a specific IBC-enabled Cosmos SDK module",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  createPacketHandler,
 	}
 
 	flagSetPath(c)
 	flagSetClearCache(c)
-	c.Flags().StringSlice(flagAck, []string{}, "自定義確認類型 (field1(場地1),field2(場地2),...)")
-	c.Flags().String(flagModule, "", "IBC 模塊將數據包添加到")
-	c.Flags().String(flagSigner, "", "消息簽名者的標籤（默認：創建者）")
-	c.Flags().Bool(flagNoMessage, false, "禁用發送消息腳手架")
+	c.Flags().StringSlice(flagAck, []string{}, "Custom acknowledgment type (field1,field2,...)")
+	c.Flags().String(flagModule, "", "IBC Module to add the packet into")
+	c.Flags().String(flagSigner, "", "Label for the message signer (default: creator)")
+	c.Flags().Bool(flagNoMessage, false, "Disable send message scaffolding")
 
 	return c
 }
 
 func createPacketHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("創建中,請耐心等候...")
+	s := clispinner.New().SetText("Scaffolding...")
 	defer s.Stop()
 
 	var (
@@ -51,7 +51,7 @@ func createPacketHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if module == "" {
-		return errors.New("請指定一個模塊來創建數據包: --module <模塊名稱>")
+		return errors.New("please specify a module to create the packet into: --module <module_name>")
 	}
 
 	ackFields, err := cmd.Flags().GetStringSlice(flagAck)
@@ -94,7 +94,7 @@ func createPacketHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Println(modificationsStr)
-	fmt.Printf("\n🎉 創建了一個數據包 `%[1]v`.\n\n", args[0])
+	fmt.Printf("\n🎉 Created a packet `%[1]v`.\n\n", args[0])
 
 	return nil
 }

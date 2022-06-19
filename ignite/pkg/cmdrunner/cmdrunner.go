@@ -13,7 +13,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/goenv"
 )
 
-// Runner 是運行命令的對象
+// Runner is an object to run commands
 type Runner struct {
 	endSignal   os.Signal
 	stdout      io.Writer
@@ -23,52 +23,52 @@ type Runner struct {
 	runParallel bool
 }
 
-// Option 定義運行命令的選項
+// Option defines option to run commands
 type Option func(*Runner)
 
-// DefaultStdout 為要運行的命令提供默認標準輸出
+// DefaultStdout provides the default stdout for the commands to run
 func DefaultStdout(writer io.Writer) Option {
 	return func(r *Runner) {
 		r.stdout = writer
 	}
 }
 
-// DefaultStderr 為要運行的命令提供默認的標準錯誤
+// DefaultStderr provides the default stderr for the commands to run
 func DefaultStderr(writer io.Writer) Option {
 	return func(r *Runner) {
 		r.stderr = writer
 	}
 }
 
-// DefaultStdin 為要運行的命令提供默認標準輸入
+// DefaultStdin provides the default stdin for the commands to run
 func DefaultStdin(reader io.Reader) Option {
 	return func(r *Runner) {
 		r.stdin = reader
 	}
 }
 
-// DefaultWorkdir 為要運行的命令提供默認工作目錄
+// DefaultWorkdir provides the default working directory for the commands to run
 func DefaultWorkdir(path string) Option {
 	return func(r *Runner) {
 		r.workdir = path
 	}
 }
 
-// RunParallel 允許命令同時運行
+// RunParallel allows the commands to run concurrently
 func RunParallel() Option {
 	return func(r *Runner) {
 		r.runParallel = true
 	}
 }
 
-// EndSignal 將 s 配置為向進程發出信號以結束它們。
+// EndSignal configures s to be signaled to the processes to end them.
 func EndSignal(s os.Signal) Option {
 	return func(r *Runner) {
 		r.endSignal = s
 	}
 }
 
-// New 返回一個新的命令運行器
+// New returns a new commands runner
 func New(options ...Option) *Runner {
 	runner := &Runner{
 		endSignal: os.Interrupt,
@@ -79,15 +79,15 @@ func New(options ...Option) *Runner {
 	return runner
 }
 
-// Run 阻塞，直到所有步驟都完成執行。
+// Run blocks until all steps have completed their executions.
 func (r *Runner) Run(ctx context.Context, steps ...*step.Step) error {
 	if len(steps) == 0 {
 		return nil
 	}
 	g, ctx := errgroup.WithContext(ctx)
 	for _, step := range steps {
-		// 複製 s 到一個新的變量來分配一個新的地址
-		// 所以我們可以安全地在這個循環中產生的 goroutines 中使用它。
+		// copy s to a new variable to allocate a new address
+		// so we can safely use it inside goroutines spawned in this loop.
 		step := step
 		if err := ctx.Err(); err != nil {
 			return err
@@ -96,7 +96,8 @@ func (r *Runner) Run(ctx context.Context, steps ...*step.Step) error {
 			return err
 		}
 		runPostExecs := func(processErr error) error {
-			// 如果上下文被取消，那麼我們可以忽略退出錯誤處理，因為它應該因為取消而退出。
+			// if context is canceled, then we can ignore exit error of the
+			// process because it should be exited because of the cancellation.
 			var err error
 			ctxErr := ctx.Err()
 			if ctxErr != nil {
@@ -145,7 +146,7 @@ func (r *Runner) Run(ctx context.Context, steps ...*step.Step) error {
 	return g.Wait()
 }
 
-// Executor 表示要執行的命令
+// Executor represents a command to execute
 type Executor interface {
 	Wait() error
 	Start() error
@@ -153,7 +154,7 @@ type Executor interface {
 	Write(data []byte) (n int, err error)
 }
 
-// dummyExecutor 是一個什麼都不做的執行者
+// dummyExecutor is an executor that does nothing
 type dummyExecutor struct{}
 
 func (e *dummyExecutor) Start() error { return nil }
@@ -164,7 +165,7 @@ func (e *dummyExecutor) Signal(os.Signal) {}
 
 func (e *dummyExecutor) Write([]byte) (int, error) { return 0, nil }
 
-// cmdSignal 是一個帶有信號處理的執行器
+// cmdSignal is an executor with signal processing
 type cmdSignal struct {
 	*exec.Cmd
 }
@@ -173,7 +174,7 @@ func (e *cmdSignal) Signal(s os.Signal) { e.Cmd.Process.Signal(s) }
 
 func (e *cmdSignal) Write(data []byte) (n int, err error) { return 0, nil }
 
-// cmdSignalWithWriter 是具有信號處理功能的執行器，可以寫入標準輸入
+// cmdSignalWithWriter is an executor with signal processing and that can write into stdin
 type cmdSignalWithWriter struct {
 	*exec.Cmd
 	w io.WriteCloser
@@ -186,9 +187,9 @@ func (e *cmdSignalWithWriter) Write(data []byte) (n int, err error) {
 	return e.w.Write(data)
 }
 
-// newCommand 返回要執行的新命令
+// newCommand returns a new command to execute
 func (r *Runner) newCommand(step *step.Step) Executor {
-	// 在空命令的情況下返回一個虛擬執行器
+	// Return a dummy executor in case of an empty command
 	if step.Exec.Command == "" {
 		return &dummyExecutor{}
 	}
@@ -199,7 +200,7 @@ func (r *Runner) newCommand(step *step.Step) Executor {
 		dir    = step.Workdir
 	)
 
-	//定義標準輸入和輸出
+	// Define standard input and outputs
 	if stdout == nil {
 		stdout = r.stdout
 	}
@@ -213,7 +214,7 @@ func (r *Runner) newCommand(step *step.Step) Executor {
 		dir = r.workdir
 	}
 
-	// 初始化命令
+	// Initialize command
 	command := exec.Command(step.Exec.Command, step.Exec.Args...)
 	command.Stdout = stdout
 	command.Stderr = stderr
@@ -221,22 +222,22 @@ func (r *Runner) newCommand(step *step.Step) Executor {
 	command.Env = append(os.Environ(), step.Env...)
 	command.Env = append(command.Env, Env("PATH", goenv.Path()))
 
-	// 如果提供了自定義標準輸入，它將作為命令的標準輸入
+	// If a custom stdin is provided it will be as the stdin for the command
 	if stdin != nil {
 		command.Stdin = stdin
 		return &cmdSignal{command}
 	}
 
-	// 如果沒有自定義標準輸入，執行器可以寫入程序的標準輸入
+	// If no custom stdin, the executor can write into the stdin of the program
 	writer, err := command.StdinPipe()
 	if err != nil {
-		// TODO 不要驚慌
+		// TODO do not panic
 		panic(err)
 	}
 	return &cmdSignalWithWriter{command, writer}
 }
 
-// Env 從 key 和 val 返回一個新的 env var 值。
+// Env returns a new env var value from key and val.
 func Env(key, val string) string {
 	return fmt.Sprintf("%s=%s", key, val)
 }

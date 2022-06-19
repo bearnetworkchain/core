@@ -3,12 +3,12 @@ import { JSONRPCServer, SimpleJSONRPCMethod} from "json-rpc-2.0";
 
 type Handler = [string, SimpleJSONRPCMethod];
 
-// run 通過標準流公開給定處理程序的 JSON-RPC 服務器。
+// run exposes the JSON-RPC server for given handlers through the standard streams.
 export default async function run(handlers: Handler[]) {
-  // 初始化 RPC 服務器。
+  // init the rpc server.
   const server = new JSONRPCServer();
 
-  // 將方法附加到 rpc 服務器。
+  // attach methods to the rpc server.
   for (const [name, func] of handlers) {
     server.addMethod(name, func);
   }

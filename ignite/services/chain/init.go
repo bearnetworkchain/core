@@ -18,7 +18,7 @@ const (
 	moniker = "mynode"
 )
 
-// Init 初始化鏈並應用所有可選配置。
+// Init initializes the chain and applies all optional configurations.
 func (c *Chain) Init(ctx context.Context, initAccounts bool) error {
 	conf, err := c.Config()
 	if err != nil {
@@ -35,7 +35,7 @@ func (c *Chain) Init(ctx context.Context, initAccounts bool) error {
 	return nil
 }
 
-// InitChain 初始化鏈。
+// InitChain initializes the chain.
 func (c *Chain) InitChain(ctx context.Context) error {
 	chainID, err := c.ID()
 	if err != nil {
@@ -47,7 +47,7 @@ func (c *Chain) InitChain(ctx context.Context) error {
 		return err
 	}
 
-	// 從以前的“服務”中清除持久數據。
+	// cleanup persistent data from previous `serve`.
 	home, err := c.Home()
 	if err != nil {
 		return err
@@ -61,24 +61,24 @@ func (c *Chain) InitChain(ctx context.Context) error {
 		return err
 	}
 
-	// 初始化節點。
+	// init node.
 	if err := commands.Init(ctx, moniker); err != nil {
 		return err
 	}
 
-	// 將 Ignite CLI 的 config.yml 中的配置更改覆蓋到
-	// 通過應用程序的 sdk 配置。
+	// overwrite configuration changes from Ignite CLI's config.yml to
+	// over app's sdk configs.
 
 	if err := c.plugin.Configure(home, conf); err != nil {
 		return err
 	}
 
-	//確保在 chain.New() 期間給出的鏈 ID 具有最高優先級.
+	// make sure that chain id given during chain.New() has the most priority.
 	if conf.Genesis != nil {
 		conf.Genesis["chain_id"] = chainID
 	}
 
-	// 初始化應用配置
+	// Initilize app config
 	genesisPath, err := c.GenesisPath()
 	if err != nil {
 		return err
@@ -124,19 +124,19 @@ func (c *Chain) InitChain(ctx context.Context) error {
 	return nil
 }
 
-//InitAccounts 初始化鏈賬戶並創建驗證者 gentxs
+// InitAccounts initializes the chain accounts and creates validator gentxs
 func (c *Chain) InitAccounts(ctx context.Context, conf chainconfig.Config) error {
 	commands, err := c.Commands(ctx)
 	if err != nil {
 		return err
 	}
 
-	// 將賬戶從配置添加到創世
+	// add accounts from config into genesis
 	for _, account := range conf.Accounts {
 		var generatedAccount chaincmdrunner.Account
 		accountAddress := account.Address
 
-		// 如果帳戶沒有提供地址，我們會創建一個
+		// If the account doesn't provide an address, we create one
 		if accountAddress == "" {
 			generatedAccount, err = commands.AddAccount(ctx, account.Name, account.Mnemonic, account.CoinType)
 			if err != nil {
@@ -153,7 +153,7 @@ func (c *Chain) InitAccounts(ctx context.Context, conf chainconfig.Config) error
 		if account.Address == "" {
 			fmt.Fprintf(
 				c.stdLog().out,
-				"🙂 創建帳戶 %q 和地址 %q 和助記詞: %q\n",
+				"🙂 Created account %q with address %q with mnemonic: %q\n",
 				generatedAccount.Name,
 				generatedAccount.Address,
 				generatedAccount.Mnemonic,
@@ -161,7 +161,7 @@ func (c *Chain) InitAccounts(ctx context.Context, conf chainconfig.Config) error
 		} else {
 			fmt.Fprintf(
 				c.stdLog().out,
-				"🙂 導入賬戶 %q 和地址: %q\n",
+				"🙂 Imported an account %q with address: %q\n",
 				account.Name,
 				account.Address,
 			)
@@ -175,25 +175,25 @@ func (c *Chain) InitAccounts(ctx context.Context, conf chainconfig.Config) error
 	return err
 }
 
-// IssueGentx 從chain config中的validator信息生成一個gentx，並在chain genesis中導入
+// IssueGentx generates a gentx from the validator information in chain config and import it in the chain genesis
 func (c Chain) IssueGentx(ctx context.Context, v Validator) (string, error) {
 	commands, err := c.Commands(ctx)
 	if err != nil {
 		return "", err
 	}
 
-	// 從配置中的驗證器創建 gentx
+	// create the gentx from the validator from the config
 	gentxPath, err := c.plugin.Gentx(ctx, commands, v)
 	if err != nil {
 		return "", err
 	}
 
-	// 將 gentx 導入創世紀
+	// import the gentx into the genesis
 	return gentxPath, commands.CollectGentxs(ctx)
 }
 
-// IsInitialized 檢查鍊是否已初始化
-// 通過檢查配置中是否存在 gentx 目錄來執行檢查
+// IsInitialized checks if the chain is initialized
+// the check is performed by checking if the gentx dir exist in the config
 func (c *Chain) IsInitialized() (bool, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -227,7 +227,7 @@ type Validator struct {
 	SecurityContact         string
 }
 
-//Account 代錶鍊中的一個賬戶。
+// Account represents an account in the chain.
 type Account struct {
 	Name     string
 	Address  string

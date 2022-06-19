@@ -15,11 +15,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
 )
 
-// NewNetworkRequestVerify 驗證請求並模擬鏈。
+// NewNetworkRequestVerify verify the request and simulate the chain.
 func NewNetworkRequestVerify() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "verify [launch-id] [number<,...>]",
-		Short: "驗證請求並從它們模擬鏈創世",
+		Short: "Verify the request and simulate the chain genesis from them",
 		RunE:  networkRequestVerifyHandler,
 		Args:  cobra.ExactArgs(2),
 	}
@@ -40,13 +40,13 @@ func networkRequestVerifyHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析啟動 ID
+	// parse launch ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// 獲取請求ID列表
+	// get the list of request ids
 	ids, err := numbers.ParseList(args[1])
 	if err != nil {
 		return err
@@ -57,17 +57,17 @@ func networkRequestVerifyHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 驗證請求
+	// verify the requests
 	if err := verifyRequest(cmd.Context(), cacheStorage, nb, launchID, ids...); err != nil {
-		session.Printf("%s 要求 %s 無效\n", icons.NotOK, numbers.List(ids, "#"))
+		session.Printf("%s Request(s) %s not valid\n", icons.NotOK, numbers.List(ids, "#"))
 		return err
 	}
 
-	return session.Printf("%s 要求 %s 已驗證\n", icons.OK, numbers.List(ids, "#"))
+	return session.Printf("%s Request(s) %s verified\n", icons.OK, numbers.List(ids, "#"))
 }
 
-// verifyRequest 從臨時目錄中的啟動 ID 初始化鏈
-// 並使用請求 ID 模擬從 genesis 啟動鏈
+// verifyRequest initialize the chain from the launch ID in a temporary directory
+// and simulate the launch of the chain from genesis with the request IDs
 func verifyRequest(
 	ctx context.Context,
 	cacheStorage cache.Storage,
@@ -80,7 +80,7 @@ func verifyRequest(
 		return err
 	}
 
-	// 使用臨時目錄初始化鏈
+	// initialize the chain with a temporary dir
 	chainLaunch, err := n.ChainLaunch(ctx, launchID)
 	if err != nil {
 		return err
@@ -101,7 +101,7 @@ func verifyRequest(
 		return err
 	}
 
-	// 獲取當前的創世信息和對鏈的請求以進行模擬
+	// fetch the current genesis information and the requests for the chain for simulation
 	genesisInformation, err := n.GenesisInformation(ctx, launchID)
 	if err != nil {
 		return err

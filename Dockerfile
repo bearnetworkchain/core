@@ -1,26 +1,26 @@
 # syntax = docker/dockerfile:1.2
-# WARNING! 使用 `DOCKER_BUILDKIT=1` 和 `docker build` 來啟用 --mount 功能。
+# WARNING! Use `DOCKER_BUILDKIT=1` with `docker build` to enable --mount feature.
 
-## 準備基礎鏡像。
+## prep the base image.
 #
 FROM golang:1.18.0-bullseye as base
 
 RUN apt update && \
     apt-get install -y \
-         build-essential \
-         ca-certificates \
-         curl
+        build-essential \
+        ca-certificates \
+        curl
 
-# 啟用更快的模塊下載。
+# enable faster module downloading.
 ENV GOPROXY https://proxy.golang.org
 
-## 建設者階段。
+## builder stage.
 #
 FROM base as builder
 
 WORKDIR /ignite
 
-# 緩存依賴項。
+# cache dependencies.
 COPY ./go.mod . 
 COPY ./go.sum . 
 RUN go mod download
@@ -29,7 +29,7 @@ COPY . .
 
 RUN --mount=type=cache,target=/root/.cache/go-build go install -v ./...
 
-## 準備最終圖像。
+## prep the final image.
 #
 FROM base
 
@@ -40,7 +40,7 @@ COPY --from=builder /go/bin/ignite /usr/bin
 
 WORKDIR /apps
 
-# 請參閱暴露端口的文檔：
+# see docs for exposed ports:
 #   https://docs.ignite.com/kb/config.html#host
 EXPOSE 26657
 EXPOSE 26656

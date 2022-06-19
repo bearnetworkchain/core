@@ -16,7 +16,7 @@ func PeerAddress(peer launchtypes.Peer) (string, error) {
 	case *launchtypes.Peer_HttpTunnel:
 		peerAddr = fmt.Sprintf("%s@%s", peer.Id, conn.HttpTunnel.Address)
 	default:
-		return peerAddr, fmt.Errorf("對等連接類型無效: %T", peer.Connection)
+		return peerAddr, fmt.Errorf("invalid peer connection type: %T", peer.Connection)
 	}
 	return peerAddr, nil
 }
@@ -24,7 +24,7 @@ func PeerAddress(peer launchtypes.Peer) (string, error) {
 func ParsePeerAddress(addr string) (launchtypes.Peer, error) {
 	sp := strings.Split(addr, "@")
 	if len(sp) != 2 {
-		return launchtypes.Peer{}, errors.New("無效的對等地址格式")
+		return launchtypes.Peer{}, errors.New("invalid peer address format")
 	}
 	return launchtypes.NewPeerConn(sp[0], sp[1]), nil
 }

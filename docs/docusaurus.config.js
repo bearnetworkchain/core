@@ -1,5 +1,5 @@
 // @ts-check
-// Note: 類型註釋允許類型檢查和 IDE 自動完成
+// Note: type annotations allow type checking and IDEs autocompletion
 
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
@@ -15,13 +15,13 @@ const config = {
   favicon: "img/favicon-svg.svg",
   trailingSlash: false,
 
-  // GitHub 頁面部署配置.
-  // 如果您不使用 GitHub 頁面，則不需要這些.
+  // GitHub pages deployment config.
+  // If you aren't using GitHub pages, you don't need these.
   organizationName: "ignite",
   projectName: "ignite docs",
 
-// 即使不使用內化，也可以使用該字段設置有用
-// 元數據，如 html lang.例如，如果您的網站是中文的，您可能想要
+  // Even if you don't use internalization, you can use this field to set useful
+  // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
   i18n: {
     defaultLocale: "en",

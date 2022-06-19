@@ -1,4 +1,4 @@
-// Package goenv 定義 Go 已知的環境變量和一些圍繞它的實用程序。
+// Package goenv defines env variables known by Go and some utilities around it.
 package goenv
 
 import (
@@ -9,10 +9,10 @@ import (
 )
 
 const (
-	// GOBIN 是 GOBIN 的環境變量。
+	// GOBIN is the env var for GOBIN.
 	GOBIN = "GOBIN"
 
-	// GOPATH 是 GOPATH 的環境變量。
+	// GOPATH is the env var for GOPATH.
 	GOPATH = "GOPATH"
 )
 
@@ -20,7 +20,7 @@ const (
 	binDir = "bin"
 )
 
-// Bin 返回安裝 Go 二進製文件的路徑。
+// Bin returns the path of where Go binaries are installed.
 func Bin() string {
 	if binPath := os.Getenv(GOBIN); binPath != "" {
 		return binPath
@@ -31,12 +31,12 @@ func Bin() string {
 	return filepath.Join(build.Default.GOPATH, binDir)
 }
 
-// Path 返回 $PATH 具有正確的 go bin 配置集。
+// Path returns $PATH with correct go bin configuration set.
 func Path() string {
 	return os.ExpandEnv(fmt.Sprintf("$PATH:%s", Bin()))
 }
 
-// ConfigurePath 使用具有 go bin 設置的正確 $PATH 配置 env。
+// ConfigurePath configures the env with correct $PATH that has go bin setup.
 func ConfigurePath() error {
 	return os.Setenv("PATH", Path())
 }

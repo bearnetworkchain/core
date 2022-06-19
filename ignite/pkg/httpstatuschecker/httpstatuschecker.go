@@ -1,4 +1,4 @@
-// httpstatuschecker 是一個檢查http頁面健康狀況的工具。
+// httpstatuschecker is a tool check health of http pages.
 package httpstatuschecker
 
 import (
@@ -12,17 +12,17 @@ type checker struct {
 	method string
 }
 
-// Option用於自定義檢查器。
+// Option used to customize checker.
 type Option func(*checker)
 
-// Method配置http方法。
+// Method configures http method.
 func Method(name string) Option {
 	return func(cr *checker) {
 		cr.method = name
 	}
 }
 
-// Check通過應用選項檢查給定的 http 地址是否存在。
+// Check checks if given http addr is alive by applying options.
 func Check(ctx context.Context, addr string, options ...Option) (isAvailable bool, err error) {
 	cr := &checker{
 		c:      http.DefaultClient,

@@ -25,28 +25,28 @@ const (
 	protoFolder = "proto"
 )
 
-// checkComponentValidity執行所有組件通用的各種檢查，以驗證它是否可以搭建
+// checkComponentValidity performs various checks common to all components to verify if it can be scaffolded
 func checkComponentValidity(appPath, moduleName string, compName multiformatname.Name, noMessage bool) error {
 	ok, err := moduleExists(appPath, moduleName)
 	if err != nil {
 		return err
 	}
 	if !ok {
-		return fmt.Errorf("模塊 %s 不存在", moduleName)
+		return fmt.Errorf("the module %s doesn't exist", moduleName)
 	}
 
-	// Ensure名稱有效，否則會生成錯誤代碼
+	// Ensure the name is valid, otherwise it would generate an incorrect code
 	if err := checkForbiddenComponentName(compName); err != nil {
-		return fmt.Errorf("%s 不能用作組件名稱: %s", compName.LowerCamel, err.Error())
+		return fmt.Errorf("%s can't be used as a component name: %s", compName.LowerCamel, err.Error())
 	}
 
-	// 檢查組件名稱尚未使用
+	// Check component name is not already used
 	return checkComponentCreated(appPath, moduleName, compName, noMessage)
 }
 
-// checkForbiddenComponentName如果名稱被禁止作為組件名稱，則返回 true
+// checkForbiddenComponentName returns true if the name is forbidden as a component name
 func checkForbiddenComponentName(name multiformatname.Name) error {
-	// 檢查腳手架代碼中已使用的名稱
+	// Check with names already used from the scaffolded code
 	switch name.LowerCase {
 	case
 		"oracle",
@@ -57,21 +57,21 @@ func checkForbiddenComponentName(name multiformatname.Name) error {
 		"types",
 		"tx",
 		datatype.TypeCustom:
-		return fmt.Errorf("%s 由熊網鏈腳手架使用", name.LowerCamel)
+		return fmt.Errorf("%s is used by Starport scaffolder", name.LowerCamel)
 	}
 
 	if strings.HasSuffix(name.LowerCase, "test") {
-		return errors.New(`名稱不能以“test”結尾"`)
+		return errors.New(`name cannot end with "test"`)
 	}
 
 	return checkGoReservedWord(name.LowerCamel)
 }
 
-// checkGoReservedWord檢查名稱是否不能使用，因為它是 go 保留關鍵字
+// checkGoReservedWord checks if the name can't be used because it is a go reserved keyword
 func checkGoReservedWord(name string) error {
 	// Check keyword or literal
 	if token.Lookup(name).IsKeyword() {
-		return fmt.Errorf("%s 是一個 Go 關鍵字", name)
+		return fmt.Errorf("%s is a Go keyword", name)
 	}
 
 	// Check with builtin identifier
@@ -113,15 +113,15 @@ func checkGoReservedWord(name string) error {
 		"uint",
 		"uint8",
 		"uintptr":
-		return fmt.Errorf("%s 是 Go 內置標識符", name)
+		return fmt.Errorf("%s is a Go built-in identifier", name)
 	}
 	return nil
 }
 
-// checkComponentCreated檢查組件是否已經在項目中使用熊網鏈創建
+// checkComponentCreated checks if the component has been already created with Starport in the project
 func checkComponentCreated(appPath, moduleName string, compName multiformatname.Name, noMessage bool) (err error) {
 
-	// 將要檢查的類型與腳手架該類型的組件相關聯
+	// associate the type to check with the component that scaffold this type
 	typesToCheck := map[string]string{
 		compName.UpperCamel:                           componentType,
 		"QueryAll" + compName.UpperCamel + "Request":  componentType,
@@ -165,7 +165,7 @@ func checkComponentCreated(appPath, moduleName string, compName multiformatname.
 
 				// Check if the parsed type is from a scaffolded component with the name
 				if compType, ok := typesToCheck[typeSpec.Name.Name]; ok {
-					err = fmt.Errorf("零件 %s 名字 %s 已經創建 (類型 %s 存在)",
+					err = fmt.Errorf("component %s with name %s is already created (type %s exists)",
 						compType,
 						compName.Original,
 						typeSpec.Name.Name,
@@ -183,14 +183,14 @@ func checkComponentCreated(appPath, moduleName string, compName multiformatname.
 	return err
 }
 
-// checkForbiddenOracleFieldName如果名稱被禁止作為 oracle 字段名稱，則返回 true
+// checkForbiddenOracleFieldName returns true if the name is forbidden as an oracle field name
 func checkForbiddenOracleFieldName(name string) error {
 	mfName, err := multiformatname.NewName(name, multiformatname.NoNumber)
 	if err != nil {
 		return err
 	}
 
-	// 檢查腳手架代碼中已使用的名稱
+	// Check with names already used from the scaffolded code
 	switch mfName.UpperCase {
 	case
 		"CLIENTID",
@@ -202,12 +202,12 @@ func checkForbiddenOracleFieldName(name string) error {
 		"FEELIMIT",
 		"PREPAREGAS",
 		"EXECUTEGAS":
-		return fmt.Errorf("%s 由熊網鏈腳手架使用", name)
+		return fmt.Errorf("%s is used by Starport scaffolder", name)
 	}
 	return nil
 }
 
-// checkCustomTypes 如果其中一種類型無效，則返回錯誤
+// checkCustomTypes returns error if one of the types is invalid
 func checkCustomTypes(ctx context.Context, path, module string, fields []string) error {
 	protoPath := filepath.Join(path, protoFolder, module)
 	customFields := make([]string, 0)
@@ -224,7 +224,7 @@ func checkCustomTypes(ctx context.Context, path, module string, fields []string)
 	return protoanalysis.HasMessages(ctx, protoPath, customFields...)
 }
 
-// containCustomTypes 如果字段列表包含至少一種自定義類型，則返回 true
+// containCustomTypes returns true if the list of fields contains at least one custom type
 func containCustomTypes(fields []string) bool {
 	for _, name := range fields {
 		fieldSplit := strings.Split(name, datatype.Separator)

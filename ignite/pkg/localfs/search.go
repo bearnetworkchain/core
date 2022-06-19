@@ -7,8 +7,8 @@ import (
 	"strings"
 )
 
-// Search 在 fs 中搜索具有給定 glob 模式的文件，方法是確保
-// 返回的文件路徑已排序。
+// Search searches for files in the fs with given glob pattern by ensuring that
+// returned file paths are sorted.
 func Search(path, pattern string) ([]string, error) {
 	files := make([]string, 0)
 	if _, err := os.Stat(path); err != nil {
@@ -23,15 +23,15 @@ func Search(path, pattern string) ([]string, error) {
 			return err
 		}
 		base := filepath.Base(path)
-		// 跳過隱藏文件夾
+		// skip hidden folders
 		if f.IsDir() && strings.HasPrefix(base, ".") {
 			return filepath.SkipDir
 		}
-		// 避免檢查目錄
+		// avoid check directories
 		if f.IsDir() {
 			return nil
 		}
-		// 檢查文件名和模式是否匹配
+		// check if the file name and pattern matches
 		matched, err := filepath.Match(pattern, base)
 		if err != nil {
 			return err

@@ -12,12 +12,12 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/protoc"
 )
 
-// NewTools 返回一個命令，其中各種工具（二進製文件）作為子命令附加
-// 對於高級用戶。
+// NewTools returns a command where various tools (binaries) are attached as sub commands
+// for advanced users.
 func NewTools() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "tools",
-		Short: "高級用戶工具",
+		Short: "Tools for advanced users",
 	}
 	c.AddCommand(NewToolsIBCSetup())
 	c.AddCommand(NewToolsIBCRelayer())
@@ -29,7 +29,7 @@ func NewTools() *cobra.Command {
 func NewToolsIBCSetup() *cobra.Command {
 	return &cobra.Command{
 		Use:   "ibc-setup [--] [...]",
-		Short: "快速設置中繼器的命令集合",
+		Short: "Collection of commands to quickly setup a relayer",
 		RunE:  toolsNodetimeProxy(nodetime.CommandIBCSetup),
 		Example: `ignite tools ibc-setup -- -h
 ignite tools ibc-setup -- init --src relayer_test_1 --dest relayer_test_2`,
@@ -39,7 +39,7 @@ ignite tools ibc-setup -- init --src relayer_test_1 --dest relayer_test_2`,
 func NewToolsIBCRelayer() *cobra.Command {
 	return &cobra.Command{
 		Use:     "ibc-relayer [--] [...]",
-		Short:   "IBC 中繼器的打字稿實現",
+		Short:   "Typescript implementation of an IBC relayer",
 		RunE:    toolsNodetimeProxy(nodetime.CommandIBCRelayer),
 		Example: `ignite tools ibc-relayer -- -h`,
 	}
@@ -48,8 +48,8 @@ func NewToolsIBCRelayer() *cobra.Command {
 func NewToolsProtoc() *cobra.Command {
 	return &cobra.Command{
 		Use:     "protoc [--] [...]",
-		Short:   "執行協議命令",
-		Long:    "協議命令。您不需要設置全局協議包含文件夾 -I, 它是自動處理的",
+		Short:   "Execute the protoc command",
+		Long:    "The protoc command. You don't need to setup the global protoc include folder with -I, it's automatically handled",
 		RunE:    toolsProtocProxy,
 		Example: `ignite tools protoc -- --version`,
 	}
@@ -90,20 +90,20 @@ func toolsProxy(ctx context.Context, command []string) error {
 
 func NewToolsCompletions() *cobra.Command {
 
-	// completionCmd 表示完成命令
+	// completionCmd represents the completion command
 	c := &cobra.Command{
 		Use:   "completions",
-		Short: "生成完成腳本",
-		Long: ` 補全命令輸出一個補全腳本，你可以在你的 shell 中使用. 輸出腳本需要
-那 [bash-completion](https://github.com/scop/bash-completion)已安裝並在您的
-系統. 由於大多數類 Unix 操作系統默認帶有 bash-completion，因此 bash-completion
-可能已經安裝並運行。
+		Short: "Generate completions script",
+		Long: ` The completions command outputs a completion script you can use in your shell. The output script requires 
+				that [bash-completion](https://github.com/scop/bash-completion)	is installed and enabled in your 
+				system. Since most Unix-like operating systems come with bash-completion by default, bash-completion 
+				is probably already installed and operational.
 
 Bash:
 
   $ source <(ignite  tools completions bash)
 
-  要為每個新會話加載完成，請運行:
+  To load completions for every new session, run:
 
   ** Linux **
   $ ignite  tools completions bash > /etc/bash_completion.d/ignite
@@ -113,21 +113,21 @@ Bash:
 
 Zsh:
 
-  如果您的環境中尚未啟用 shell 完成，則需要啟用它。您可以執行以下一次:
+  If shell completions is not already enabled in your environment, you will need to enable it.  You can execute the following once:
 
   $ echo "autoload -U compinit; compinit" >> ~/.zshrc
 
-  要為每個會話加載完成，請執行一次:
+  To load completions for each session, execute once:
   
   $ ignite  tools completions zsh > "${fpath[1]}/_ignite"
 
-  您需要啟動一個新的 shell 才能使此設置生效.
+  You will need to start a new shell for this setup to take effect.
 
 fish:
 
   $ ignite  tools completions fish | source
 
- 要為每個會話加載完成，請執行一次:
+  To load completions for each session, execute once:
   
   $ ignite  tools completions fish > ~/.config/fish/completionss/ignite.fish
 
@@ -135,11 +135,11 @@ PowerShell:
 
   PS> ignite  tools completions powershell | Out-String | Invoke-Expression
 
-  要為每個新會話加載完成，請運行:
+  To load completions for every new session, run:
   
   PS> ignite  tools completions powershell > ignite.ps1
   
-  並從您的 PowerShell 配置文件中獲取此文件.
+  and source this file from your PowerShell profile.
 `,
 		DisableFlagsInUseLine: true,
 		ValidArgs:             []string{"bash", "zsh", "fish", "powershell"},

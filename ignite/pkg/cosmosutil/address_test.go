@@ -17,14 +17,14 @@ func TestChangePrefix(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "BNK地址到SPN地址",
-			address: "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+			name:    "cosmos address to spn address",
+			address: "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
 			prefix:  "spn",
 			want:    "spn1dd246yq6z5vzjz9gh8cff46pll75yyl8c5tt7g",
 		},
 		{
-			name:    "BNK地址到SPN地址2",
-			address: "bnkt1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
+			name:    "cosmos address to spn address 2",
+			address: "cosmos1mmlqwyqk7neqegffp99q86eckpm4pjah3ytlpa",
 			prefix:  "spn",
 			want:    "spn1mmlqwyqk7neqegffp99q86eckpm4pjahdcne08",
 		},
@@ -67,8 +67,8 @@ func TestChangePrefix(t *testing.T) {
 }
 
 func TestGetPrefix(t *testing.T) {
-	prefix, err := cosmosutil.GetAddressPrefix("bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj")
-	require.Equal(t, "bnkt", prefix)
+	prefix, err := cosmosutil.GetAddressPrefix("cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj")
+	require.Equal(t, "cosmos", prefix)
 	require.NoError(t, err)
 
 	prefix, err = cosmosutil.GetAddressPrefix("mars1c6ac48k2ur8tl3tf0cpntlw5068kvp8xf4xq37")

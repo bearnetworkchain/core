@@ -12,8 +12,8 @@ import (
 func NewScaffoldWasm() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "wasm",
-		Short: "將 wasm 模塊導入您的應用程序",
-		Long:  "為您的區塊鏈添加對 WebAssembly 智能合約的支持",
+		Short: "Import the wasm module to your app",
+		Long:  "Add support for WebAssembly smart contracts to your blockchain",
 		Args:  cobra.NoArgs,
 		RunE:  scaffoldWasmHandler,
 	}
@@ -26,7 +26,7 @@ func NewScaffoldWasm() *cobra.Command {
 func scaffoldWasmHandler(cmd *cobra.Command, args []string) error {
 	appPath := flagGetPath(cmd)
 
-	s := clispinner.New().SetText("創建中,請耐心等待....順便去抽根菸,喝口飲料...")
+	s := clispinner.New().SetText("Scaffolding...")
 	defer s.Stop()
 
 	cacheStorage, err := newCache(cmd)
@@ -52,7 +52,7 @@ func scaffoldWasmHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Println(modificationsStr)
-	fmt.Printf("\n🎉 匯入wasm.\n\n")
+	fmt.Printf("\n🎉 Imported wasm.\n\n")
 
 	return nil
 }

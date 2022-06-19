@@ -1,17 +1,17 @@
-# 如果您想自動化以下流程，此工作流程很有用：
+# This workflow is useful if you want to automate the process of:
 #
-# a) 當你推送一個帶有“v”前綴（版本）的新標籤時，創建一個新的預發布。
+# a) Creating a new prelease when you push a new tag with a "v" prefix (version).
 #
-# 這種類型的預發布用於生產：alpha、beta、rc 等類型的發布。
-# 創建預發布後，您需要在相關的發布頁面上進行更改
-# Github 頁面並發布您的版本。
+#    This type of prerelease is meant to be used for production: alpha, beta, rc, etc. types of releases.
+#    After the prerelease is created, you need to make your changes on the release page at the relevant
+#    Github page and publish your release.
 #
-# b) 在推送到默認分支時創建/更新“最新”預發布版本。
+# b) Creating/updating the "latest" prerelease when you push to your default branch.
 #
-# 這種類型的預發布對於使您的前沿二進製文件可供高級用戶使用很有用。
+#    This type of prelease is useful to make your bleeding-edge binaries available to advanced users.
 #
-# 如果沒有推送帶有“v”前綴的標籤並且沒有更改推送到您的
-# 默認分支。
+# The workflow will not run if there is no tag pushed with a "v" prefix and no change pushed to your 
+# default branch.
 on: push
 
 jobs:

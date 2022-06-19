@@ -12,22 +12,22 @@ import (
 
 const flagSigner = "signer"
 
-// NewScaffoldMessage 返回腳手架消息的命令
+// NewScaffoldMessage returns the command to scaffold messages
 func NewScaffoldMessage() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "message [name] [field1] [field2] ...",
-		Short: "在區塊鏈上執行狀態轉換的消息",
+		Short: "Message to perform state transition on the blockchain",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  messageHandler,
 	}
 
 	flagSetPath(c)
 	flagSetClearCache(c)
-	c.Flags().String(flagModule, "", "將消息添加到的模塊。默認值：應用程序的主模塊")
-	c.Flags().StringSliceP(flagResponse, "r", []string{}, "響應字段")
-	c.Flags().Bool(flagNoSimulation, false, "禁用 CRUD 模擬腳手架")
-	c.Flags().StringP(flagDescription, "d", "", "命令說明")
-	c.Flags().String(flagSigner, "", "消息簽名者的標籤（默認：創建者）")
+	c.Flags().String(flagModule, "", "Module to add the message into. Default: app's main module")
+	c.Flags().StringSliceP(flagResponse, "r", []string{}, "Response fields")
+	c.Flags().Bool(flagNoSimulation, false, "Disable CRUD simulation scaffolding")
+	c.Flags().StringP(flagDescription, "d", "", "Description of the command")
+	c.Flags().String(flagSigner, "", "Label for the message signer (default: creator)")
 
 	return c
 }
@@ -42,7 +42,7 @@ func messageHandler(cmd *cobra.Command, args []string) error {
 		withoutSimulation = flagGetNoSimulation(cmd)
 	)
 
-	s := clispinner.New().SetText("創建中,請耐心等待...")
+	s := clispinner.New().SetText("Scaffolding...")
 	defer s.Stop()
 
 	cacheStorage, err := newCache(cmd)
@@ -52,17 +52,17 @@ func messageHandler(cmd *cobra.Command, args []string) error {
 
 	var options []scaffolder.MessageOption
 
-	// 獲取描述
+	// Get description
 	if desc != "" {
 		options = append(options, scaffolder.WithDescription(desc))
 	}
 
-	// 獲取簽名者
+	// Get signer
 	if signer != "" {
 		options = append(options, scaffolder.WithSigner(signer))
 	}
 
-	// 跳過腳手架模擬
+	// Skip scaffold simulation
 	if withoutSimulation {
 		options = append(options, scaffolder.WithoutSimulation())
 	}
@@ -85,7 +85,7 @@ func messageHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	fmt.Println(modificationsStr)
-	fmt.Printf("\n🎉 創建了一條消息 `%[1]v`.\n\n", args[0])
+	fmt.Printf("\n🎉 Created a message `%[1]v`.\n\n", args[0])
 
 	return nil
 }

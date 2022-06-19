@@ -2,7 +2,7 @@ package xexec
 
 import "os/exec"
 
-//IsCommandAvailable 檢查用戶路徑上的命令是否可用。
+// IsCommandAvailable checks if command is available on user's path.
 func IsCommandAvailable(name string) bool {
 	_, err := exec.LookPath(name)
 	return err == nil

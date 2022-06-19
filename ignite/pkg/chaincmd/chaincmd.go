@@ -80,7 +80,7 @@ type ChainCmd struct {
 	sdkVersion cosmosver.Version
 }
 
-// New 創建一個新的 ChainCmd 以使用鏈應用程序啟動命令
+// New creates a new ChainCmd to launch command with the chain app
 func New(appCmd string, options ...Option) ChainCmd {
 	chainCmd := ChainCmd{
 		appCmd:     appCmd,
@@ -92,14 +92,14 @@ func New(appCmd string, options ...Option) ChainCmd {
 	return chainCmd
 }
 
-// Copy 通過使用給定選項覆蓋其選項來複製 ChainCmd。
+// Copy makes a copy of ChainCmd by overwriting its options with given options.
 func (c ChainCmd) Copy(options ...Option) ChainCmd {
 	applyOptions(&c, options)
 
 	return c
 }
 
-//選項配置 ChainCmd。
+// Option configures ChainCmd.
 type Option func(*ChainCmd)
 
 func applyOptions(c *ChainCmd, options []Option) {
@@ -108,82 +108,82 @@ func applyOptions(c *ChainCmd, options []Option) {
 	}
 }
 
-// WithVersion 設置區塊鏈的版本。
-// 如果未提供，則假定為最新版本的 SDK。
+// WithVersion sets the version of the blockchain.
+// when this is not provided, latest version of SDK is assumed.
 func WithVersion(v cosmosver.Version) Option {
 	return func(c *ChainCmd) {
 		c.sdkVersion = v
 	}
 }
 
-// WithHome 替換了鏈使用的默認主頁
+// WithHome replaces the default home used by the chain
 func WithHome(home string) Option {
 	return func(c *ChainCmd) {
 		c.homeDir = home
 	}
 }
 
-// WithChainID 為接受此選項的命令提供特定的鏈 ID
+// WithChainID provides a specific chain ID for the commands that accept this option
 func WithChainID(chainID string) Option {
 	return func(c *ChainCmd) {
 		c.chainID = chainID
 	}
 }
 
-// WithAutoChainIDDetection 通過與運行的節點通信找出鏈 id。
+// WithAutoChainIDDetection finds out the chain id by communicating with the node running.
 func WithAutoChainIDDetection() Option {
 	return func(c *ChainCmd) {
 		c.isAutoChainIDDetectionEnabled = true
 	}
 }
 
-// WithKeyringBackend 為接受此選項的命令提供特定的密鑰環後端
+// WithKeyringBackend provides a specific keyring backend for the commands that accept this option
 func WithKeyringBackend(keyringBackend KeyringBackend) Option {
 	return func(c *ChainCmd) {
 		c.keyringBackend = keyringBackend
 	}
 }
 
-// WithKeyringPassword 提供了解鎖密鑰環的密碼
+// WithKeyringPassword provides a password to unlock keyring
 func WithKeyringPassword(password string) Option {
 	return func(c *ChainCmd) {
 		c.keyringPassword = password
 	}
 }
 
-// WithNodeAddress 為需要生成的命令設置節點地址
-// 向具有不同於默認節點地址的節點的 API 請求。
+// WithNodeAddress sets the node address for the commands that needs to make an
+// API request to the node that has a different node address other than the default one.
 func WithNodeAddress(addr string) Option {
 	return func(c *ChainCmd) {
 		c.nodeAddress = addr
 	}
 }
 
-// WithLaunchpadCLI 為區塊鏈提供 CLI 應用程序名稱
-// 這對於 Launchpad 應用程序是必需的，因為它有兩個不同的二進製文件，但是
-// Stargate 應用程序不需要
+// WithLaunchpadCLI provides the CLI application name for the blockchain
+// this is necessary for Launchpad applications since it has two different binaries but
+// not needed by Stargate applications
 func WithLaunchpadCLI(cliCmd string) Option {
 	return func(c *ChainCmd) {
 		c.cliCmd = cliCmd
 	}
 }
 
-// WithLaunchpadCLIHome 替換了 Launchpad 鏈 CLI 使用的默認主頁
+// WithLaunchpadCLIHome replaces the default home used by the Launchpad chain CLI
 func WithLaunchpadCLIHome(cliHome string) Option {
 	return func(c *ChainCmd) {
 		c.cliHome = cliHome
 	}
 }
 
-// WithLegacySendCommand 將使命令使用來自啟動板的傳統 tx 發送語法
-// 在星門鏈上。例如：CosmWasm
+// WithLegacySendCommand will make the command use the legacy tx send syntax from launchpad
+// on stargate chains. e.g.: CosmWasm
 func WithLegacySendCommand() Option {
 	return func(c *ChainCmd) {
 		c.legacySend = true
 	}
 }
 
-// StartCommand 返回啟動鏈的守護進程的命令
+// StartCommand returns the command to start the daemon of the chain
 func (c ChainCmd) StartCommand(options ...string) step.Option {
 	command := append([]string{
 		commandStart,
@@ -191,7 +191,7 @@ func (c ChainCmd) StartCommand(options ...string) step.Option {
 	return c.daemonCommand(command)
 }
 
-// InitCommand 返回初始化鏈的命令
+// InitCommand returns the command to initialize the chain
 func (c ChainCmd) InitCommand(moniker string) step.Option {
 	command := []string{
 		commandInit,
@@ -201,7 +201,7 @@ func (c ChainCmd) InitCommand(moniker string) step.Option {
 	return c.daemonCommand(command)
 }
 
-// AddKeyCommand 返回在鏈密鑰環中添加新密鑰的命令
+// AddKeyCommand returns the command to add a new key in the chain keyring
 func (c ChainCmd) AddKeyCommand(accountName, coinType string) step.Option {
 	command := []string{
 		commandKeys,
@@ -218,7 +218,7 @@ func (c ChainCmd) AddKeyCommand(accountName, coinType string) step.Option {
 	return c.cliCommand(command)
 }
 
-// RecoverKeyCommand 返回從助記詞中將密鑰恢復到鏈密鑰環中的命令
+// RecoverKeyCommand returns the command to recover a key into the chain keyring from a mnemonic
 func (c ChainCmd) RecoverKeyCommand(accountName, coinType string) step.Option {
 	command := []string{
 		commandKeys,
@@ -234,7 +234,7 @@ func (c ChainCmd) RecoverKeyCommand(accountName, coinType string) step.Option {
 	return c.cliCommand(command)
 }
 
-// ImportKeyCommand 返回將密鑰從密鑰文件導入到鍊式密鑰環的命令
+// ImportKeyCommand returns the command to import a key into the chain keyring from a key file
 func (c ChainCmd) ImportKeyCommand(accountName, keyFile string) step.Option {
 	command := []string{
 		commandKeys,
@@ -247,7 +247,7 @@ func (c ChainCmd) ImportKeyCommand(accountName, keyFile string) step.Option {
 	return c.cliCommand(command)
 }
 
-// ShowKeyAddressCommand 返回命令以打印鏈密鑰環中密鑰的地址
+// ShowKeyAddressCommand returns the command to print the address of a key in the chain keyring
 func (c ChainCmd) ShowKeyAddressCommand(accountName string) step.Option {
 	command := []string{
 		commandKeys,
@@ -260,7 +260,7 @@ func (c ChainCmd) ShowKeyAddressCommand(accountName string) step.Option {
 	return c.cliCommand(command)
 }
 
-// ListKeysCommand 返回命令以打印鏈密鑰環中的密鑰列表
+// ListKeysCommand returns the command to print the list of a keys in the chain keyring
 func (c ChainCmd) ListKeysCommand() step.Option {
 	command := []string{
 		commandKeys,
@@ -273,7 +273,7 @@ func (c ChainCmd) ListKeysCommand() step.Option {
 	return c.cliCommand(command)
 }
 
-// AddGenesisAccountCommand 返回在鏈的創世文件中添加新賬戶的命令
+// AddGenesisAccountCommand returns the command to add a new account in the genesis file of the chain
 func (c ChainCmd) AddGenesisAccountCommand(address, coins string) step.Option {
 	command := []string{
 		commandAddGenesisAccount,
@@ -284,7 +284,7 @@ func (c ChainCmd) AddGenesisAccountCommand(address, coins string) step.Option {
 	return c.daemonCommand(command)
 }
 
-// AddVestingAccountCommand 返回在鏈的創世文件中添加延遲歸屬賬戶的命令
+// AddVestingAccountCommand returns the command to add a delayed vesting account in the genesis file of the chain
 func (c ChainCmd) AddVestingAccountCommand(address, originalCoins, vestingCoins string, vestingEndTime int64) step.Option {
 	command := []string{
 		commandAddGenesisAccount,
@@ -299,10 +299,10 @@ func (c ChainCmd) AddVestingAccountCommand(address, originalCoins, vestingCoins 
 	return c.daemonCommand(command)
 }
 
-// GentxCommand 的 GentxOption
+// GentxOption for the GentxCommand
 type GentxOption func([]string) []string
 
-// GentxWithMoniker 為 gentx 命令提供 moniker 選項
+// GentxWithMoniker provides moniker option for the gentx command
 func GentxWithMoniker(moniker string) GentxOption {
 	return func(command []string) []string {
 		if len(moniker) > 0 {
@@ -312,7 +312,7 @@ func GentxWithMoniker(moniker string) GentxOption {
 	}
 }
 
-// GentxWithCommissionRate 為 gentx 命令提供佣金率選項
+// GentxWithCommissionRate provides commission rate option for the gentx command
 func GentxWithCommissionRate(commissionRate string) GentxOption {
 	return func(command []string) []string {
 		if len(commissionRate) > 0 {
@@ -322,7 +322,7 @@ func GentxWithCommissionRate(commissionRate string) GentxOption {
 	}
 }
 
-// GentxWithCommissionMaxRate 為 gentx 命令提供佣金最高費率選項
+// GentxWithCommissionMaxRate provides commission max rate option for the gentx command
 func GentxWithCommissionMaxRate(commissionMaxRate string) GentxOption {
 	return func(command []string) []string {
 		if len(commissionMaxRate) > 0 {
@@ -332,7 +332,7 @@ func GentxWithCommissionMaxRate(commissionMaxRate string) GentxOption {
 	}
 }
 
-// GentxWithCommissionMaxChangeRate 為 gentx 命令提供佣金最大變化率選項
+// GentxWithCommissionMaxChangeRate provides commission max change rate option for the gentx command
 func GentxWithCommissionMaxChangeRate(commissionMaxChangeRate string) GentxOption {
 	return func(command []string) []string {
 		if len(commissionMaxChangeRate) > 0 {
@@ -342,7 +342,7 @@ func GentxWithCommissionMaxChangeRate(commissionMaxChangeRate string) GentxOptio
 	}
 }
 
-// GentxWithMinSelfDelegation 為 gentx 命令提供最小自我委託選項
+// GentxWithMinSelfDelegation provides minimum self delegation option for the gentx command
 func GentxWithMinSelfDelegation(minSelfDelegation string) GentxOption {
 	return func(command []string) []string {
 		if len(minSelfDelegation) > 0 {
@@ -352,7 +352,7 @@ func GentxWithMinSelfDelegation(minSelfDelegation string) GentxOption {
 	}
 }
 
-// GentxWithGasPrices 為 gentx 命令提供 gas 價格選項
+// GentxWithGasPrices provides gas price option for the gentx command
 func GentxWithGasPrices(gasPrices string) GentxOption {
 	return func(command []string) []string {
 		if len(gasPrices) > 0 {
@@ -362,7 +362,7 @@ func GentxWithGasPrices(gasPrices string) GentxOption {
 	}
 }
 
-// GentxWithDetails 為 gentx 命令提供驗證器詳細信息選項
+// GentxWithDetails provides validator details option for the gentx command
 func GentxWithDetails(details string) GentxOption {
 	return func(command []string) []string {
 		if len(details) > 0 {
@@ -372,7 +372,7 @@ func GentxWithDetails(details string) GentxOption {
 	}
 }
 
-// GentxWithIdentity 為 gentx 命令提供驗證者身份選項
+// GentxWithIdentity provides validator identity option for the gentx command
 func GentxWithIdentity(identity string) GentxOption {
 	return func(command []string) []string {
 		if len(identity) > 0 {
@@ -382,7 +382,7 @@ func GentxWithIdentity(identity string) GentxOption {
 	}
 }
 
-// GentxWithWebsite 為 gentx 命令提供驗證器網站選項
+// GentxWithWebsite provides validator website option for the gentx command
 func GentxWithWebsite(website string) GentxOption {
 	return func(command []string) []string {
 		if len(website) > 0 {
@@ -392,7 +392,7 @@ func GentxWithWebsite(website string) GentxOption {
 	}
 }
 
-// GentxWithSecurityContact 為 gentx 命令提供驗證器安全聯繫人選項
+// GentxWithSecurityContact provides validator security contact option for the gentx command
 func GentxWithSecurityContact(securityContact string) GentxOption {
 	return func(command []string) []string {
 		if len(securityContact) > 0 {
@@ -410,7 +410,7 @@ func (c ChainCmd) SDKVersion() cosmosver.Version {
 	return c.sdkVersion
 }
 
-// GentxCommand 返回為鏈生成 gentx 的命令
+// GentxCommand returns the command to generate a gentx for the chain
 func (c ChainCmd) GentxCommand(
 	validatorName string,
 	selfDelegation string,
@@ -440,18 +440,18 @@ func (c ChainCmd) GentxCommand(
 			selfDelegation,
 		)
 
-		// 附加HOME客戶端選項
+		// Attach home client option
 		if c.cliHome != "" {
 			command = append(command, []string{optionHomeClient, c.cliHome}...)
 		}
 	}
 
-	// 應用用戶提供的選項
+	// Apply the options provided by the user
 	for _, applyOption := range options {
 		command = applyOption(command)
 	}
 
-	// 添加必要的 flags
+	// Add necessary flags
 	if c.sdkVersion.IsFamily(cosmosver.Stargate) {
 		command = c.attachChainID(command)
 	}
@@ -461,7 +461,7 @@ func (c ChainCmd) GentxCommand(
 	return c.daemonCommand(command)
 }
 
-// CollectGentxsCommand 返回命令將 /gentx 目錄中的 gentxs 收集到鏈的創世紀文件中
+// CollectGentxsCommand returns the command to gather the gentxs in /gentx dir into the genesis file of the chain
 func (c ChainCmd) CollectGentxsCommand() step.Option {
 	command := []string{
 		commandCollectGentxs,
@@ -469,7 +469,7 @@ func (c ChainCmd) CollectGentxsCommand() step.Option {
 	return c.daemonCommand(command)
 }
 
-// ValidateGenesisCommand 返回檢查鏈創世有效性的命令
+// ValidateGenesisCommand returns the command to check the validity of the chain genesis
 func (c ChainCmd) ValidateGenesisCommand() step.Option {
 	command := []string{
 		commandValidateGenesis,
@@ -477,7 +477,7 @@ func (c ChainCmd) ValidateGenesisCommand() step.Option {
 	return c.daemonCommand(command)
 }
 
-// ShowNodeIDCommand返回命令以打印鏈的節點的節點 ID
+// ShowNodeIDCommand returns the command to print the node ID of the node for the chain
 func (c ChainCmd) ShowNodeIDCommand() step.Option {
 	command := []string{
 		constTendermint,
@@ -486,7 +486,7 @@ func (c ChainCmd) ShowNodeIDCommand() step.Option {
 	return c.daemonCommand(command)
 }
 
-// UnsafeResetCommand返回重置區塊鏈數據庫的命令
+// UnsafeResetCommand returns the command to reset the blockchain database
 func (c ChainCmd) UnsafeResetCommand() step.Option {
 	var command []string
 
@@ -499,7 +499,7 @@ func (c ChainCmd) UnsafeResetCommand() step.Option {
 	return c.daemonCommand(command)
 }
 
-// ExportCommand 返回將區塊鏈狀態導出到創世文件的命令
+// ExportCommand returns the command to export the state of the blockchain into a genesis file
 func (c ChainCmd) ExportCommand() step.Option {
 	command := []string{
 		commandExport,
@@ -507,7 +507,7 @@ func (c ChainCmd) ExportCommand() step.Option {
 	return c.daemonCommand(command)
 }
 
-// BankSendCommand 返回用於傳輸令牌的命令。
+// BankSendCommand returns the command for transferring tokens.
 func (c ChainCmd) BankSendCommand(fromAddress, toAddress, amount string) step.Option {
 	command := []string{
 		commandTx,
@@ -540,7 +540,7 @@ func (c ChainCmd) BankSendCommand(fromAddress, toAddress, amount string) step.Op
 	return c.cliCommand(command)
 }
 
-// QueryTxCommand 返回查詢tx的命令
+// QueryTxCommand returns the command to query tx
 func (c ChainCmd) QueryTxCommand(txHash string) step.Option {
 	command := []string{
 		commandQuery,
@@ -552,7 +552,7 @@ func (c ChainCmd) QueryTxCommand(txHash string) step.Option {
 	return c.cliCommand(command)
 }
 
-// QueryTxEventsCommand 返回查詢事件的命令。
+// QueryTxEventsCommand returns the command to query events.
 func (c ChainCmd) QueryTxEventsCommand(query string) step.Option {
 	command := []string{
 		commandQuery,
@@ -573,25 +573,25 @@ func (c ChainCmd) QueryTxEventsCommand(query string) step.Option {
 	return c.cliCommand(command)
 }
 
-// LaunchpadSetConfigCommand 返回設置配置值的命令
+// LaunchpadSetConfigCommand returns the command to set config value
 func (c ChainCmd) LaunchpadSetConfigCommand(name, value string) step.Option {
 	// Check version
 	if c.isStargate() {
-		panic("Stargate 的配置命令不存在")
+		panic("config command doesn't exist for Stargate")
 	}
 	return c.launchpadSetConfigCommand(name, value)
 }
 
-// LaunchpadRestServerCommand 返回啟動 CLI REST 服務器的命令
+// LaunchpadRestServerCommand returns the command to start the CLI REST server
 func (c ChainCmd) LaunchpadRestServerCommand(apiAddress, rpcAddress string) step.Option {
 	// Check version
 	if c.isStargate() {
-		panic("rest-server Stargate 的命令不存在")
+		panic("rest-server command doesn't exist for Stargate")
 	}
 	return c.launchpadRestServerCommand(apiAddress, rpcAddress)
 }
 
-// StatusCommand 返回獲取節點狀態的命令.
+// StatusCommand returns the command that fetches node's status.
 func (c ChainCmd) StatusCommand() step.Option {
 	command := []string{
 		commandStatus,
@@ -601,17 +601,17 @@ func (c ChainCmd) StatusCommand() step.Option {
 	return c.cliCommand(command)
 }
 
-// KeyringBackend 返回底層密鑰環後端.
+// KeyringBackend returns the underlying keyring backend.
 func (c ChainCmd) KeyringBackend() KeyringBackend {
 	return c.keyringBackend
 }
 
-// KeyringPassword 返回底層密鑰環密碼.
+// KeyringPassword returns the underlying keyring password.
 func (c ChainCmd) KeyringPassword() string {
 	return c.keyringPassword
 }
 
-// attachChainID 將Chain ID 標誌附加到提供的命令
+// attachChainID appends the chain ID flag to the provided command
 func (c ChainCmd) attachChainID(command []string) []string {
 	if c.chainID != "" {
 		command = append(command, []string{optionChainID, c.chainID}...)
@@ -619,7 +619,7 @@ func (c ChainCmd) attachChainID(command []string) []string {
 	return command
 }
 
-// attachKeyringBackend 將密鑰環後端標誌附加到提供的命令
+// attachKeyringBackend appends the keyring backend flag to the provided command
 func (c ChainCmd) attachKeyringBackend(command []string) []string {
 	if c.keyringBackend != "" {
 		command = append(command, []string{optionKeyringBackend, string(c.keyringBackend)}...)
@@ -627,7 +627,7 @@ func (c ChainCmd) attachKeyringBackend(command []string) []string {
 	return command
 }
 
-// attachHome 將 home 標誌附加到提供的命令
+// attachHome appends the home flag to the provided command
 func (c ChainCmd) attachHome(command []string) []string {
 	if c.homeDir != "" {
 		command = append(command, []string{optionHome, c.homeDir}...)
@@ -635,7 +635,7 @@ func (c ChainCmd) attachHome(command []string) []string {
 	return command
 }
 
-// attachNode 將節點標誌附加到提供的命令
+// attachNode appends the node flag to the provided command
 func (c ChainCmd) attachNode(command []string) []string {
 	if c.nodeAddress != "" {
 		command = append(command, []string{optionNode, c.nodeAddress}...)
@@ -643,27 +643,27 @@ func (c ChainCmd) attachNode(command []string) []string {
 	return command
 }
 
-// isStargate 檢查命令的版本是否為星門
+// isStargate checks if the version for commands is Stargate
 func (c ChainCmd) isStargate() bool {
 	return c.sdkVersion.Family == cosmosver.Stargate
 }
 
-// daemonCommand 從提供的命令返回守護程序命令
+// daemonCommand returns the daemon command from the provided command
 func (c ChainCmd) daemonCommand(command []string) step.Option {
 	return step.Exec(c.appCmd, c.attachHome(command)...)
 }
 
-// cliCommand 從提供的命令返回 cli 命令
-// cli 是星際之門的守護進程
+// cliCommand returns the cli command from the provided command
+// cli is the daemon for Stargate
 func (c ChainCmd) cliCommand(command []string) step.Option {
-	//檢查版本
+	// Check version
 	if c.isStargate() {
 		return step.Exec(c.appCmd, c.attachHome(command)...)
 	}
 	return step.Exec(c.cliCmd, c.attachCLIHome(command)...)
 }
 
-// KeyringBackendFromString 從其字符串返回密鑰環後端
+// KeyringBackendFromString returns the keyring backend from its string
 func KeyringBackendFromString(kb string) (KeyringBackend, error) {
 	existingKeyringBackend := map[KeyringBackend]bool{
 		KeyringBackendUnspecified: true,
@@ -677,5 +677,5 @@ func KeyringBackendFromString(kb string) (KeyringBackend, error) {
 	if _, ok := existingKeyringBackend[KeyringBackend(kb)]; ok {
 		return KeyringBackend(kb), nil
 	}
-	return KeyringBackendUnspecified, fmt.Errorf("無法識別的密鑰環後端: %s", kb)
+	return KeyringBackendUnspecified, fmt.Errorf("unrecognized keyring backend: %s", kb)
 }

@@ -17,12 +17,12 @@ const flagSecret = "secret"
 func NewAccountImport() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "import [name]",
-		Short: "使用助記詞或私鑰導入賬戶",
+		Short: "Import an account by using a mnemonic or a private key",
 		Args:  cobra.ExactArgs(1),
 		RunE:  accountImportHandler,
 	}
 
-	c.Flags().String(flagSecret, "", "您的助記詞或私鑰的路徑（使用交互模式來安全地傳遞您的助記詞)")
+	c.Flags().String(flagSecret, "", "Your mnemonic or path to your private key (use interactive mode instead to securely pass your mnemonic)")
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 	c.Flags().AddFlagSet(flagSetAccountImportExport())
 
@@ -37,7 +37,7 @@ func accountImportHandler(cmd *cobra.Command, args []string) error {
 
 	if secret == "" {
 		if err := cliquiz.Ask(
-			cliquiz.NewQuestion("您的助記符或私鑰路徑", &secret, cliquiz.Required())); err != nil {
+			cliquiz.NewQuestion("Your mnemonic or path to your private key", &secret, cliquiz.Required())); err != nil {
 			return err
 		}
 	}
@@ -50,7 +50,7 @@ func accountImportHandler(cmd *cobra.Command, args []string) error {
 	if !bip39.IsMnemonicValid(secret) {
 		privKey, err := os.ReadFile(secret)
 		if os.IsNotExist(err) {
-			return errors.New("助記符無效或在路徑中找不到私鑰")
+			return errors.New("mnemonic is not valid or private key not found at path")
 		}
 		if err != nil {
 			return err
@@ -69,6 +69,6 @@ func accountImportHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("帳戶 %q 已匯入.\n", name)
+	fmt.Printf("Account %q imported.\n", name)
 	return nil
 }

@@ -8,11 +8,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network"
 )
 
-// NewNetworkCampaignShow 返回一個新命令以在 Ignite 上顯示已發布的活動
+// NewNetworkCampaignShow returns a new command to show published campaign on Ignite
 func NewNetworkCampaignShow() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "show [campaign-id]",
-		Short: "顯示已發布的活動",
+		Short: "Show published campaign",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkCampaignShowHandler,
 	}
@@ -23,7 +23,7 @@ func networkCampaignShowHandler(cmd *cobra.Command, args []string) error {
 	session := cliui.New()
 	defer session.Cleanup()
 
-	// 解析活動 ID
+	// parse campaign ID
 	campaignID, err := network.ParseID(args[0])
 	if err != nil {
 		return err

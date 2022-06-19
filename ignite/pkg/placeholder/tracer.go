@@ -20,17 +20,17 @@ func (set iterableStringSet) Add(item string) {
 	set[item] = struct{}{}
 }
 
-// Option用於配置會話。
+// Option for configuring session.
 type Option func(*Tracer)
 
-// WithAdditionalInfo 將信息附加到驗證錯誤。
+// WithAdditionalInfo will append info to the validation error.
 func WithAdditionalInfo(info string) Option {
 	return func(s *Tracer) {
 		s.additionalInfo = info
 	}
 }
 
-// New 使用提供的選項實例化 Session。
+// New instantiates Session with provided options.
 func New(opts ...Option) *Tracer {
 	s := &Tracer{missing: iterableStringSet{}}
 	for _, opt := range opts {
@@ -46,14 +46,14 @@ type Replacer interface {
 	AppendMiscError(miscError string)
 }
 
-// Tracer跟踪丟失的佔位符或與文件修改相關的其他問題。
+// Tracer keeps track of missing placeholders or other issues related to file modification.
 type Tracer struct {
 	missing        iterableStringSet
 	miscErrors     []string
 	additionalInfo string
 }
 
-// ReplaceAll用替換字符串替換內容中的所有佔位符。
+// ReplaceAll replace all placeholders in content with replacement string.
 func (t *Tracer) ReplaceAll(content, placeholder, replacement string) string {
 	if strings.Count(content, placeholder) == 0 {
 		t.missing.Add(placeholder)
@@ -62,10 +62,10 @@ func (t *Tracer) ReplaceAll(content, placeholder, replacement string) string {
 	return strings.ReplaceAll(content, placeholder, replacement)
 }
 
-// Replace 內容中的佔位符，替換字符串一次。
+// Replace placeholder in content with replacement string once.
 func (t *Tracer) Replace(content, placeholder, replacement string) string {
-	// 注意（dshulyak）我們將計算兩次。一次在這裡，第二次在字符串中。替換
-	// 如果結果是問題，請從 strings.Replace 複製代碼。
+	// NOTE(dshulyak) we will count twice. once here and second time in strings.Replace
+	// if it turns out to be an issue, copy the code from strings.Replace.
 	if strings.Count(content, placeholder) == 0 {
 		t.missing.Add(placeholder)
 		return content
@@ -73,7 +73,7 @@ func (t *Tracer) Replace(content, placeholder, replacement string) string {
 	return strings.Replace(content, placeholder, replacement, 1)
 }
 
-// 僅當內容中尚未找到替換時，ReplaceOnce 才會替換內容中的佔位符。
+// ReplaceOnce will replace placeholder in content only if replacement is not already found in content.
 func (t *Tracer) ReplaceOnce(content, placeholder, replacement string) string {
 	if !strings.Contains(content, replacement) {
 		return t.Replace(content, placeholder, replacement)
@@ -81,14 +81,14 @@ func (t *Tracer) ReplaceOnce(content, placeholder, replacement string) string {
 	return content
 }
 
-// AppendMiscError 允許在文件修改期間跟踪與丟失佔位符無關的錯誤
+// AppendMiscError allows to track errors not related to missing placeholders during file modification
 func (t *Tracer) AppendMiscError(miscError string) {
 	t.miscErrors = append(t.miscErrors, miscError)
 }
 
-// Err 如果在執行期間缺少任何占位符。
+// Err if any of the placeholders were missing during execution.
 func (t *Tracer) Err() error {
-	// miscellaneous 錯誤表示阻止與丟失佔位符無關的源修改的錯誤
+	// miscellaneous errors represent errors preventing source modification not related to missing placeholder
 	var miscErrors error
 	if len(t.miscErrors) > 0 {
 		miscErrors = &ValidationMiscError{
@@ -108,6 +108,6 @@ func (t *Tracer) Err() error {
 		}
 	}
 
-	// 如果沒有丟失佔位符但仍然有雜項錯誤，則返回它們
+	// if not missing placeholder but still miscellaneous errors, return them
 	return miscErrors
 }

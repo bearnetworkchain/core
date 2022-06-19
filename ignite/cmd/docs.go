@@ -11,7 +11,7 @@ import (
 func NewDocs() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "docs",
-		Short: "顯示 Ignite CLI 文檔",
+		Short: "Show Ignite CLI docs",
 		Args:  cobra.NoArgs,
 		RunE:  docsHandler,
 	}

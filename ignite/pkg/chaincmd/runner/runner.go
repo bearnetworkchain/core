@@ -1,4 +1,4 @@
-// chaincmdrunner 提供對區塊鏈命令的高級訪問。
+// Package chaincmdrunner provides a high level access to a blockchain's commands.
 package chaincmdrunner
 
 import (
@@ -17,45 +17,45 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/truncatedbuffer"
 )
 
-// Runner 提供對區塊鏈命令的高級訪問。
+// Runner provides a high level access to a blockchain's commands.
 type Runner struct {
 	chainCmd                      chaincmd.ChainCmd
 	stdout, stderr                io.Writer
 	daemonLogPrefix, cliLogPrefix string
 }
 
-// 選項配置 Runner。
+// Option configures Runner.
 type Option func(r *Runner)
 
-// 標準輸出為執行的命令設置標準輸出。
+// Stdout sets stdout for executed commands.
 func Stdout(w io.Writer) Option {
 	return func(runner *Runner) {
 		runner.stdout = w
 	}
 }
 
-// DaemonLogPrefix 是添加到應用程序的守護程序日誌的前綴。
+// DaemonLogPrefix is a prefix added to app's daemon logs.
 func DaemonLogPrefix(prefix string) Option {
 	return func(runner *Runner) {
 		runner.daemonLogPrefix = prefix
 	}
 }
 
-// CLILogPrefix 是添加到應用程序 cli 日誌的前綴。
+// CLILogPrefix is a prefix added to app's cli logs.
 func CLILogPrefix(prefix string) Option {
 	return func(runner *Runner) {
 		runner.cliLogPrefix = prefix
 	}
 }
 
-// Stderr 為執行的命令設置標準錯誤。
+// Stderr sets stderr for executed commands.
 func Stderr(w io.Writer) Option {
 	return func(runner *Runner) {
 		runner.stderr = w
 	}
 }
 
-// New 使用 cc 和 options 創建一個新的 Runner.
+// New creates a new Runner with cc and options.
 func New(ctx context.Context, chainCmd chaincmd.ChainCmd, options ...Option) (Runner, error) {
 	runner := Runner{
 		chainCmd: chainCmd,
@@ -65,8 +65,8 @@ func New(ctx context.Context, chainCmd chaincmd.ChainCmd, options ...Option) (Ru
 
 	applyOptions(&runner, options)
 
-	// 自動檢測鏈 id 並將其應用於 chaincmd 如果是 auto
-	// 啟用檢測。
+	// auto detect the chain id and get it applied to chaincmd if auto
+	// detection is enabled.
 	if chainCmd.IsAutoChainIDDetectionEnabled() {
 		status, err := runner.Status(ctx)
 		if err != nil {
@@ -85,37 +85,37 @@ func applyOptions(r *Runner, options []Option) {
 	}
 }
 
-// Copy 通過使用給定選項覆蓋其選項來複製 runner。
+// Copy makes a copy of runner by overwriting its options with given options.
 func (r Runner) Copy(options ...Option) Runner {
 	applyOptions(&r, options)
 
 	return r
 }
 
-// Cmd 返回底層鏈 cmd。
+// Cmd returns underlying chain cmd.
 func (r Runner) Cmd() chaincmd.ChainCmd {
 	return r.chainCmd
 }
 
 type runOptions struct {
-	// WrappedStdErrMaxLen 確定打包錯誤日誌的最大長度
-	// 此選項用於長時間運行的命令，以防止包含 stderr 的緩衝區變得太大
-	// 0 可以用於沒有最大長度
+	// wrappedStdErrMaxLen determines the maximum length of the wrapped error logs
+	// this option is used for long running command to prevent the buffer containing stderr getting too big
+	// 0 can be used for no maximum length
 	wrappedStdErrMaxLen int
 
-	// stdout 和 stderr 用於收集命令輸出的副本。
+	// stdout and stderr used to collect a copy of command's outputs.
 	stdout, stderr io.Writer
 
-	// stdin 定義命令的輸入
+	// stdin defines input for the command
 	stdin io.Reader
 }
 
-// run 執行命令。
+// run executes a command.
 func (r Runner) run(ctx context.Context, runOptions runOptions, stepOptions ...step.Option) error {
 	var (
-		// 我們使用截斷的緩衝區來防止內存洩漏
-		// 這是因為 Stargate 應用當前正在向 StdErr 發送日誌
-		// 因此，如果應用程序成功啟動，寫入的日誌會變得很長
+		// we use a truncated buffer to prevent memory leak
+		// this is because Stargate app currently send logs to StdErr
+		// therefore if the app successfully starts, the written logs can become extensive
 		errb = truncatedbuffer.NewTruncatedBuffer(runOptions.wrappedStdErrMaxLen)
 
 		// add optional prefixes to output streams.
@@ -127,7 +127,7 @@ func (r Runner) run(ctx context.Context, runOptions runOptions, stepOptions ...s
 		)
 	)
 
-	// 設置標準輸出
+	// Set standard outputs
 	if runOptions.stdout != nil {
 		stdout = io.MultiWriter(stdout, runOptions.stdout)
 	}
@@ -142,7 +142,7 @@ func (r Runner) run(ctx context.Context, runOptions runOptions, stepOptions ...s
 		cmdrunner.DefaultStderr(stderr),
 	}
 
-	// 如果已定義，則設置標準輸入
+	// Set standard input if defined
 	if runOptions.stdin != nil {
 		runnerOptions = append(runnerOptions, cmdrunner.DefaultStdin(runOptions.stdin))
 	}
@@ -160,13 +160,13 @@ func newBuffer() *buffer {
 	}
 }
 
-//buffer 是一個帶有附加功能的 bytes.Buffer。
+// buffer is a bytes.Buffer with additional features.
 type buffer struct {
 	*bytes.Buffer
 }
 
-// JSONEnsuredBytes 確保返回字節的編碼格式始終是
-// JSON 即使寫入的數據最初是用 YAML 編碼的。
+// JSONEnsuredBytes ensures that encoding format for returned bytes is always
+// JSON even if the written data is originally encoded in YAML.
 func (b *buffer) JSONEnsuredBytes() ([]byte, error) {
 	bytes := b.Buffer.Bytes()
 

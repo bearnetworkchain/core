@@ -46,9 +46,9 @@ const (
 	LogVerbose
 )
 
-//Chain 為 Cosmos SDK 區塊鏈提供編程訪問和工具。
+// Chain provides programatic access and tools for a Cosmos SDK blockchain.
 type Chain struct {
-	// 應用程序保存有關區塊鏈應用程序的信息。
+	// app holds info about blockchain app.
 	app App
 
 	options chainOptions
@@ -62,78 +62,78 @@ type Chain struct {
 	serveRefresher chan struct{}
 	served         bool
 
-	// protoBuiltAtLeastOnce 表示應用程序的原型生成至少生成一次。
+	// protoBuiltAtLeastOnce indicates that app's proto generation at least made once.
 	protoBuiltAtLeastOnce bool
 
 	stdout, stderr io.Writer
 }
 
-// chainOptions 包含覆蓋鏈默認值的用戶給定選項。
+// chainOptions holds user given options that overwrites chain's defaults.
 type chainOptions struct {
-	// chainID is鏈的 ID。
+	// chainID is the chain's id.
 	chainID string
 
-	// homePath鏈的配置目錄。
+	// homePath of the chain's config dir.
 	homePath string
 
-	// 如果未在配置中指定，則命令使用的密鑰環後端
+	// keyring backend used by commands if not specified in configuration
 	keyringBackend chaincmd.KeyringBackend
 
-	// isThirdPartyModuleCodegen 指示是否應該生成 proto 代碼
-	// 對於第 3 方模塊。 SDK 模塊也被視為第 3 方。
+	// isThirdPartyModuleCodegen indicates if proto code generation should be made
+	// for 3rd party modules. SDK modules are also considered as a 3rd party.
 	isThirdPartyModuleCodegenEnabled bool
 
-	// 自定義配置文件的路徑
+	// path of a custom config file
 	ConfigFile string
 }
 
-// 選項配置鏈。
+// Option configures Chain.
 type Option func(*Chain)
 
-//LogLevel 設置日誌記錄級別。
+// LogLevel sets logging level.
 func LogLevel(level LogLvl) Option {
 	return func(c *Chain) {
 		c.logLevel = level
 	}
 }
 
-//ID 用給定的 id 替換鏈的 id。
+// ID replaces chain's id with given id.
 func ID(id string) Option {
 	return func(c *Chain) {
 		c.options.chainID = id
 	}
 }
 
-// HomePath用給定路徑替換鏈的配置主路徑。
+// HomePath replaces chain's configuration home path with given path.
 func HomePath(path string) Option {
 	return func(c *Chain) {
 		c.options.homePath = path
 	}
 }
 
-// KeyringBackend指定用於鏈命令的密鑰環後端
+// KeyringBackend specifies the keyring backend to use for the chain command
 func KeyringBackend(keyringBackend chaincmd.KeyringBackend) Option {
 	return func(c *Chain) {
 		c.options.keyringBackend = keyringBackend
 	}
 }
 
-// ConfigFile指定要使用的自定義配置文件
+// ConfigFile specifies a custom config file to use
 func ConfigFile(configFile string) Option {
 	return func(c *Chain) {
 		c.options.ConfigFile = configFile
 	}
 }
 
-// EnableThirdPartyModuleCodegen 啟用第三方模塊的代碼生成，
-// 包括 SDK。
+// EnableThirdPartyModuleCodegen enables code generation for third party modules,
+// including the SDK.
 func EnableThirdPartyModuleCodegen() Option {
 	return func(c *Chain) {
 		c.options.isThirdPartyModuleCodegenEnabled = true
 	}
 }
 
-// New 使用其源位於路徑的選項初始化一個新鏈。
+// New initializes a new Chain with options that its source lives at path.
 func New(path string, options ...Option) (*Chain, error) {
 	app, err := NewAppAt(path)
 	if err != nil {
@@ -148,7 +148,7 @@ func New(path string, options ...Option) (*Chain, error) {
 		stderr:         io.Discard,
 	}
 
-	// 應用選項
+	// Apply the options
 	for _, apply := range options {
 		apply(c)
 	}
@@ -172,7 +172,7 @@ func New(path string, options ...Option) (*Chain, error) {
 		return nil, sperrors.ErrOnlyStargateSupported
 	}
 
-	// 根據鏈的版本初始化插件
+	// initialize the plugin depending on the version of the chain
 	c.plugin = c.pickPlugin()
 
 	return c, nil
@@ -191,8 +191,8 @@ func (c *Chain) appVersion() (v version, err error) {
 	return v, nil
 }
 
-// RPCPublicAddress 指向 Tendermint RPC 的公共地址，這是由
-// 中繼器相關操作的其他鏈。
+// RPCPublicAddress points to the public address of Tendermint RPC, this is shared by
+// other chains for relayer related actions.
 func (c *Chain) RPCPublicAddress() (string, error) {
 	rpcAddress := os.Getenv("RPC_ADDRESS")
 	if rpcAddress == "" {
@@ -205,8 +205,8 @@ func (c *Chain) RPCPublicAddress() (string, error) {
 	return rpcAddress, nil
 }
 
-// ConfigPath 返回鏈的配置路徑
-// 空字符串表示鏈沒有定義的配置
+// ConfigPath returns the config path of the chain
+// Empty string means that the chain has no defined config
 func (c *Chain) ConfigPath() string {
 	if c.options.ConfigFile != "" {
 		return c.options.ConfigFile
@@ -218,7 +218,7 @@ func (c *Chain) ConfigPath() string {
 	return path
 }
 
-// Config 返回鏈的配置
+// Config returns the config of the chain
 func (c *Chain) Config() (chainconfig.Config, error) {
 	configPath := c.ConfigPath()
 	if configPath == "" {
@@ -227,14 +227,14 @@ func (c *Chain) Config() (chainconfig.Config, error) {
 	return chainconfig.ParseFile(configPath)
 }
 
-// ID 返回鏈的 id。
+// ID returns the chain's id.
 func (c *Chain) ID() (string, error) {
 	// chainID in App has the most priority.
 	if c.options.chainID != "" {
 		return c.options.chainID, nil
 	}
 
-	// 否則定義的用途config.yml
+	// otherwise uses defined in config.yml
 	chainConfig, err := c.Config()
 	if err != nil {
 		return "", err
@@ -244,11 +244,11 @@ func (c *Chain) ID() (string, error) {
 		return genid.(string), nil
 	}
 
-	// 默認使用應用名稱。
+	// use app name by default.
 	return c.app.N(), nil
 }
 
-// ChainID 返回默認網絡鏈的 id。
+// ChainID returns the default network chain's id.
 func (c *Chain) ChainID() (string, error) {
 	chainID, err := c.ID()
 	if err != nil {
@@ -257,12 +257,12 @@ func (c *Chain) ChainID() (string, error) {
 	return chainid.NewGenesisChainID(chainID, 1), nil
 }
 
-// Name 返回鏈的名稱
+// Name returns the chain's name
 func (c *Chain) Name() string {
 	return c.app.N()
 }
 
-// Binary 返回應用程序的默認 (appd) 二進製文件的名稱。
+// Binary returns the name of app's default (appd) binary.
 func (c *Chain) Binary() (string, error) {
 	conf, err := c.Config()
 	if err != nil {
@@ -276,17 +276,17 @@ func (c *Chain) Binary() (string, error) {
 	return c.app.D(), nil
 }
 
-// SetHome 設置鍊主目錄。
+// SetHome sets the chain home directory.
 func (c *Chain) SetHome(home string) {
 	c.options.homePath = home
 }
 
-// Home 返回區塊鏈節點的主目錄。
+// Home returns the blockchain node's home dir.
 func (c *Chain) Home() (string, error) {
-	// 檢查是否為應用明確定義了主頁
+	// check if home is explicitly defined for the app
 	home := c.options.homePath
 	if home == "" {
-		// 否則返回默認主頁
+		// return default home otherwise
 		var err error
 		home, err = c.DefaultHome()
 		if err != nil {
@@ -295,13 +295,13 @@ func (c *Chain) Home() (string, error) {
 
 	}
 
-	// 擴展環境變量 home
+	// expand environment variables in home
 	home = os.ExpandEnv(home)
 
 	return home, nil
 }
 
-// DefaultHome應用程序中未指定時返回區塊鏈節點的默認主目錄
+// DefaultHome returns the blockchain node's default home dir when not specified in the app
 func (c *Chain) DefaultHome() (string, error) {
 	// check if home is defined in config
 	config, err := c.Config()
@@ -315,7 +315,7 @@ func (c *Chain) DefaultHome() (string, error) {
 	return c.plugin.Home(), nil
 }
 
-// DefaultGentxPath返回應用程序的默認 gentx.json 路徑。
+// DefaultGentxPath returns default gentx.json path of the app.
 func (c *Chain) DefaultGentxPath() (string, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -324,7 +324,7 @@ func (c *Chain) DefaultGentxPath() (string, error) {
 	return filepath.Join(home, "config/gentx/gentx.json"), nil
 }
 
-// GenesisPath返回應用程序的 genesis.json 路徑。
+// GenesisPath returns genesis.json path of the app.
 func (c *Chain) GenesisPath() (string, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -333,7 +333,7 @@ func (c *Chain) GenesisPath() (string, error) {
 	return filepath.Join(home, "config/genesis.json"), nil
 }
 
-// GentxsPath 返回為應用程序存儲 gentxs 的目錄。
+// GentxsPath returns the directory where gentxs are stored for the app.
 func (c *Chain) GentxsPath() (string, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -342,7 +342,7 @@ func (c *Chain) GentxsPath() (string, error) {
 	return filepath.Join(home, "config/gentx"), nil
 }
 
-// AppTOMLPath 返回應用程序的 app.toml 路徑。
+// AppTOMLPath returns app.toml path of the app.
 func (c *Chain) AppTOMLPath() (string, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -351,7 +351,7 @@ func (c *Chain) AppTOMLPath() (string, error) {
 	return filepath.Join(home, "config/app.toml"), nil
 }
 
-// ConfigTOMLPath 返回應用程序的 config.toml 路徑。
+// ConfigTOMLPath returns config.toml path of the app.
 func (c *Chain) ConfigTOMLPath() (string, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -360,7 +360,7 @@ func (c *Chain) ConfigTOMLPath() (string, error) {
 	return filepath.Join(home, "config/config.toml"), nil
 }
 
-// ClientTOMLPath 返回應用程序的 client.toml 路徑。
+// ClientTOMLPath returns client.toml path of the app.
 func (c *Chain) ClientTOMLPath() (string, error) {
 	home, err := c.Home()
 	if err != nil {
@@ -369,7 +369,7 @@ func (c *Chain) ClientTOMLPath() (string, error) {
 	return filepath.Join(home, "config/client.toml"), nil
 }
 
-// KeyringBackend 返回為鏈選擇的密鑰環後端。
+// KeyringBackend returns the keyring backend chosen for the chain.
 func (c *Chain) KeyringBackend() (chaincmd.KeyringBackend, error) {
 	// 1st.
 	if c.options.keyringBackend != "" {
@@ -415,7 +415,7 @@ func (c *Chain) KeyringBackend() (chaincmd.KeyringBackend, error) {
 	return chaincmd.KeyringBackendTest, nil
 }
 
-// Commands 返回運行者在鏈的二進製文件上執行命令
+// Commands returns the runner execute commands on the chain's binary
 func (c *Chain) Commands(ctx context.Context) (chaincmdrunner.Runner, error) {
 	id, err := c.ID()
 	if err != nil {

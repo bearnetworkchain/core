@@ -9,22 +9,22 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// NewScaffoldFlutter 為鏈構建了一個 Flutter 應用程序。
+// NewScaffoldFlutter scaffolds a Flutter app for a chain.
 func NewScaffoldFlutter() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "flutter",
-		Short: "適用於您的鏈生態的 Flutter 應用",
+		Short: "A Flutter app for your chain",
 		Args:  cobra.NoArgs,
 		RunE:  scaffoldFlutterHandler,
 	}
 
-	c.Flags().StringP(flagPath, "p", "./flutter", "Flutter 應用的腳手架內容的路徑")
+	c.Flags().StringP(flagPath, "p", "./flutter", "path to scaffold content of the Flutter app")
 
 	return c
 }
 
 func scaffoldFlutterHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("創建中,請耐心等待...")
+	s := clispinner.New().SetText("Scaffolding...")
 	defer s.Stop()
 
 	path := flagGetPath(cmd)
@@ -33,7 +33,7 @@ func scaffoldFlutterHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	s.Stop()
-	fmt.Printf("\n🎉 搭建了一個 Flutter 應用程序.\n\n")
+	fmt.Printf("\n🎉 Scaffold a Flutter app.\n\n")
 
 	return nil
 }

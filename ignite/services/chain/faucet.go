@@ -15,19 +15,19 @@ import (
 )
 
 var (
-	// ErrFaucetIsNotEnabled在 config.yml 中未啟用水龍頭時返回。
-	ErrFaucetIsNotEnabled = errors.New("config.yml 中未啟用水龍頭")
+	// ErrFaucetIsNotEnabled is returned when faucet is not enabled in the config.yml.
+	ErrFaucetIsNotEnabled = errors.New("faucet is not enabled in the config.yml")
 
-	// ErrFaucetAccountDoesNotExist 當 config.yml 中指定的水龍頭賬戶不存在時返回。
-	ErrFaucetAccountDoesNotExist = errors.New("指定的帳戶（faucet.name）不存在")
+	// ErrFaucetAccountDoesNotExist returned when specified faucet account in the config.yml does not exist.
+	ErrFaucetAccountDoesNotExist = errors.New("specified account (faucet.name) does not exist")
 )
 
 var (
 	envAPIAddress = os.Getenv("API_ADDRESS")
 )
 
-// Faucet 返回鏈的水龍頭，如果水龍頭返回錯誤
-// 配置錯誤或根本未配置（未啟用）。
+// Faucet returns the faucet for the chain or an error if the faucet
+// configuration is wrong or not configured (not enabled) at all.
 func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 	id, err := c.ID()
 	if err != nil {
@@ -44,7 +44,7 @@ func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 		return cosmosfaucet.Faucet{}, err
 	}
 
-	// 驗證 config.yml 中的水龍頭初始化是否正確。
+	// validate if the faucet initialization in the config.yml is correct.
 	if conf.Faucet.Name == nil {
 		return cosmosfaucet.Faucet{}, ErrFaucetIsNotEnabled
 	}
@@ -56,7 +56,7 @@ func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 		return cosmosfaucet.Faucet{}, err
 	}
 
-	// 構建水龍頭選項。
+	// construct faucet options.
 	apiAddress := conf.Host.API
 	if envAPIAddress != "" {
 		apiAddress = envAPIAddress
@@ -64,7 +64,7 @@ func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 
 	apiAddress, err = xurl.HTTP(apiAddress)
 	if err != nil {
-		return cosmosfaucet.Faucet{}, fmt.Errorf("無效的主機 api 地址格式: %w", err)
+		return cosmosfaucet.Faucet{}, fmt.Errorf("invalid host api address format: %w", err)
 	}
 
 	faucetOptions := []cosmosfaucet.Option{
@@ -73,7 +73,7 @@ func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 		cosmosfaucet.OpenAPI(apiAddress),
 	}
 
-	// 解析硬幣以作為硬幣傳遞給水龍頭。
+	// parse coins to pass to the faucet as coins.
 	for _, coin := range conf.Faucet.Coins {
 		parsedCoin, err := sdk.ParseCoinNormalized(coin)
 		if err != nil {
@@ -82,7 +82,7 @@ func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 
 		var amountMax uint64
 
-		// 找出這枚硬幣的最大金額。
+		// find out the max amount for this coin.
 		for _, coinMax := range conf.Faucet.CoinsMax {
 			parsedMax, err := sdk.ParseCoinNormalized(coinMax)
 			if err != nil {
@@ -106,6 +106,6 @@ func (c *Chain) Faucet(ctx context.Context) (cosmosfaucet.Faucet, error) {
 		faucetOptions = append(faucetOptions, cosmosfaucet.RefreshWindow(rateLimitWindow))
 	}
 
-	// 使用選項初始化水龍頭並返回。
+	// init the faucet with options and return.
 	return cosmosfaucet.New(ctx, commands, faucetOptions...)
 }

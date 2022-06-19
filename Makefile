@@ -1,6 +1,6 @@
 #! /usr/bin/make -f
 
-#項目變量。
+# Project variables.
 PROJECT_NAME = ignite
 DATE := $(shell date '+%Y-%m-%dT%H:%M:%S')
 FIND_ARGS := -name '*.go' -type f -not -name '*.pb.go'
@@ -10,19 +10,19 @@ LD_FLAGS = -X github.com/ignite-hq/cli/ignite/version.Head='$(HEAD)' \
 BUILD_FLAGS = -mod=readonly -ldflags='$(LD_FLAGS)'
 BUILD_FOLDER = ./dist
 
-## install:安裝 de 二進製文件。
+## install: Install de binary.
 install:
-	@echo 安裝熊網鏈...
+	@echo Installing Ignite CLI...
 	@go install $(BUILD_FLAGS) ./...
 	@ignite version
 
-## build:構建二進製文件。
+## build: Build the binary.
 build:
-	@echo 建立熊網鏈...
+	@echo Building Ignite CLI...
 	@-mkdir -p $(BUILD_FOLDER) 2> /dev/null
 	@go build $(BUILD_FLAGS) -o $(BUILD_FOLDER) ./...
 
-## clean: 清理構建文件。還在內部運行`go clean`。
+## clean: Clean build files. Also runs `go clean` internally.
 clean:
 	@echo Cleaning build cache...
 	@-rm -rf $(BUILD_FOLDER) 2> /dev/null
@@ -33,34 +33,34 @@ govet:
 	@echo Running go vet...
 	@go vet ./...
 
-## format: 運行霍夫曼。
+## format: Run gofmt.
 format:
 	@echo Formatting...
 	@find . $(FIND_ARGS) | xargs gofmt -d -s
 	@find . $(FIND_ARGS) | xargs goimports -w -local github.com/ignite-hq/cli
 
-## lint：運行Golang CI Lint。
+## lint: Run Golang CI Lint.
 lint:
 	@echo Running gocilint...
 	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.45.2
 	@golangci-lint run --out-format=tab --issues-exit-code=0
 
-## test-unit：運行單元測試。
+## test-unit: Run the unit tests.
 test-unit:
 	@echo Running unit tests...
 	@go test -race -failfast -v ./ignite/...
 
-## test-integration：運行集成測試。
+## test-integration: Run the integration tests.
 test-integration: install
 	@echo Running integration tests...
 	@go test -race -failfast -v -timeout 60m ./integration/...
 
-## 測試：運行單元和集成測試。
+## test: Run unit and integration tests.
 test: govet test-unit test-integration
 
 help: Makefile
 	@echo
-	@echo " 選擇一個命令運行 "$(PROJECT_NAME)", 或者只是運行'make'進行"install"
+	@echo " Choose a command run in "$(PROJECT_NAME)", or just run 'make' for install"
 	@echo
 	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
 	@echo

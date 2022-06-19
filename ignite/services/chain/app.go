@@ -7,14 +7,14 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
 )
 
-// 應用保存有關鏈的信息。
+// App keeps info about chain.
 type App struct {
 	Name       string
 	Path       string
 	ImportPath string
 }
 
-// NewAppAt 從位於 path 的區塊鏈源代碼創建一個應用程序。
+// NewAppAt creates an App from the blockchain source code located at path.
 func NewAppAt(path string) (App, error) {
 	p, appPath, err := gomodulepath.Find(path)
 	if err != nil {
@@ -27,22 +27,22 @@ func NewAppAt(path string) (App, error) {
 	}, nil
 }
 
-// N 返回不帶破折號的應用名稱。
+// N returns app name without dashes.
 func (a App) N() string {
 	return strings.ReplaceAll(a.Name, "-", "")
 }
 
-// D 返回應用程序名稱。
+// D returns appd name.
 func (a App) D() string {
 	return a.Name + "d"
 }
 
-// ND 返回無破折號的應用程序名稱。
+// ND returns no-dash appd name.
 func (a App) ND() string {
 	return a.N() + "d"
 }
 
-// Root 返回app的根路徑。
+// Root returns the root path of app.
 func (a App) Root() string {
 	path, _ := filepath.Abs(a.Path)
 	return path

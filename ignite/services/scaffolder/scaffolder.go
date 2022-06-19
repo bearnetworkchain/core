@@ -1,5 +1,5 @@
-// Package scaffolder 初始化 Ignite CLI 應用程序並修改現有應用程序
-// 稍後添加更多功能。
+// Package scaffolder initializes Ignite CLI apps and modifies existing ones
+// to add more features in a later time.
 package scaffolder
 
 import (
@@ -20,19 +20,19 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
 )
 
-// Scaffolder是 Ignite CLI 應用程序腳手架。
+// Scaffolder is Ignite CLI app scaffolder.
 type Scaffolder struct {
-	// 鏈的版本
+	// Version of the chain
 	Version cosmosver.Version
 
-	// 應用程序的路徑。
+	// path of the app.
 	path string
 
-	// modpath表示應用的 go 模塊路徑。
+	// modpath represents the go module path of the app.
 	modpath gomodulepath.Path
 }
 
-// App為現有應用程序創建一個新的腳手架。
+// App creates a new scaffolder for an existent app.
 func App(path string) (Scaffolder, error) {
 	path, err := filepath.Abs(path)
 	if err != nil {
@@ -98,7 +98,7 @@ func protoc(cacheStorage cache.Storage, projectPath, gomodPath string) error {
 		cosmosgen.IncludeDirs(conf.Build.Proto.ThirdPartyPaths),
 	}
 
-	// generate 如果啟用了 Vuex 代碼，也是如此。
+	// generate Vuex code as well if it is enabled.
 	if conf.Client.Vuex.Path != "" {
 		storeRootPath := filepath.Join(projectPath, conf.Client.Vuex.Path, "generated")
 

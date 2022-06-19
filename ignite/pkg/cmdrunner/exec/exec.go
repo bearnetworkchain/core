@@ -14,7 +14,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
 )
 
-// ExitError 是 exec.ExitError 的別名
+// ExitError is an alias to exec.ExitError
 type ExitError = exec.ExitError
 
 type execConfig struct {
@@ -36,7 +36,7 @@ func IncludeStdLogsToError() Option {
 	}
 }
 
-// Exec executes 帶有 args 的命令，它是基本命令執行的快捷方式。
+// Exec executes a command with args, it's a shortcut func for basic command executions.
 func Exec(ctx context.Context, fullCommand []string, options ...Option) error {
 	errb := &bytes.Buffer{}
 	logs := &bytes.Buffer{}
@@ -66,11 +66,11 @@ func Exec(ctx context.Context, fullCommand []string, options ...Option) error {
 	return nil
 }
 
-// Error 提供來自已執行程序的詳細錯誤。
+// Error provides detailed errors from the executed program.
 type Error struct {
 	Err                   error
 	Command               string
-	StdLogs               string // 從代碼生成工具收集的日誌。
+	StdLogs               string // collected logs from code generation tools.
 	includeStdLogsToError bool
 }
 
@@ -79,7 +79,7 @@ func (e *Error) Unwrap() error {
 }
 
 func (e *Error) Error() string {
-	message := fmt.Sprintf("運行命令時出錯 %s: %s", e.Command, e.Err.Error())
+	message := fmt.Sprintf("error while running command %s: %s", e.Command, e.Err.Error())
 	if e.includeStdLogsToError && strings.TrimSpace(e.StdLogs) != "" {
 		return fmt.Sprintf("%s\n\n%s", message, e.StdLogs)
 	}

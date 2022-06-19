@@ -16,46 +16,46 @@ import (
 	modulecreate "github.com/ignite-hq/cli/ignite/templates/module/create"
 )
 
-// messageOptions表示消息腳手架的配置
+// messageOptions represents configuration for the message scaffolding
 type messageOptions struct {
 	description       string
 	signer            string
 	withoutSimulation bool
 }
 
-// newMessageOptions返回帶有默認選項的 messageOptions
+// newMessageOptions returns a messageOptions with default options
 func newMessageOptions(messageName string) messageOptions {
 	return messageOptions{
-		description: fmt.Sprintf("廣播消息 %s", messageName),
+		description: fmt.Sprintf("Broadcast message %s", messageName),
 		signer:      "creator",
 	}
 }
 
-// MessageOption 配置消息腳手架
+// MessageOption configures the message scaffolding
 type MessageOption func(*messageOptions)
 
-// WithDescription 為消息 CLI 命令提供自定義描述
+// WithDescription provides a custom description for the message CLI command
 func WithDescription(desc string) MessageOption {
 	return func(m *messageOptions) {
 		m.description = desc
 	}
 }
 
-// WithSigner 為消息提供自定義簽名者名稱
+// WithSigner provides a custom signer name for the message
 func WithSigner(signer string) MessageOption {
 	return func(m *messageOptions) {
 		m.signer = signer
 	}
 }
 
-// WithoutSimulation 禁用生成消息模擬
+// WithoutSimulation disables generating messages simulation
 func WithoutSimulation() MessageOption {
 	return func(m *messageOptions) {
 		m.withoutSimulation = true
 	}
 }
 
-// AddMessage 向腳手架應用程序添加新消息
+// AddMessage adds a new message to scaffolded app
 func (s Scaffolder) AddMessage(
 	ctx context.Context,
 	cacheStorage cache.Storage,
@@ -66,13 +66,13 @@ func (s Scaffolder) AddMessage(
 	resFields []string,
 	options ...MessageOption,
 ) (sm xgenny.SourceModification, err error) {
-	// 創建選項
+	// Create the options
 	scaffoldingOpts := newMessageOptions(msgName)
 	for _, apply := range options {
 		apply(&scaffoldingOpts)
 	}
 
-	// 如果沒有提供模塊，我們將類型添加到應用程序的模塊中
+	// If no module is provided, we add the type to the app's module
 	if moduleName == "" {
 		moduleName = s.modpath.Package
 	}
@@ -91,7 +91,7 @@ func (s Scaffolder) AddMessage(
 		return sm, err
 	}
 
-	// 檢查和解析提供的字段
+	// Check and parse provided fields
 	if err := checkCustomTypes(ctx, s.path, moduleName, fields); err != nil {
 		return sm, err
 	}
@@ -100,7 +100,7 @@ func (s Scaffolder) AddMessage(
 		return sm, err
 	}
 
-	//檢查並解析提供的響應字段
+	// Check and parse provided response fields
 	if err := checkCustomTypes(ctx, s.path, moduleName, resFields); err != nil {
 		return sm, err
 	}
@@ -130,7 +130,7 @@ func (s Scaffolder) AddMessage(
 		}
 	)
 
-	//檢查並支持 MsgServer 約定
+	// Check and support MsgServer convention
 	var gens []*genny.Generator
 	gens, err = supportMsgServer(
 		gens,
@@ -157,7 +157,7 @@ func (s Scaffolder) AddMessage(
 		return sm, err
 	}
 
-	// 腳手架
+	// Scaffold
 	g, err = message.NewStargate(tracer, opts)
 	if err != nil {
 		return sm, err
@@ -170,7 +170,7 @@ func (s Scaffolder) AddMessage(
 	return sm, finish(cacheStorage, opts.AppPath, s.modpath.RawPath)
 }
 
-// checkForbiddenMessageField如果名稱被禁止作為消息名稱，則返回 true
+// checkForbiddenMessageField returns true if the name is forbidden as a message name
 func checkForbiddenMessageField(name string) error {
 	mfName, err := multiformatname.NewName(name)
 	if err != nil {
@@ -178,7 +178,7 @@ func checkForbiddenMessageField(name string) error {
 	}
 
 	if mfName.LowerCase == datatype.TypeCustom {
-		return fmt.Errorf("%s 由消息腳手架使用", name)
+		return fmt.Errorf("%s is used by the message scaffolder", name)
 	}
 
 	return checkGoReservedWord(name)

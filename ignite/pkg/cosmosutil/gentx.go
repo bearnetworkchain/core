@@ -15,7 +15,7 @@ import (
 var GentxFilename = "gentx.json"
 
 type (
-	// GentxInfo 表示關於 gentx 文件的基本信息
+	// GentxInfo represents the basic info about gentx file
 	GentxInfo struct {
 		DelegatorAddress string
 		PubKey           ed25519.PubKey
@@ -23,7 +23,7 @@ type (
 		Memo             string
 	}
 
-	// StargateGentx 代表熊網鏈gentx文件
+	// StargateGentx represents the stargate gentx file
 	StargateGentx struct {
 		Body struct {
 			Messages []struct {
@@ -43,10 +43,10 @@ type (
 	}
 )
 
-// GentxFromPath 從 json 文件返回 GentxInfo
+// GentxFromPath returns GentxInfo from the json file
 func GentxFromPath(path string) (info GentxInfo, gentx []byte, err error) {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
-		return info, gentx, errors.New("鏈的主文件夾尚未初始化: " + path)
+		return info, gentx, errors.New("chain home folder is not initialized yet: " + path)
 	}
 
 	gentx, err = os.ReadFile(path)
@@ -56,8 +56,8 @@ func GentxFromPath(path string) (info GentxInfo, gentx []byte, err error) {
 	return ParseGentx(gentx)
 }
 
-// ParseGentx 以字節為單位返回 GentxInfo 和 gentx 文件
-// TODO 反射器。無需返回文件，它已經在參數中作為 gentx 給出.
+// ParseGentx returns GentxInfo and the gentx file in bytes
+// TODO refector. no need to return file, it's already given as gentx in the argument.
 func ParseGentx(gentx []byte) (info GentxInfo, file []byte, err error) {
 	// Try parsing Stargate gentx
 	var stargateGentx StargateGentx
@@ -65,12 +65,12 @@ func ParseGentx(gentx []byte) (info GentxInfo, file []byte, err error) {
 		return info, gentx, err
 	}
 	if stargateGentx.Body.Messages == nil {
-		return info, gentx, errors.New("gentx 無法解析")
+		return info, gentx, errors.New("the gentx cannot be parsed")
 	}
 
 	// This is a stargate gentx
 	if len(stargateGentx.Body.Messages) != 1 {
-		return info, gentx, errors.New("添加驗證器 gentx 必須包含 1 條消息")
+		return info, gentx, errors.New("add validator gentx must contain 1 message")
 	}
 
 	info.Memo = stargateGentx.Body.Memo
@@ -79,12 +79,12 @@ func ParseGentx(gentx []byte) (info GentxInfo, file []byte, err error) {
 	pb := stargateGentx.Body.Messages[0].PubKey.Key
 	info.PubKey, err = base64.StdEncoding.DecodeString(pb)
 	if err != nil {
-		return info, gentx, fmt.Errorf("無效的驗證者公鑰 %s", err.Error())
+		return info, gentx, fmt.Errorf("invalid validator public key %s", err.Error())
 	}
 
 	amount, ok := sdk.NewIntFromString(stargateGentx.Body.Messages[0].Value.Amount)
 	if !ok {
-		return info, gentx, errors.New("gentx內部的自委託無效")
+		return info, gentx, errors.New("the self-delegation inside the gentx is invalid")
 	}
 
 	info.SelfDelegation = sdk.NewCoin(

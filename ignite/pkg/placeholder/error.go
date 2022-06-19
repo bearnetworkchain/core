@@ -9,14 +9,14 @@ import (
 
 var _ validation.Error = (*MissingPlaceholdersError)(nil)
 
-// MissingPlaceholdersError 當源文件缺少佔位符時用作錯誤
+// MissingPlaceholdersError is used as an error when a source file is missing placeholder
 type MissingPlaceholdersError struct {
 	missing          iterableStringSet
 	additionalInfo   string
 	additionalErrors error
 }
 
-// 如果兩個錯誤具有相同的缺失佔位符列表，則為真。
+// Is true if both errors have the same list of missing placeholders.
 func (e *MissingPlaceholdersError) Is(err error) bool {
 	other, ok := err.(*MissingPlaceholdersError)
 	if !ok {
@@ -33,7 +33,7 @@ func (e *MissingPlaceholdersError) Is(err error) bool {
 	return true
 }
 
-// Error實現錯誤接口
+// Error implements error interface
 func (e *MissingPlaceholdersError) Error() string {
 	var b strings.Builder
 	b.WriteString("missing placeholders: ")
@@ -47,7 +47,7 @@ func (e *MissingPlaceholdersError) Error() string {
 	return b.String()
 }
 
-// ValidationInfo 實現validation.Error接口
+// ValidationInfo implements validation.Error interface
 func (e *MissingPlaceholdersError) ValidationInfo() string {
 	var b strings.Builder
 	b.WriteString("Missing placeholders:\n\n")
@@ -71,17 +71,17 @@ func (e *MissingPlaceholdersError) ValidationInfo() string {
 
 var _ validation.Error = (*ValidationMiscError)(nil)
 
-// ValidationMiscError用作與驗證相關的雜項錯誤
+// ValidationMiscError is used as a miscellaneous error related to validation
 type ValidationMiscError struct {
 	errors []string
 }
 
-// Error 實現錯誤接口
+// Error implements error interface
 func (e *ValidationMiscError) Error() string {
 	return fmt.Sprintf("validation errors: %v", e.errors)
 }
 
-// ValidationInfo 實現validation.Error接口
+// ValidationInfo implements validation.Error interface
 func (e *ValidationMiscError) ValidationInfo() string {
 	return fmt.Sprintf("Validation errors:\n\n%v", strings.Join(e.errors, "\n"))
 }

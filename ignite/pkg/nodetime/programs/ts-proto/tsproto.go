@@ -1,4 +1,4 @@
-// Package tsproto 提供對 protoc-gen-ts_proto protoc 插件的訪問。
+// Package tsproto provides access to protoc-gen-ts_proto protoc plugin.
 package tsproto
 
 import (
@@ -12,12 +12,12 @@ import (
 
 const pluginName = "protoc-gen-ts_proto"
 
-// BinaryPath 返回 ts-proto 插件的二進製文件的路徑，因此可以將其傳遞給
-// 通過 --plugin 選項的協議。
+// BinaryPath returns the path to the binary of the ts-proto plugin so it can be passed to
+// protoc via --plugin option.
 //
-// protoc 對其插件的二進制名稱非常挑剔。對於 ts-proto，二進制名稱
-// 將是 protoc-gen-ts_proto。
-// 看看為什麼：https://github.com/stephenh/ts-proto/blob/7f76c05/README.markdown#quickstart。
+// protoc is very picky about binary names of its plugins. for ts-proto, binary name
+// will be protoc-gen-ts_proto.
+// see why: https://github.com/stephenh/ts-proto/blob/7f76c05/README.markdown#quickstart.
 func BinaryPath() (path string, cleanup func(), err error) {
 	var command []string
 
@@ -29,7 +29,7 @@ func BinaryPath() (path string, cleanup func(), err error) {
 	tmpdir := os.TempDir()
 	path = filepath.Join(tmpdir, pluginName)
 
-	// 通過為插件的二進製文件提供 protoc-gen-ts_proto 名稱來安慰 protoc。
+	// comforting protoc by giving protoc-gen-ts_proto name to the plugin's binary.
 	script := fmt.Sprintf(`#!/bin/bash
 %s "$@"
 `, strings.Join(command, " "))

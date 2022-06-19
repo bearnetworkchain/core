@@ -14,19 +14,19 @@ const (
 	flagNoVerification = "no-verification"
 )
 
-// NewNetworkRequestApprove 創建一個新的請求批准
-// 批准鏈請求的命令.
+// NewNetworkRequestApprove creates a new request approve
+// command to approve requests for a chain.
 func NewNetworkRequestApprove() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "approve [launch-id] [number<,...>]",
 		Aliases: []string{"accept"},
-		Short:   "批准請求",
+		Short:   "Approve requests",
 		RunE:    networkRequestApproveHandler,
 		Args:    cobra.ExactArgs(2),
 	}
 
 	flagSetClearCache(c)
-	c.Flags().Bool(flagNoVerification, false, "批准請求而不驗證它們")
+	c.Flags().Bool(flagNoVerification, false, "approve the requests without verifying them")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetHome())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
@@ -42,19 +42,19 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析啟動 ID
+	// parse launch ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// 獲取請求ID列表
+	// Get the list of request ids
 	ids, err := numbers.ParseList(args[1])
 	if err != nil {
 		return err
 	}
 
-	// 驗證請求是否有效
+	// Verify the requests are valid
 	noVerification, err := cmd.Flags().GetBool(flagNoVerification)
 	if err != nil {
 		return err
@@ -70,15 +70,15 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 如果必須驗證請求，我們將在臨時目錄中使用請求模擬鏈
+	// if requests must be verified, we simulate the chain in a temporary directory with the requests
 	if !noVerification {
 		if err := verifyRequest(cmd.Context(), cacheStorage, nb, launchID, ids...); err != nil {
 			return errors.Wrap(err, "request(s) not valid")
 		}
-		session.Printf("%s 要求(s) %s 已驗證\n", icons.OK, numbers.List(ids, "#"))
+		session.Printf("%s Request(s) %s verified\n", icons.OK, numbers.List(ids, "#"))
 	}
 
-	// 提交批准的請求
+	// Submit the approved requests
 	reviewals := make([]network.Reviewal, 0)
 	for _, id := range ids {
 		reviewals = append(reviewals, network.ApproveRequest(id))
@@ -89,5 +89,5 @@ func networkRequestApproveHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s 要求(s) %s 得到正式認可的\n", icons.OK, numbers.List(ids, "#"))
+	return session.Printf("%s Request(s) %s approved\n", icons.OK, numbers.List(ids, "#"))
 }

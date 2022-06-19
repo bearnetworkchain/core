@@ -7,12 +7,12 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
 )
 
-// NewRelayer 返回一個新的中繼命令。
+// NewRelayer returns a new relayer command.
 func NewRelayer() *cobra.Command {
 	c := &cobra.Command{
 		Use:     "relayer",
 		Aliases: []string{"r"},
-		Short:   "使用 IBC 協議連接區塊鏈",
+		Short:   "Connect blockchains by using IBC protocol",
 	}
 
 	c.AddCommand(
@@ -29,5 +29,5 @@ func handleRelayerAccountErr(err error) error {
 		return err
 	}
 
-	return errors.Wrap(accountErr, `確保通過“ignite account”命令創建或導入您的帳戶`)
+	return errors.Wrap(accountErr, `make sure to create or import your account through "ignite account" commands`)
 }

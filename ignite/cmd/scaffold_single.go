@@ -6,11 +6,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// NewScaffoldSingle 返回一個新命令來搭建單例。
+// NewScaffoldSingle returns a new command to scaffold a singleton.
 func NewScaffoldSingle() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "single NAME [field]...",
-		Short: "CRUD 用於存儲在單個位置的數據",
+		Short: "CRUD for data stored in a single location",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  scaffoldSingleHandler,
 	}

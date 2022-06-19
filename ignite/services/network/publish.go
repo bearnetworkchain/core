@@ -15,7 +15,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// publishOptions 保存有關如何創建鏈的信息。
+// publishOptions holds info about how to create a chain.
 type publishOptions struct {
 	genesisURL       string
 	chainID          string
@@ -27,66 +27,66 @@ type publishOptions struct {
 	mainnet          bool
 }
 
-// PublishOption 配置鏈創建。
+// PublishOption configures chain creation.
 type PublishOption func(*publishOptions)
 
-// WithCampaign添加活動ID。
+// WithCampaign add a campaign id.
 func WithCampaign(id uint64) PublishOption {
 	return func(o *publishOptions) {
 		o.campaignID = id
 	}
 }
 
-// WithChainID 使用自定義鏈 ID。
+// WithChainID use a custom chain id.
 func WithChainID(chainID string) PublishOption {
 	return func(o *publishOptions) {
 		o.chainID = chainID
 	}
 }
 
-// WithNoCheck 禁用檢查鏈的完整性。
+// WithNoCheck disables checking integrity of the chain.
 func WithNoCheck() PublishOption {
 	return func(o *publishOptions) {
 		o.noCheck = true
 	}
 }
 
-// WithCustomGenesis 允許在發布期間使用自定義起源。
+// WithCustomGenesis enables using a custom genesis during publish.
 func WithCustomGenesis(url string) PublishOption {
 	return func(o *publishOptions) {
 		o.genesisURL = url
 	}
 }
 
-// WithMetadata provides 更新活動的元數據提案。
+// WithMetadata provides a meta data proposal to update the campaign.
 func WithMetadata(metadata string) PublishOption {
 	return func(c *publishOptions) {
 		c.metadata = metadata
 	}
 }
 
-// WithTotalSupply 提供總供應建議以更新活動。
+// WithTotalSupply provides a total supply proposal to update the campaign.
 func WithTotalSupply(totalSupply sdk.Coins) PublishOption {
 	return func(c *publishOptions) {
 		c.totalSupply = totalSupply
 	}
 }
 
-// WithPercentageShares為股票啟用鑄造代金券。
+// WithPercentageShares enables minting vouchers for shares.
 func WithPercentageShares(sharePercentages []SharePercent) PublishOption {
 	return func(c *publishOptions) {
 		c.sharePercentages = sharePercentages
 	}
 }
 
-// Mainnet 將已發布的鏈初始化到主網
+// Mainnet initialize a published chain into the mainnet
 func Mainnet() PublishOption {
 	return func(o *publishOptions) {
 		o.mainnet = true
 	}
 }
 
-// Publish向 SPN 提交創世紀以宣布新網絡。
+// Publish submits Genesis to SPN to announce a new network.
 func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption) (launchID, campaignID uint64, err error) {
 	o := publishOptions{}
 	for _, apply := range options {
@@ -99,7 +99,7 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 		genesis     cosmosutil.ChainGenesis
 	)
 
-	// 如果初始創世是一個創世 URL 並且沒有執行檢查，我們只需獲取它並獲取它的哈希值。
+	// if the initial genesis is a genesis URL and no check are performed, we simply fetch it and get its hash.
 	if o.genesisURL != "" {
 		genesisFile, genesisHash, err = cosmosutil.GenesisAndHashFromURL(ctx, o.genesisURL)
 		if err != nil {
@@ -112,11 +112,11 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 	}
 
 	chainID := genesis.ChainID
-	// 始終以最高優先級使用鏈 ID 標誌。
+	// use chain id flag always in the highest priority.
 	if o.chainID != "" {
 		chainID = o.chainID
 	}
-	// 如果鏈 id 為空，則使用默認值。
+	// if the chain id is empty, use a default one.
 	if chainID == "" {
 		chainID, err = c.ChainID()
 		if err != nil {
@@ -127,7 +127,7 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 	coordinatorAddress := n.account.Address(networktypes.SPN)
 	campaignID = o.campaignID
 
-	n.ev.Send(events.New(events.StatusOngoing, "發佈網絡"))
+	n.ev.Send(events.New(events.StatusOngoing, "Publishing the network"))
 
 	_, err = n.profileQuery.
 		CoordinatorByAddress(ctx, &profiletypes.QueryGetCoordinatorByAddressRequest{
@@ -177,9 +177,9 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 			}
 			coins = append(coins, coin)
 		}
-		// TODO 考慮遷移到 UpdateCampaign，但不確定，可能不相關。
-		// 最好在一個 tx 中發送多條消息。
-		// 考慮重構方法以實現更好的 API 和效率。
+		// TODO consider moving to UpdateCampaign, but not sure, may not be relevant.
+		// It is better to send multiple message in a single tx too.
+		// consider ways to refactor to accomplish a better API and efficiency.
 		msgMintVouchers := campaigntypes.NewMsgMintVouchers(
 			n.account.Address(networktypes.SPN),
 			campaignID,
@@ -191,7 +191,7 @@ func (n Network) Publish(ctx context.Context, c Chain, options ...PublishOption)
 		}
 	}
 
-	// 根據主網標誌初始化主網或測試網
+	// depending on mainnet flag initialize mainnet or testnet
 	if o.mainnet {
 		launchID, err = n.InitializeMainnet(campaignID, c.SourceURL(), c.SourceHash(), chainID)
 		if err != nil {
@@ -230,7 +230,7 @@ func (n Network) SendAccountRequestForCoordinator(launchID uint64, amount sdk.Co
 	return n.sendAccountRequest(launchID, n.account.Address(networktypes.SPN), amount)
 }
 
-// SendAccountRequest 創建一個添加 AddAccount 請求消息。
+// SendAccountRequest creates an add AddAccount request message.
 func (n Network) sendAccountRequest(
 	launchID uint64,
 	address string,
@@ -243,7 +243,7 @@ func (n Network) sendAccountRequest(
 		amount,
 	)
 
-	n.ev.Send(events.New(events.StatusOngoing, "廣播賬戶交易"))
+	n.ev.Send(events.New(events.StatusOngoing, "Broadcasting account transactions"))
 	res, err := n.cosmos.BroadcastTx(n.account.Name, msg)
 	if err != nil {
 		return err
@@ -255,10 +255,10 @@ func (n Network) sendAccountRequest(
 	}
 
 	if requestRes.AutoApproved {
-		n.ev.Send(events.New(events.StatusDone, "協調者添加到網絡的帳戶!"))
+		n.ev.Send(events.New(events.StatusDone, "Account added to the network by the coordinator!"))
 	} else {
 		n.ev.Send(events.New(events.StatusDone,
-			fmt.Sprintf("要求 %d 添加帳戶到網絡已提交!",
+			fmt.Sprintf("Request %d to add account to the network has been submitted!",
 				requestRes.RequestID),
 		))
 	}

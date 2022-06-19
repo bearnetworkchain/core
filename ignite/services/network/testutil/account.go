@@ -12,7 +12,7 @@ const (
 	TestAccountName = "test"
 )
 
-//NewTestAccount 使用內存密鑰環後端創建一個用於測試目的的帳戶
+// NewTestAccount creates an account for test purposes using inmemory keyring backend
 func NewTestAccount(t *testing.T, name string) cosmosaccount.Account {
 	r, err := cosmosaccount.NewInMemory()
 	assert.NoError(t, err)

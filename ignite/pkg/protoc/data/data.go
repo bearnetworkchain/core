@@ -5,16 +5,16 @@ import (
 	"io/fs"
 )
 
-//go:嵌入包含/* 包含/**/*
+//go:embed include/* include/**/*
 var include embed.FS
 
-// Include 返回一個文件系統，其中包含 protoc 使用的標準 proto 文件。
+// Include returns a file system that contains standard proto files used by protoc.
 func Include() fs.FS {
 	f, _ := fs.Sub(include, "include")
 	return f
 }
 
-// Binary 返回平台特定的協議二進製文件。
+// Binary returns the platform spesific protoc binary.
 func Binary() []byte {
 	return binary
 }

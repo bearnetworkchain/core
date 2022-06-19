@@ -24,37 +24,37 @@ func (g *generator) generateGo() error {
 		return err
 	}
 
-	// 創建了一個臨時目錄來定位生成的代碼，稍後只有其中一些會被移動到
-	// 應用程序的源代碼。這也可以防止在應用程序的源代碼或其父目錄中存在剩余文件 -when
-	// 直接在那裡執行的命令——在中斷的情況下。
+	// created a temporary dir to locate generated code under which later only some of them will be moved to the
+	// app's source code. this also prevents having leftover files in the app's source code or its parent dir -when
+	// command executed directly there- in case of an interrupt.
 	tmp, err := os.MkdirTemp("", "")
 	if err != nil {
 		return err
 	}
 	defer os.RemoveAll(tmp)
 
-	// 在應用程序中發現 proto 包。
+	// discover proto packages in the app.
 	pp := filepath.Join(g.appPath, g.protoDir)
 	pkgs, err := protoanalysis.Parse(g.ctx, nil, pp)
 	if err != nil {
 		return err
 	}
 
-	// 為每個模塊生成代碼。
+	// code generate for each module.
 	for _, pkg := range pkgs {
 		if err := protoc.Generate(g.ctx, tmp, pkg.Path, includePaths, goOuts); err != nil {
 			return err
 		}
 	}
 
-	// 將應用程序生成的代碼移動到其源代碼中的相對位置下。
+	// move generated code for the app under the relative locations in its source code.
 	generatedPath := filepath.Join(tmp, g.o.gomodPath)
 
 	_, err = os.Stat(generatedPath)
 	if err == nil {
 		err = copy.Copy(generatedPath, g.appPath)
 		if err != nil {
-			return errors.Wrap(err, "無法複製路徑")
+			return errors.Wrap(err, "cannot copy path")
 		}
 	} else if !os.IsNotExist(err) {
 		return err

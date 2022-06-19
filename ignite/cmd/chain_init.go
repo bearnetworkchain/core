@@ -13,7 +13,7 @@ import (
 func NewChainInit() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "init",
-		Short: "初始化熊網鏈",
+		Short: "Initialize your chain",
 		Args:  cobra.NoArgs,
 		RunE:  chainInitHandler,
 	}
@@ -54,7 +54,7 @@ func chainInitHandler(cmd *cobra.Command, _ []string) error {
 		return err
 	}
 
-	fmt.Printf("🗃  初始化。 簽出您的熊網鏈的主（數據）目錄: %s\n", colors.Info(home))
+	fmt.Printf("🗃  Initialized. Checkout your chain's home (data) directory: %s\n", colors.Info(home))
 
 	return nil
 }

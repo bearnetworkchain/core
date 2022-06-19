@@ -59,7 +59,7 @@ func (p *stargatePlugin) Configure(homePath string, conf chainconfig.Config) err
 }
 
 func (p *stargatePlugin) appTOML(homePath string, conf chainconfig.Config) error {
-	// TODO 找到更好的方法，以便不刪除 toml.yml 中的註釋
+	// TODO find a better way in order to not delete comments in the toml.yml
 	path := filepath.Join(homePath, "config/app.toml")
 	config, err := toml.LoadFile(path)
 	if err != nil {
@@ -68,7 +68,7 @@ func (p *stargatePlugin) appTOML(homePath string, conf chainconfig.Config) error
 
 	apiAddr, err := xurl.TCP(conf.Host.API)
 	if err != nil {
-		return fmt.Errorf("api地址格式無效 %s: %w", conf.Host.API, err)
+		return fmt.Errorf("invalid api address format %s: %w", conf.Host.API, err)
 	}
 
 	config.Set("api.enable", true)
@@ -96,7 +96,7 @@ func (p *stargatePlugin) appTOML(homePath string, conf chainconfig.Config) error
 }
 
 func (p *stargatePlugin) configTOML(homePath string, conf chainconfig.Config) error {
-	// TODO 找到更好的方法，以便不刪除 toml.yml 中的註釋
+	// TODO find a better way in order to not delete comments in the toml.yml
 	path := filepath.Join(homePath, "config/config.toml")
 	config, err := toml.LoadFile(path)
 	if err != nil {
@@ -105,12 +105,12 @@ func (p *stargatePlugin) configTOML(homePath string, conf chainconfig.Config) er
 
 	rpcAddr, err := xurl.TCP(conf.Host.RPC)
 	if err != nil {
-		return fmt.Errorf("無效的 rpc 地址格式 %s: %w", conf.Host.RPC, err)
+		return fmt.Errorf("invalid rpc address format %s: %w", conf.Host.RPC, err)
 	}
 
 	p2pAddr, err := xurl.TCP(conf.Host.P2P)
 	if err != nil {
-		return fmt.Errorf("無效的 p2p 地址格式 %s: %w", conf.Host.P2P, err)
+		return fmt.Errorf("invalid p2p address format %s: %w", conf.Host.P2P, err)
 	}
 
 	config.Set("mode", "validator")

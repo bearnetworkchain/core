@@ -10,7 +10,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
 )
 
-// IsOnGitpod 報告是否在 Gitpod 上運行。
+// IsOnGitpod reports whether if running on Gitpod or not.
 func IsOnGitpod() bool {
 	return os.Getenv("GITPOD_WORKSPACE_ID") != ""
 }

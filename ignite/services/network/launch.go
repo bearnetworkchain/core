@@ -12,7 +12,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
-// LaunchParams 從 SPN 獲取鏈啟動模塊參數
+// LaunchParams fetches the chain launch module params from SPN
 func (n Network) LaunchParams(ctx context.Context) (launchtypes.Params, error) {
 	res, err := n.launchQuery.Params(ctx, &launchtypes.QueryParamsRequest{})
 	if err != nil {
@@ -21,9 +21,9 @@ func (n Network) LaunchParams(ctx context.Context) (launchtypes.Params, error) {
 	return res.GetParams(), nil
 }
 
-// TriggerLaunch作為協調者啟動一個鏈
+// TriggerLaunch launches a chain as a coordinator
 func (n Network) TriggerLaunch(ctx context.Context, launchID uint64, remainingTime time.Duration) error {
-	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("啟動鏈 %d", launchID)))
+	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("Launching chain %d", launchID)))
 	params, err := n.LaunchParams(ctx)
 	if err != nil {
 		return err
@@ -36,20 +36,20 @@ func (n Network) TriggerLaunch(ctx context.Context, launchID uint64, remainingTi
 	)
 	switch {
 	case remainingTime == 0:
-		// 如果用戶沒有指定剩餘時間，則使用最小的一個
+		// if the user does not specify the remaining time, use the minimal one
 		remainingTime = minLaunch
 	case remainingTime < minLaunch:
-		return fmt.Errorf("剩餘時間 %s 低於最小值 %s",
+		return fmt.Errorf("remaining time %s lower than minimum %s",
 			xtime.NowAfter(remainingTime),
 			xtime.NowAfter(minLaunch))
 	case remainingTime > maxLaunch:
-		return fmt.Errorf("剩餘時間 %s 大於最大值 %s",
+		return fmt.Errorf("remaining time %s greater than maximum %s",
 			xtime.NowAfter(remainingTime),
 			xtime.NowAfter(maxLaunch))
 	}
 
 	msg := launchtypes.NewMsgTriggerLaunch(address, launchID, int64(remainingTime.Seconds()))
-	n.ev.Send(events.New(events.StatusOngoing, "設置啟動時間"))
+	n.ev.Send(events.New(events.StatusOngoing, "Setting launch time"))
 	res, err := n.cosmos.BroadcastTx(n.account.Name, msg)
 	if err != nil {
 		return err
@@ -61,14 +61,14 @@ func (n Network) TriggerLaunch(ctx context.Context, launchID uint64, remainingTi
 	}
 
 	n.ev.Send(events.New(events.StatusDone,
-		fmt.Sprintf("鏈 %d 將會啟動於 %s", launchID, xtime.NowAfter(remainingTime)),
+		fmt.Sprintf("Chain %d will be launched on %s", launchID, xtime.NowAfter(remainingTime)),
 	))
 	return nil
 }
 
-// RevertLaunch 將已啟動的鏈恢復為協調器
+// RevertLaunch reverts a launched chain as a coordinator
 func (n Network) RevertLaunch(launchID uint64, chain Chain) error {
-	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("恢復已啟動的鏈 %d", launchID)))
+	n.ev.Send(events.New(events.StatusOngoing, fmt.Sprintf("Reverting launched chain %d", launchID)))
 
 	address := n.account.Address(networktypes.SPN)
 	msg := launchtypes.NewMsgRevertLaunch(address, launchID)
@@ -78,13 +78,13 @@ func (n Network) RevertLaunch(launchID uint64, chain Chain) error {
 	}
 
 	n.ev.Send(events.New(events.StatusDone,
-		fmt.Sprintf("鏈 %d 啟動被恢復", launchID),
+		fmt.Sprintf("Chain %d launch was reverted", launchID),
 	))
 
-	n.ev.Send(events.New(events.StatusOngoing, "重置創世時間"))
+	n.ev.Send(events.New(events.StatusOngoing, "Resetting the genesis time"))
 	if err := chain.ResetGenesisTime(); err != nil {
 		return err
 	}
-	n.ev.Send(events.New(events.StatusDone, "創世時間被重置"))
+	n.ev.Send(events.New(events.StatusDone, "Genesis time was reset"))
 	return nil
 }

@@ -11,12 +11,12 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/network"
 )
 
-// NewNetworkRewardSet 創建一個新的鏈獎勵集命令以
-// 將鏈獎勵作為協調者添加到網絡中。
+// NewNetworkRewardSet creates a new chain reward set command to
+// add the chain reward to the network as a coordinator.
 func NewNetworkRewardSet() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "set [launch-id] [last-reward-height] [coins]",
-		Short: "設置網絡鏈獎勵",
+		Short: "set a network chain reward",
 		Args:  cobra.ExactArgs(3),
 		RunE:  networkChainRewardSetHandler,
 	}
@@ -35,13 +35,13 @@ func networkChainRewardSetHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析啟動 ID
+	// parse launch ID
 	launchID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
-	// 解析最後的獎勵高度
+	// parse the last reward height
 	lastRewardHeight, err := strconv.ParseInt(args[1], 10, 64)
 	if err != nil {
 		return err
@@ -49,7 +49,7 @@ func networkChainRewardSetHandler(cmd *cobra.Command, args []string) error {
 
 	coins, err := sdk.ParseCoinsNormalized(args[2])
 	if err != nil {
-		return fmt.Errorf("無法解析硬幣: %w", err)
+		return fmt.Errorf("failed to parse coins: %w", err)
 	}
 
 	n, err := nb.Network()

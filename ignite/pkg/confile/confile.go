@@ -1,4 +1,4 @@
-// Package confile 是加載和覆蓋配置文件的助手。
+// Package confile is helper to load and overwrite configuration files.
 package confile
 
 import (
@@ -6,14 +6,14 @@ import (
 	"path/filepath"
 )
 
-// ConfigFile 代表一個配置文件。
+// ConfigFile represents a configuration file.
 type ConfigFile struct {
 	creator EncodingCreator
 	path    string
 }
 
-// New 啟動一個新的 ConfigFile，使用 creator 作為底層 EncodingCreator 進行編碼和
-// 解碼出現或將出現在路徑上的配置文件。
+// New starts a new ConfigFile by using creator as underlying EncodingCreator to encode and
+// decode config file that presents or will present on path.
 func New(creator EncodingCreator, path string) *ConfigFile {
 	return &ConfigFile{
 		creator: creator,
@@ -21,8 +21,8 @@ func New(creator EncodingCreator, path string) *ConfigFile {
 	}
 }
 
-// 如果路徑上存在文件，則加載將配置文件的內容加載到 v 中。
-// 否則沒有任何內容加載到 v 中並且不返回錯誤。
+// Load loads content of config file into v if file exist on path.
+// otherwise nothing loaded into v and no error is returned.
 func (c *ConfigFile) Load(v interface{}) error {
 	file, err := os.Open(c.path)
 	if err != nil {
@@ -35,8 +35,8 @@ func (c *ConfigFile) Load(v interface{}) error {
 	return c.creator.Create(file).Decode(v)
 }
 
-// Save 通過覆蓋之前的內容將 v 保存到配置文件中，它還會創建
-// 如果不存在配置文件。
+// Save saves v into config file by overwriting the previous content it also creates the
+// config file if it wasn't exist.
 func (c *ConfigFile) Save(v interface{}) error {
 	if err := os.MkdirAll(filepath.Dir(c.path), 0755); err != nil {
 		return err

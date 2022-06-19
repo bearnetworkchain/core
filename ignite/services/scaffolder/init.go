@@ -22,15 +22,15 @@ import (
 )
 
 var (
-	commitMessage = "使用 Ignite CLI 初始化"
+	commitMessage = "Initialized with Ignite CLI"
 	devXAuthor    = &object.Signature{
-		Name:  "熊網鏈的開發人員體驗團隊",
-		Email: "bear.network.root@gmail.com",
+		Name:  "Developer Experience team at Tendermint",
+		Email: "hello@tendermint.com",
 		When:  time.Now(),
 	}
 )
 
-// Init 使用名稱和給定選項初始化一個新應用程序。
+// Init initializes a new app with name and given options.
 func Init(cacheStorage cache.Storage, tracer *placeholder.Tracer, root, name, addressPrefix string, noDefaultModule bool) (path string, err error) {
 	if root, err = filepath.Abs(root); err != nil {
 		return "", err
@@ -52,7 +52,7 @@ func Init(cacheStorage cache.Storage, tracer *placeholder.Tracer, root, name, ad
 		return "", err
 	}
 
-	// 初始化 git 存儲庫並執行第一次提交
+	// initialize git repository and perform the first commit
 	if err := initGit(path); err != nil {
 		return "", err
 	}
@@ -60,7 +60,7 @@ func Init(cacheStorage cache.Storage, tracer *placeholder.Tracer, root, name, ad
 	return path, nil
 }
 
-//不願意：界面
+//nolint:interfacer
 func generate(
 	tracer *placeholder.Tracer,
 	pathInfo gomodulepath.Path,
@@ -70,12 +70,12 @@ func generate(
 ) error {
 	githubPath := gomodulepath.ExtractAppPath(pathInfo.RawPath)
 	if !strings.Contains(githubPath, "/") {
-		// 當應用模塊路徑只有一個元素時，必須添加用戶名
-		githubPath = fmt.Sprintf("用戶名/%s", githubPath)
+		// A username must be added when the app module path has a single element
+		githubPath = fmt.Sprintf("username/%s", githubPath)
 	}
 
 	g, err := app.New(&app.Options{
-		// 生成應用模板
+		// generate application template
 		ModulePath:       pathInfo.RawPath,
 		AppName:          pathInfo.Package,
 		AppPath:          absRoot,
@@ -96,10 +96,10 @@ func generate(
 		return err
 	}
 
-	// 生成模塊模板
+	// generate module template
 	if !noDefaultModule {
 		opts := &modulecreate.CreateOptions{
-			ModuleName: pathInfo.Package, //名稱
+			ModuleName: pathInfo.Package, // App name
 			ModulePath: pathInfo.RawPath,
 			AppName:    pathInfo.Package,
 			AppPath:    absRoot,
@@ -119,16 +119,16 @@ func generate(
 
 	}
 
-	// 生成 vue 應用。
+	// generate the vue app.
 	return Vue(filepath.Join(absRoot, "vue"))
 }
 
-//Vue 為鏈搭建了一個 Vue.js 應用程序。
+// Vue scaffolds a Vue.js app for a chain.
 func Vue(path string) error {
 	return localfs.Save(vue.Boilerplate(), path)
 }
 
-// Flutter 為鏈構建了一個 Flutter 應用程序。
+// Flutter scaffolds a Flutter app for a chain.
 func Flutter(path string) error {
 	return localfs.Save(flutter.Boilerplate(), path)
 }

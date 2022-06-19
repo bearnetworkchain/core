@@ -27,27 +27,27 @@ import (
 )
 
 const (
-	// 導出創世紀是鏈的導出創世文件的名稱
+	// exportedGenesis is the name of the exported genesis file for a chain
 	exportedGenesis = "exported_genesis.json"
 
-	// sourceChecksumKey 是校驗和檢測源修改的緩存鍵
+	// sourceChecksumKey is the cache key for the checksum to detect source modification
 	sourceChecksumKey = "source_checksum"
 
-	// binaryChecksumKey 是校驗和檢測二進制修改的緩存鍵
+	// binaryChecksumKey is the cache key for the checksum to detect binary modification
 	binaryChecksumKey = "binary_checksum"
 
-	// configChecksumKey 是包含校驗和以檢測配置修改的緩存鍵
+	// configChecksumKey is the cache key for containing the checksum to detect config modification
 	configChecksumKey = "config_checksum"
 
-	// serveDirchangeCacheNamespace 是緩存命名空間的名稱，用於檢測目錄的變化
+	// serveDirchangeCacheNamespace is the name of the cache namespace for detecting changes in directories
 	serveDirchangeCacheNamespace = "serve.dirchange"
 )
 
 var (
-	// ignoreExts 保存了一個被忽略的文件列表。
+	// ignoredExts holds a list of ignored files from watching.
 	ignoredExts = []string{"pb.go", "pb.gw.go"}
 
-	// starportSavePath 是保存鏈導出創世的地方
+	// starportSavePath is the place where chain exported genesis are saved
 	starportSavePath = xfilepath.Join(
 		chainconfig.ConfigDirPath,
 		xfilepath.Path("local-chains"),
@@ -66,38 +66,38 @@ func newServeOption() serveOptions {
 	}
 }
 
-// ServeOption 為 serve 命令提供選項
+// ServeOption provides options for the serve command
 type ServeOption func(*serveOptions)
 
-// ServeForceReset 允許在服務鏈時以及每次源更改時強制重置狀態
+// ServeForceReset allows to force reset of the state when the chain is served and on every source change
 func ServeForceReset() ServeOption {
 	return func(c *serveOptions) {
 		c.forceReset = true
 	}
 }
 
-// ServeResetOnce 允許在鏈服務一次時重置狀態
+// ServeResetOnce allows to reset of the state when the chain is served once
 func ServeResetOnce() ServeOption {
 	return func(c *serveOptions) {
 		c.resetOnce = true
 	}
 }
 
-// 服務提供應用程序。
+// Serve serves an app.
 func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options ...ServeOption) error {
 	serveOptions := newServeOption()
 
-	// 應用選項
+	// apply the options
 	for _, apply := range options {
 		apply(&serveOptions)
 	}
 
-	// 初始檢查和設置。
+	// initial checks and setup.
 	if err := c.setup(); err != nil {
 		return err
 	}
 
-	// 確保 config.yml 存在
+	// make sure that config.yml exists
 	if c.options.ConfigFile != "" {
 		if _, err := os.Stat(c.options.ConfigFile); err != nil {
 			return err
@@ -106,10 +106,10 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 		return err
 	}
 
-	// 開始服務組件。
+	// start serving components.
 	g, ctx := errgroup.WithContext(ctx)
 
-	//區塊鏈節點例程
+	// blockchain node routine
 	g.Go(func() error {
 		c.refreshServe()
 
@@ -134,23 +134,23 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 				)
 				serveCtx, c.serveCancel = context.WithCancel(ctx)
 
-				// 確定鍊是否應該重置狀態
+				// determine if the chain should reset the state
 				shouldReset := serveOptions.forceReset || serveOptions.resetOnce
 
-				// 為應用程序服務。
+				// serve the app.
 				err = c.serve(serveCtx, cacheStorage, shouldReset)
 				serveOptions.resetOnce = false
 
 				switch {
 				case err == nil:
 				case errors.Is(err, context.Canceled):
-					//如果應用程序已經被服務，我們保存創世狀態
+					// If the app has been served, we save the genesis state
 					if c.served {
 						c.served = false
 
-						fmt.Fprintln(c.stdLog().out, "💿 保存熊網鏈創世狀態...")
+						fmt.Fprintln(c.stdLog().out, "💿 Saving genesis state...")
 
-						// 如果服務已停止，則保存創世狀態
+						// If serve has been stopped, save the genesis state
 						if err := c.saveChainState(context.TODO(), commands); err != nil {
 							fmt.Fprint(c.stdLog().err, err.Error())
 							return err
@@ -161,32 +161,33 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 							fmt.Fprintln(c.stdLog().err, err.Error())
 							return err
 						}
-						fmt.Fprintf(c.stdLog().out, "💿 熊網鏈創世狀態保存在 %s\n", genesisPath)
+						fmt.Fprintf(c.stdLog().out, "💿 Genesis state saved in %s\n", genesisPath)
 					}
 				case errors.As(err, &buildErr):
 					fmt.Fprintf(c.stdLog().err, "%s\n", errorColor(err.Error()))
 
 					var validationErr *chainconfig.ValidationError
 					if errors.As(err, &validationErr) {
-						fmt.Fprintln(c.stdLog().out, "請查看: https://github.com/ignite-hq/cli#configure")
+						fmt.Fprintln(c.stdLog().out, "see: https://github.com/ignite-hq/cli#configure")
 					}
 
-					fmt.Fprintf(c.stdLog().out, "%s\n", infoColor("在重試之前等待修復..."))
+					fmt.Fprintf(c.stdLog().out, "%s\n", infoColor("Waiting for a fix before retrying..."))
 
 				case errors.As(err, &startErr):
-					// 解析返回的錯誤日誌
+					// Parse returned error logs
 					parsedErr := startErr.ParseStartError()
 
-					// 如果為空，我們無法識別錯誤
-					// 因此，該錯誤可能是由於與舊應用狀態不兼容的新邏輯引起的
-					// 我們建議用戶最終重置應用狀態
+					// If empty, we cannot recognized the error
+					// Therefore, the error may be caused by a new logic that is not compatible with the old app state
+					// We suggest the user to eventually reset the app state
 					if parsedErr == "" {
-						fmt.Fprintf(c.stdLog().out, "%s %s\n", infoColor(`區塊鏈無法啟動。如果新代碼不再與保存的狀態兼容，您可以通過啟動來重置數據庫:`), "ignite chain serve --reset-once")
+						fmt.Fprintf(c.stdLog().out, "%s %s\n", infoColor(`Blockchain failed to start.
+If the new code is no longer compatible with the saved state, you can reset the database by launching:`), "ignite chain serve --reset-once")
 
-						return fmt.Errorf("不能啟動 %s", startErr.AppName)
+						return fmt.Errorf("cannot run %s", startErr.AppName)
 					}
 
-					// 返回明確的解析錯誤
+					// return the clear parsed error
 					return errors.New(parsedErr)
 				default:
 					return err
@@ -195,7 +196,7 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 		}
 	})
 
-	// 日常看後端
+	// routine to watch back-end
 	g.Go(func() error {
 		return c.watchAppBackend(ctx)
 	})
@@ -204,17 +205,17 @@ func (c *Chain) Serve(ctx context.Context, cacheStorage cache.Storage, options .
 }
 
 func (c *Chain) setup() error {
-	fmt.Fprintf(c.stdLog().out, "熊網鏈版本是: %s\n\n", infoColor(c.Version))
+	fmt.Fprintf(c.stdLog().out, "Cosmos SDK's version is: %s\n\n", infoColor(c.Version))
 
 	return c.checkSystem()
 }
 
-// checkSystem 檢查開發人員的工作環境是否符合必須有
-// 依賴關係和前提條件。
+// checkSystem checks if developer's work environment comply must to have
+// dependencies and pre-conditions.
 func (c *Chain) checkSystem() error {
-	// 檢查 Go 是否已安裝。
+	// check if Go has installed.
 	if !xexec.IsCommandAvailable("go") {
-		return errors.New("請檢查是否正確安裝了Go語言 $PATH. See https://golang.org/doc/install")
+		return errors.New("Please, check that Go language is installed correctly in $PATH. See https://golang.org/doc/install")
 	}
 	return nil
 }
@@ -243,9 +244,9 @@ func (c *Chain) watchAppBackend(ctx context.Context) error {
 	)
 }
 
-// serve 執行為區塊鏈服務的操作：構建、初始化和啟動
-// 如果鏈已經初始化並且文件沒有改變，則直接啟動應用程序
-// 如果文件改變了，狀態被導入
+// serve performs the operations to serve the blockchain: build, init and start
+// if the chain is already initialized and the file didn't changed, the app is directly started
+// if the files changed, the state is imported
 func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceReset bool) error {
 	conf, err := c.Config()
 	if err != nil {
@@ -257,13 +258,13 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 		return err
 	}
 
-	// isInit 判斷應用是否初始化
+	// isInit determines if the app is initialized
 	var isInit bool
 
 	dirCache := cache.New[[]byte](cacheStorage, serveDirchangeCacheNamespace)
 
-	// 確定應用程序是否必須重置狀態
-	// 如果必須重置狀態，那麼我們認為鏈沒有初始化
+	// determine if the app must reset the state
+	// if the state must be reset, then we consider the chain as being not initialized
 	isInit, err = c.IsInitialized()
 	if err != nil {
 		return err
@@ -278,20 +279,20 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 		}
 
 		if forceReset || configModified {
-			// 如果設置了 forceReset，我們認為應用程序沒有初始化
-			fmt.Fprintln(c.stdLog().out, "🔄 重置熊網鏈應用狀態...")
+			// if forceReset is set, we consider the app as being not initialized
+			fmt.Fprintln(c.stdLog().out, "🔄 Resetting the app state...")
 			isInit = false
 		}
 	}
 
-	// 檢查自上次服務以來是否已修改源
-	// 如果狀態不能被重置但源已經改變，我們重建鏈並導入導出的狀態
+	// check if source has been modified since last serve
+	// if the state must not be reset but the source has changed, we rebuild the chain and import the exported state
 	sourceModified, err := dirchange.HasDirChecksumChanged(dirCache, sourceChecksumKey, c.app.Path, appBackendSourceWatchPaths...)
 	if err != nil {
 		return err
 	}
 
-	// 我們還考慮了校驗和中的二進製文件，以確保二進製文件未被第三方更改
+	// we also consider the binary in the checksum to ensure the binary has not been changed by a third party
 	var binaryModified bool
 	binaryName, err := c.Binary()
 	if err != nil {
@@ -312,7 +313,7 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 
 	appModified := sourceModified || binaryModified
 
-	// 檢查導出的創世紀是否存在
+	// check if exported genesis exists
 	exportGenesisExists := true
 	exportedGenesisPath, err := c.exportedGenesisPath()
 	if err != nil {
@@ -324,26 +325,26 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 		return err
 	}
 
-	// 構建階段
+	// build phase
 	if !isInit || appModified {
-		// 構建區塊鏈應用程序
+		// build the blockchain app
 		if err := c.build(ctx, cacheStorage, ""); err != nil {
 			return err
 		}
 	}
 
-	// 初始階段
-	// 不願意：gocritic
+	// init phase
+	// nolint:gocritic
 	if !isInit || (appModified && !exportGenesisExists) {
-		fmt.Fprintln(c.stdLog().out, "💿 初始化熊網鏈應用程序...")
+		fmt.Fprintln(c.stdLog().out, "💿 Initializing the app...")
 
 		if err := c.Init(ctx, true); err != nil {
 			return err
 		}
 	} else if appModified {
-		// 如果鏈已經初始化但源已被修改
-		// 我們重置鏈數據庫並導入創世狀態
-		fmt.Fprintln(c.stdLog().out, "💿 檢測到存在的創世起源，正在恢復數據庫...")
+		// if the chain is already initialized but the source has been modified
+		// we reset the chain database and import the genesis state
+		fmt.Fprintln(c.stdLog().out, "💿 Existent genesis detected, restoring the database...")
 
 		if err := commands.UnsafeReset(ctx); err != nil {
 			return err
@@ -353,10 +354,10 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 			return err
 		}
 	} else {
-		fmt.Fprintln(c.stdLog().out, "▶️  重啟熊網鏈現有應用...")
+		fmt.Fprintln(c.stdLog().out, "▶️  Restarting existing app...")
 	}
 
-	// 保存校驗和
+	// save checksums
 	if c.ConfigPath() != "" {
 		if err := dirchange.SaveDirChecksum(dirCache, configChecksumKey, c.app.Path, c.ConfigPath()); err != nil {
 			return err
@@ -373,7 +374,7 @@ func (c *Chain) serve(ctx context.Context, cacheStorage cache.Storage, forceRese
 		return err
 	}
 
-	// 啟動區塊鏈
+	// start the blockchain
 	return c.start(ctx, conf)
 }
 
@@ -385,16 +386,16 @@ func (c *Chain) start(ctx context.Context, config chainconfig.Config) error {
 
 	g, ctx := errgroup.WithContext(ctx)
 
-	// 啟動區塊鏈。
+	// start the blockchain.
 	g.Go(func() error { return c.plugin.Start(ctx, commands, config) })
 
-	// 如果啟用，請啟動水龍頭。
+	// start the faucet if enabled.
 	faucet, err := c.Faucet(ctx)
 	isFaucetEnabled := err != ErrFaucetIsNotEnabled
 
 	if isFaucetEnabled {
 		if err == ErrFaucetAccountDoesNotExist {
-			return &CannotBuildAppError{errors.Wrap(err, "水龍頭帳戶不存在")}
+			return &CannotBuildAppError{errors.Wrap(err, "faucet account doesn't exist")}
 		}
 		if err != nil {
 			return err
@@ -408,21 +409,21 @@ func (c *Chain) start(ctx context.Context, config chainconfig.Config) error {
 		})
 	}
 
-	// 將應用設置為正在服務
+	// set the app as being served
 	c.served = true
 
-	// 注意：地址格式錯誤由錯誤組，因此可以在這里安全地忽略它們
-
+	// note: address format errors are handled by the
+	// error group, so they can be safely ignored here
 	rpcAddr, _ := xurl.HTTP(config.Host.RPC)
 	apiAddr, _ := xurl.HTTP(config.Host.API)
 
-	// 打印服務器地址。
-	fmt.Fprintf(c.stdLog().out, "🌍 熊網鏈節點: %s\n", rpcAddr)
-	fmt.Fprintf(c.stdLog().out, "🌍 熊網鏈API: %s\n", apiAddr)
+	// print the server addresses.
+	fmt.Fprintf(c.stdLog().out, "🌍 Tendermint node: %s\n", rpcAddr)
+	fmt.Fprintf(c.stdLog().out, "🌍 Blockchain API: %s\n", apiAddr)
 
 	if isFaucetEnabled {
 		faucetAddr, _ := xurl.HTTP(chainconfig.FaucetHost(config))
-		fmt.Fprintf(c.stdLog().out, "🌍 熊幣水龍頭: %s\n", faucetAddr)
+		fmt.Fprintf(c.stdLog().out, "🌍 Token faucet: %s\n", faucetAddr)
 	}
 
 	return g.Wait()
@@ -440,7 +441,7 @@ func (c *Chain) runFaucetServer(ctx context.Context, faucet cosmosfaucet.Faucet)
 	})
 }
 
-// saveChainState 運行鏈的導出命令並將導出的創世紀存儲在鏈保存的配置中
+// saveChainState runs the export command of the chain and store the exported genesis in the chain saved config
 func (c *Chain) saveChainState(ctx context.Context, commands chaincmdrunner.Runner) error {
 	genesisPath, err := c.exportedGenesisPath()
 	if err != nil {
@@ -450,7 +451,7 @@ func (c *Chain) saveChainState(ctx context.Context, commands chaincmdrunner.Runn
 	return commands.Export(ctx, genesisPath)
 }
 
-// importChainState 導入鏈配置中保存的創世紀以將其用作創世紀
+// importChainState imports the saved genesis in chain config to use it as the genesis
 func (c *Chain) importChainState() error {
 	exportGenesisPath, err := c.exportedGenesisPath()
 	if err != nil {
@@ -464,8 +465,8 @@ func (c *Chain) importChainState() error {
 	return copy.Copy(exportGenesisPath, genesisPath)
 }
 
-// chainSavePath 返回鏈狀態保存的路徑
-// 如果路徑不存在則創建路徑
+// chainSavePath returns the path where the chain state is saved
+// create the path if it doesn't exist
 func (c *Chain) chainSavePath() (string, error) {
 	savePath, err := starportSavePath()
 	if err != nil {
@@ -478,7 +479,7 @@ func (c *Chain) chainSavePath() (string, error) {
 	}
 	chainSavePath := filepath.Join(savePath, chainID)
 
-	// 確保路徑存在
+	// ensure the path exists
 	if err := os.MkdirAll(savePath, 0700); err != nil && !os.IsExist(err) {
 		return "", err
 	}
@@ -486,7 +487,7 @@ func (c *Chain) chainSavePath() (string, error) {
 	return chainSavePath, nil
 }
 
-// exportGenesisPath 返回導出的創世文件的路徑
+// exportedGenesisPath returns the path of the exported genesis file
 func (c *Chain) exportedGenesisPath() (string, error) {
 	savePath, err := c.chainSavePath()
 	if err != nil {
@@ -501,7 +502,7 @@ type CannotBuildAppError struct {
 }
 
 func (e *CannotBuildAppError) Error() string {
-	return fmt.Sprintf("無法構建熊網鏈應用程序:\n\n\t%s", e.Err)
+	return fmt.Sprintf("cannot build app:\n\n\t%s", e.Err)
 }
 
 func (e *CannotBuildAppError) Unwrap() error {
@@ -514,24 +515,24 @@ type CannotStartAppError struct {
 }
 
 func (e *CannotStartAppError) Error() string {
-	return fmt.Sprintf("不能啟動 %sd 開始:\n%s", e.AppName, errors.Unwrap(e.Err))
+	return fmt.Sprintf("cannot run %sd start:\n%s", e.AppName, errors.Unwrap(e.Err))
 }
 
 func (e *CannotStartAppError) Unwrap() error {
 	return e.Err
 }
 
-// ParseStartError 將錯誤解析為明確的錯誤字符串
-// Cosmos SDK 應用程序的錯誤日誌太長，無法直接打印
-// 如果錯誤沒有被識別，返回一個空字符串
+// ParseStartError parses the error into a clear error string
+// The error logs from Cosmos SDK application are too extensive to be directly printed
+// If the error is not recognized, returns an empty string
 func (e *CannotStartAppError) ParseStartError() string {
 	errorLogs := errors.Unwrap(e.Err).Error()
 	switch {
-	case strings.Contains(errorLogs, "綁定：地址已經在使用中"):
-		r := regexp.MustCompile(`listen .* 綁定：地址已經在使用中`)
+	case strings.Contains(errorLogs, "bind: address already in use"):
+		r := regexp.MustCompile(`listen .* bind: address already in use`)
 		return r.FindString(errorLogs)
-	case strings.Contains(errorLogs, "驗證器集在創世中為零"):
-		return "錯誤：握手期間出錯：重放時出錯：驗證器集在創世中為零，並且在 InitChain 之後仍然為空"
+	case strings.Contains(errorLogs, "validator set is nil in genesis"):
+		return "Error: error during handshake: error on replay: validator set is nil in genesis and still empty after InitChain"
 	default:
 		return ""
 	}

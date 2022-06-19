@@ -21,13 +21,13 @@ const (
 func NewNetworkCampaignUpdate() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "update [campaign-id]",
-		Short: "更新活動的詳情",
+		Short: "Update details fo the campaign of the campaign",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkCampaignUpdateHandler,
 	}
-	c.Flags().String(flagCampaignName, "", "更新活動名稱")
-	c.Flags().String(flagCampaignMetadata, "", "更新活動元數據")
-	c.Flags().String(flagCampaignTotalSupply, "", "更新活動的主網總數")
+	c.Flags().String(flagCampaignName, "", "Update the campaign name")
+	c.Flags().String(flagCampaignMetadata, "", "Update the campaign metadata")
+	c.Flags().String(flagCampaignTotalSupply, "", "Update the total of the mainnet of a campaign")
 	c.Flags().AddFlagSet(flagNetworkFrom())
 	c.Flags().AddFlagSet(flagSetKeyringBackend())
 	return c
@@ -52,14 +52,14 @@ func networkCampaignUpdateHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析活動 ID
+	// parse campaign ID
 	campaignID, err := network.ParseID(args[0])
 	if err != nil {
 		return err
 	}
 
 	if campaignName == "" && metadata == "" && totalSupply.Empty() {
-		return fmt.Errorf("至少一個標誌 %s 必須提供",
+		return fmt.Errorf("at least one of the flags %s must be provided",
 			strings.Join([]string{
 				flagCampaignName,
 				flagCampaignMetadata,

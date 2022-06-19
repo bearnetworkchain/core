@@ -31,12 +31,12 @@ const (
 )
 
 type (
-	// Genesis 代表更易讀的熊網鏈創世紀文件版本
+	// Genesis represents a more readable version of the stargate genesis file
 	Genesis struct {
 		Accounts   []string
 		StakeDenom string
 	}
-	// ChainGenesis 代表熊網鏈創世文件
+	// ChainGenesis represents the stargate genesis file
 	ChainGenesis struct {
 		ChainID  string `json:"chain_id"`
 		AppState struct {
@@ -53,13 +53,13 @@ type (
 		} `json:"app_state"`
 	}
 
-	// 從創世紀更新的字段
+	// fields to update from genesis
 	fields map[string]string
-	// GenesisField 配置創世鍵值字段。
+	// GenesisField configures the genesis key value fields.
 	GenesisField func(fields)
 )
 
-// HasAccount 檢查帳戶是否存在於創世帳戶中
+// HasAccount check if account exist into the genesis account
 func (g Genesis) HasAccount(address string) bool {
 	for _, account := range g.Accounts {
 		if account == address {
@@ -69,35 +69,35 @@ func (g Genesis) HasAccount(address string) bool {
 	return false
 }
 
-// WithKeyValue 將鍵和值字段設置為創世文件
+// WithKeyValue sets key and value field to genesis file
 func WithKeyValue(key, value string) GenesisField {
 	return func(f fields) {
 		f[key] = value
 	}
 }
 
-// WithKeyValueInt 將 key 和 int64 值字段設置為創世紀文件
+// WithKeyValueInt sets key and int64 value field to genesis file
 func WithKeyValueInt(key string, value int64) GenesisField {
 	return func(f fields) {
 		f[key] = strconv.FormatInt(value, 10)
 	}
 }
 
-// WithKeyValueUint 將鍵和 uint64 值字段設置為創世文件
+// WithKeyValueUint sets key and uint64 value field to genesis file
 func WithKeyValueUint(key string, value uint64) GenesisField {
 	return func(f fields) {
 		f[key] = strconv.FormatUint(value, 10)
 	}
 }
 
-// WithKeyValueTimestamp 將鍵和時間戳值字段設置為創世文件
+// WithKeyValueTimestamp sets key and timestamp value field to genesis file
 func WithKeyValueTimestamp(key string, value int64) GenesisField {
 	return func(f fields) {
 		f[key] = time.Unix(value, 0).UTC().Format(time.RFC3339Nano)
 	}
 }
 
-// WithKeyValueBoolean 將鍵和布爾值字段設置為創世文件
+// WithKeyValueBoolean sets key and boolean value field to genesis file
 func WithKeyValueBoolean(key string, value bool) GenesisField {
 	return func(f fields) {
 		if value {
@@ -132,28 +132,28 @@ func UpdateGenesis(genesisPath string, options ...GenesisField) error {
 	return os.WriteFile(genesisPath, genesisBytes, 0644)
 }
 
-// ParseGenesisFromPath 從創世文件中解析鏈創世紀對象
+// ParseGenesisFromPath parse ChainGenesis object from a genesis file
 func ParseGenesisFromPath(genesisPath string) (Genesis, error) {
 	genesisFile, err := os.ReadFile(genesisPath)
 	if err != nil {
-		return Genesis{}, errors.Wrap(err, "無法打開創世文件")
+		return Genesis{}, errors.Wrap(err, "cannot open genesis file")
 	}
 	return ParseGenesis(genesisFile)
 }
 
-// ParseChainGenesis 從字節片中解析鏈創世紀對象
+// ParseChainGenesis parse ChainGenesis object from a byte slice
 func ParseChainGenesis(genesisFile []byte) (chainGenesis ChainGenesis, err error) {
 	if err := json.Unmarshal(genesisFile, &chainGenesis); err != nil {
-		return chainGenesis, errors.New("無法解組鏈創世文件: " + err.Error())
+		return chainGenesis, errors.New("cannot unmarshal the chain genesis file: " + err.Error())
 	}
 	return chainGenesis, err
 }
 
-// ParseGenesis 將 ChainGenesis 對像從字節切片解析為創世紀對象
+// ParseGenesis parse ChainGenesis object from a byte slice into a Genesis object
 func ParseGenesis(genesisFile []byte) (Genesis, error) {
 	chainGenesis, err := ParseChainGenesis(genesisFile)
 	if err != nil {
-		return Genesis{}, errors.New("無法解組創世文件: " + err.Error())
+		return Genesis{}, errors.New("cannot unmarshal the genesis file: " + err.Error())
 	}
 	genesis := Genesis{StakeDenom: chainGenesis.AppState.Staking.Params.BondDenom}
 	for _, acc := range chainGenesis.AppState.Auth.Accounts {
@@ -162,7 +162,7 @@ func ParseGenesis(genesisFile []byte) (Genesis, error) {
 	return genesis, nil
 }
 
-// CheckGenesisContainsAddress 如果地址存在於創世文件中，則返回 true
+// CheckGenesisContainsAddress returns true if the address exist into the genesis file
 func CheckGenesisContainsAddress(genesisPath, addr string) (bool, error) {
 	_, err := os.Stat(genesisPath)
 	if os.IsNotExist(err) {
@@ -177,7 +177,7 @@ func CheckGenesisContainsAddress(genesisPath, addr string) (bool, error) {
 	return genesis.HasAccount(addr), nil
 }
 
-// GenesisAndHashFromURL 從給定的 url 獲取創世紀並返回其內容以及 sha256 哈希值。
+// GenesisAndHashFromURL fetches the genesis from the given url and returns its content along with the sha256 hash.
 func GenesisAndHashFromURL(ctx context.Context, url string) (genesis []byte, hash string, err error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
 	if err != nil {

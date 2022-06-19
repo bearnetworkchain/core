@@ -17,7 +17,7 @@ import (
 func NewNetworkChainInstall() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "install [launch-id]",
-		Short: "安裝二進製文件並啟動熊網鏈",
+		Short: "Install chain binary for a launch",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainInstallHandler,
 	}
@@ -69,9 +69,9 @@ func networkChainInstallHandler(cmd *cobra.Command, args []string) error {
 	binaryPath := filepath.Join(goenv.Bin(), binaryName)
 
 	session.StopSpinner()
-	session.Printf("%s 二進制安裝\n", icons.OK)
-	session.Printf("%s 二進制名稱: %s\n", icons.Info, colors.Info(binaryName))
-	session.Printf("%s 二進制路徑: %s\n", icons.Info, colors.Info(binaryPath))
+	session.Printf("%s Binary installed\n", icons.OK)
+	session.Printf("%s Binary's name: %s\n", icons.Info, colors.Info(binaryName))
+	session.Printf("%s Binary's path: %s\n", icons.Info, colors.Info(binaryPath))
 
 	return nil
 }

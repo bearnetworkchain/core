@@ -30,7 +30,7 @@ type CosmosClient interface {
 	ConsensusInfo(ctx context.Context, height int64) (cosmosclient.ConsensusInfo, error)
 }
 
-// Network是網絡建設者。
+// Network is network builder.
 type Network struct {
 	ev            events.Bus
 	cosmos        CosmosClient
@@ -91,14 +91,14 @@ func WithStakingQueryClient(client stakingtypes.QueryClient) Option {
 	}
 }
 
-// CollectEvents 從網絡構建器收集事件。
+// CollectEvents collects events from the network builder.
 func CollectEvents(ev events.Bus) Option {
 	return func(n *Network) {
 		n.ev = ev
 	}
 }
 
-// New 創建一個生成器。
+// New creates a Builder.
 func New(cosmos CosmosClient, account cosmosaccount.Account, options ...Option) Network {
 	n := Network{
 		cosmos:        cosmos,
@@ -118,10 +118,10 @@ func New(cosmos CosmosClient, account cosmosaccount.Account, options ...Option) 
 func ParseID(id string) (uint64, error) {
 	objID, err := strconv.ParseUint(id, 10, 64)
 	if err != nil {
-		return 0, errors.Wrap(err, "解析啟動ID出錯")
+		return 0, errors.Wrap(err, "error parsing launchID")
 	}
 	if objID == 0 {
-		return 0, errors.New("啟動 ID 必須大於 0")
+		return 0, errors.New("launch ID must be greater than 0")
 	}
 	return objID, nil
 }

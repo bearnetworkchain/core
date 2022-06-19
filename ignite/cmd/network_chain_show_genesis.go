@@ -14,7 +14,7 @@ import (
 func newNetworkChainShowGenesis() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "genesis [launch-id]",
-		Short: "顯示熊網鏈創世文件",
+		Short: "Show the chain genesis file",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainShowGenesisHandler,
 	}
@@ -65,15 +65,15 @@ func networkChainShowGenesisHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 檢查起源是否已經存在
+	// check if the genesis already exists
 	if _, err = os.Stat(genesisPath); os.IsNotExist(err) {
-		// 獲取信息以構建創世紀
+		// fetch the information to construct genesis
 		genesisInformation, err := n.GenesisInformation(cmd.Context(), launchID)
 		if err != nil {
 			return err
 		}
 
-		// 在臨時目錄中創建鏈
+		// create the chain in a temp dir
 		tmpHome, err := os.MkdirTemp("", "*-spn")
 		if err != nil {
 			return err
@@ -103,7 +103,7 @@ func networkChainShowGenesisHandler(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		// 獲得新的創世路徑
+		// get the new genesis path
 		genesisPath, err = c.GenesisPath()
 		if err != nil {
 			return err
@@ -120,5 +120,5 @@ func networkChainShowGenesisHandler(cmd *cobra.Command, args []string) error {
 
 	session.StopSpinner()
 
-	return session.Printf("%s 創世紀生成: %s\n", icons.Bullet, out)
+	return session.Printf("%s Genesis generated: %s\n", icons.Bullet, out)
 }

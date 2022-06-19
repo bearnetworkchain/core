@@ -12,59 +12,59 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
 )
 
-// Msgs 是一個模塊導入路徑-SDK 消息對。
+// Msgs is a module import path-sdk msgs pair.
 type Msgs map[string][]string
 
-// Module 保留有關 Cosmos SDK 模塊的元數據.
+// Module keeps metadata about a Cosmos SDK module.
 type Module struct {
 	// Name of the module.
 	Name string
 
-	// GoModulePath 定義模塊的應用程序。
+	// GoModulePath of the app where the module is defined.
 	GoModulePath string
 
-	// Pkg 保存原始包信息。
+	// Pkg holds the proto package info.
 	Pkg protoanalysis.Package
 
-	// Msg 是模塊的 sdk.Msg 實現列表。
+	// Msg is a list of sdk.Msg implementation of the module.
 	Msgs []Msg
 
-	// HTTPQueries 是模塊查詢的列表。
+	// HTTPQueries is a list of module queries.
 	HTTPQueries []HTTPQuery
 
-	// Types是模塊可能使用的原型類型列表。
+	// Types is a list of proto types that might be used by module.
 	Types []Type
 }
 
-// Msg 保留有關 sdk.Msg 實現的元數據。
+// Msg keeps metadata about an sdk.Msg implementation.
 type Msg struct {
-	// 類型的名稱。
+	// Name of the type.
 	Name string
 
-	// 類型的 URI。
+	// URI of the type.
 	URI string
 
-	// FilePath 是定義消息的 .proto 文件的路徑。
+	// FilePath is the path of the .proto file where message is defined at.
 	FilePath string
 }
 
-// HTTPQuery 是一個 sdk 查詢。
+// HTTPQuery is an sdk Query.
 type HTTPQuery struct {
-	// RPC 函數的名稱。
+	// Name of the RPC func.
 	Name string
 
-	// 帶有服務名稱和 rpc 函數名稱的查詢的全名。
+	// FullName of the query with service name and rpc func name.
 	FullName string
 
-	// HTTPAnnotations 保存有關查詢的 http 註釋的信息。
+	// HTTPAnnotations keeps info about http annotations of query.
 	Rules []protoanalysis.HTTPRule
 }
 
-// Type 是模塊可能使用的原型類型。
+// Type is a proto type that might be used by module.
 type Type struct {
 	Name string
 
-	// FilePath 是定義消息的 .proto 文件的路徑。
+	// FilePath is the path of the .proto file where message is defined at.
 	FilePath string
 }
 
@@ -75,17 +75,17 @@ type moduleDiscoverer struct {
 	registeredModules []string
 }
 
-// Discover 發現並返回在應用中註冊的模塊及其類型
-// chainRoot 是鏈的根路徑
-// sourcePath 是 proto dir 所在的 go 模塊的根路徑
+// Discover discovers and returns modules and their types that are registered in the app
+// chainRoot is the root path of the chain
+// sourcePath is the root path of the go module which the proto dir is from
 //
-// 發現算法利用註冊模塊和原型定義來查找相關的註冊模塊
-// 它通過以下方式實現：
-// 1. 從app中獲取所有註冊的go模塊
-// 2. 解析 proto 文件找到服務和消息
-// 3. 檢查 proto 服務是否在任何註冊的模塊中實現
+// discovery algorithm make use of registered modules and proto definitions to find relevant registered modules
+// It does so by:
+// 1. Getting all the registered go modules from the app
+// 2. Parsing the proto files to find services and messages
+// 3. Check if the proto services are implemented in any of the registered modules
 func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Module, error) {
-	// 找出區塊鏈的基本 Go 導入路徑。
+	// find out base Go import path of the blockchain.
 	gm, err := gomodule.ParseAt(sourcePath)
 	if err != nil {
 		if err == gomodule.ErrGoModNotFound {
@@ -101,7 +101,7 @@ func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Mo
 
 	basegopath := gm.Module.Mod.Path
 
-	// 只過濾掉這裡可能不相關的註冊模塊
+	// Just filter out the registered modules that are not possibly relevant here
 	potentialModules := make([]string, 0)
 	for _, m := range registeredModules {
 		if strings.HasPrefix(m, basegopath) {
@@ -119,7 +119,7 @@ func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Mo
 		registeredModules: potentialModules,
 	}
 
-	// 查找屬於 x/ 下模塊​​的 proto 包。
+	// find proto packages that belong to modules under x/.
 	pkgs, err := md.findModuleProtoPkgs(ctx)
 	if err != nil {
 		return nil, err
@@ -142,7 +142,7 @@ func Discover(ctx context.Context, chainRoot, sourcePath, protoDir string) ([]Mo
 	return modules, nil
 }
 
-// 通過 proto pkg 發現發現和 sdk 模塊。
+// discover discovers and sdk module by a proto pkg.
 func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 	pkgrelpath := strings.TrimPrefix(pkg.GoImportPath(), d.basegopath)
 	pkgpath := filepath.Join(d.sourcePath, pkgrelpath)
@@ -175,9 +175,9 @@ func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 	for _, msg := range msgs {
 		pkgmsg, err := pkg.MessageByName(msg)
 		if err != nil {
-			// no msg found in the proto defs 對應於發現的 sdk 消息。
-			// 如果找不到，不用擔心，這意味著它被使用了
-			// 僅限內部使用，不開放供實際使用。
+			// no msg found in the proto defs corresponds to discovered sdk message.
+			// if it cannot be found, nothing to worry about, this means that it is used
+			// only internally and not open for actual use.
 			continue
 		}
 
@@ -188,21 +188,21 @@ func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 		})
 	}
 
-	// isType 是否可以將 protomsg 作為任何類型添加到模塊。
+	// isType whether if protomsg can be added as an any Type to Module.
 	isType := func(protomsg protoanalysis.Message) bool {
-		// 不要使用創世狀態類型。
+		// do not use GenesisState type.
 		if protomsg.Name == "GenesisState" {
 			return false
 		}
 
-		// 如果 SDK 消息，請勿使用。
+		// do not use if an SDK message.
 		for _, msg := range msgs {
 			if msg == protomsg.Name {
 				return false
 			}
 		}
 
-		// 如果用作 RPC 的請求/返回類型，請勿使用。
+		// do not use if used as a request/return type type of an RPC.
 		for _, s := range pkg.Services {
 			for _, q := range s.RPCFuncs {
 				if q.RequestType == protomsg.Name || q.ReturnsType == protomsg.Name {
@@ -214,7 +214,7 @@ func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 		return true
 	}
 
-	//填充類型。
+	// fill types.
 	for _, protomsg := range pkg.Messages {
 		if !isType(protomsg) {
 			continue
@@ -226,7 +226,7 @@ func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 		})
 	}
 
-	//填寫查詢。
+	// fill queries.
 	for _, s := range pkg.Services {
 		for _, q := range s.RPCFuncs {
 			if len(q.HTTPRules) == 0 {
@@ -244,13 +244,13 @@ func (d *moduleDiscoverer) discover(pkg protoanalysis.Package) (Module, error) {
 }
 
 func (d *moduleDiscoverer) findModuleProtoPkgs(ctx context.Context) ([]protoanalysis.Package, error) {
-	// 找出區塊鏈中的所有原始包。
+	// find out all proto packages inside blockchain.
 	allprotopkgs, err := protoanalysis.Parse(ctx, nil, d.protoPath)
 	if err != nil {
 		return nil, err
 	}
 
-	// 過濾掉不代表區塊鏈 x/ 模塊的 proto 包。
+	// filter out proto packages that do not represent x/ modules of blockchain.
 	var xprotopkgs []protoanalysis.Package
 	for _, pkg := range allprotopkgs {
 		if !strings.HasPrefix(pkg.GoImportName, d.basegopath) {
@@ -263,7 +263,7 @@ func (d *moduleDiscoverer) findModuleProtoPkgs(ctx context.Context) ([]protoanal
 	return xprotopkgs, nil
 }
 
-// 檢查 pkg 是否在任何已註冊的模塊中實現
+// Checks if the pkg is implemented in any of the registered modules
 func (d *moduleDiscoverer) pkgIsFromRegisteredModule(pkg protoanalysis.Package) (bool, error) {
 	for _, rm := range d.registeredModules {
 		implRelPath := strings.TrimPrefix(rm, d.basegopath)
@@ -279,8 +279,8 @@ func (d *moduleDiscoverer) pkgIsFromRegisteredModule(pkg protoanalysis.Package) 
 				return false, err
 			}
 
-			// 在某些情況下，模塊註冊在模塊的另一層子目錄中。
-			// 全部: 在 proto 包中找到最近的子目錄。
+			// In some cases, the module registration is in another level of sub dir in the module.
+			// TODO: find the closest sub dir among proto packages.
 			if len(found) == 0 && strings.HasPrefix(rm, pkg.GoImportName) {
 				altImplRelPath := strings.TrimPrefix(pkg.GoImportName, d.basegopath)
 				altImplPath := filepath.Join(d.sourcePath, altImplRelPath)

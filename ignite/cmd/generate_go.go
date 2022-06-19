@@ -12,13 +12,13 @@ import (
 func NewGenerateGo() *cobra.Command {
 	return &cobra.Command{
 		Use:   "proto-go",
-		Short: "生成應用程序源代碼所需的原型Golang代碼",
+		Short: "Generate proto based Go code needed for the app's source code",
 		RunE:  generateGoHandler,
 	}
 }
 
 func generateGoHandler(cmd *cobra.Command, args []string) error {
-	s := clispinner.New().SetText("生成中,抽根菸,喝口飲料,稍等一下...")
+	s := clispinner.New().SetText("Generating...")
 	defer s.Stop()
 
 	c, err := newChainWithHomeFlags(cmd)
@@ -36,7 +36,7 @@ func generateGoHandler(cmd *cobra.Command, args []string) error {
 	}
 
 	s.Stop()
-	fmt.Println("⛏️  生成Golang代碼.")
+	fmt.Println("⛏️  Generated go code.")
 
 	return nil
 }

@@ -6,11 +6,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// NewScaffoldList 返回一個新命令來構建列表。
+// NewScaffoldList returns a new command to scaffold a list.
 func NewScaffoldList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list NAME [field]...",
-		Short: "CRUD 用於存儲為數組的數據",
+		Short: "CRUD for data stored as an array",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  scaffoldListHandler,
 	}

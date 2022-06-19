@@ -12,7 +12,7 @@ const (
 	optionName       = "--name"
 )
 
-// 啟動板設置配置命令
+// launchpadSetConfigCommand
 func (c ChainCmd) launchpadSetConfigCommand(name string, value string) step.Option {
 	command := []string{
 		commandConfig,
@@ -23,7 +23,7 @@ func (c ChainCmd) launchpadSetConfigCommand(name string, value string) step.Opti
 	return c.cliCommand(command)
 }
 
-// 啟動板RestServerCommand
+// launchpadRestServerCommand
 func (c ChainCmd) launchpadRestServerCommand(apiAddress string, rpcAddress string) step.Option {
 	command := []string{
 		commandRestServer,
@@ -36,7 +36,7 @@ func (c ChainCmd) launchpadRestServerCommand(apiAddress string, rpcAddress strin
 	return c.cliCommand(command)
 }
 
-// attachCLIHome 將 home 標誌附加到提供的 CLI 命令
+// attachCLIHome appends the home flag to the provided CLI command
 func (c ChainCmd) attachCLIHome(command []string) []string {
 	if c.cliHome != "" {
 		command = append(command, []string{optionHome, c.cliHome}...)

@@ -21,10 +21,10 @@ import (
 	"github.com/ignite-hq/cli/ignite/templates/typed/singleton"
 )
 
-// AddTypeOption 配置 AddType 的選項。
+// AddTypeOption configures options for AddType.
 type AddTypeOption func(*addTypeOptions)
 
-// AddTypeKind 為 AddType 配置類型種類選項。
+// AddTypeKind configures the type kind option for AddType.
 type AddTypeKind func(*addTypeOptions)
 
 type addTypeOptions struct {
@@ -42,7 +42,7 @@ type addTypeOptions struct {
 	signer            string
 }
 
-// newAddTypeOptions 返回帶有默認選項的 addTypeOptions
+// newAddTypeOptions returns a addTypeOptions with default options
 func newAddTypeOptions(moduleName string) addTypeOptions {
 	return addTypeOptions{
 		moduleName: moduleName,
@@ -50,15 +50,15 @@ func newAddTypeOptions(moduleName string) addTypeOptions {
 	}
 }
 
-// ListType 使類型存儲在存儲中的列表約定中。
+// ListType makes the type stored in a list convention in the storage.
 func ListType() AddTypeKind {
 	return func(o *addTypeOptions) {
 		o.isList = true
 	}
 }
 
-// MapType 使類型存儲在具有自定義的存儲中的鍵值約定中
-// 指數期權。
+// MapType makes the type stored in a key-value convention in the storage with a custom
+// index option.
 func MapType(indexes ...string) AddTypeKind {
 	return func(o *addTypeOptions) {
 		o.isMap = true
@@ -66,57 +66,57 @@ func MapType(indexes ...string) AddTypeKind {
 	}
 }
 
-// SingletonType 使存儲在固定位置的類型作為存儲中的單個條目。
+// SingletonType makes the type stored in a fixed place as a single entry in the storage.
 func SingletonType() AddTypeKind {
 	return func(o *addTypeOptions) {
 		o.isSingleton = true
 	}
 }
 
-// DryType 僅創建具有基本定義的類型。
+// DryType only creates a type with a basic definition.
 func DryType() AddTypeKind {
 	return func(o *addTypeOptions) {}
 }
 
-// TypeWithModule 腳手架類型的模塊。
+// TypeWithModule module to scaffold type into.
 func TypeWithModule(name string) AddTypeOption {
 	return func(o *addTypeOptions) {
 		o.moduleName = name
 	}
 }
 
-// TypeWithFields 將字段添加到要搭建的類型。
+// TypeWithFields adds fields to the type to be scaffolded.
 func TypeWithFields(fields ...string) AddTypeOption {
 	return func(o *addTypeOptions) {
 		o.fields = fields
 	}
 }
 
-// TypeWithoutMessage 禁用生成 sdk 兼容消息和 tx 相關 API。
+// TypeWithoutMessage disables generating sdk compatible messages and tx related APIs.
 func TypeWithoutMessage() AddTypeOption {
 	return func(o *addTypeOptions) {
 		o.withoutMessage = true
 	}
 }
 
-// TypeWithoutSimulation 禁用生成消息模擬。
+// TypeWithoutSimulation disables generating messages simulation.
 func TypeWithoutSimulation() AddTypeOption {
 	return func(o *addTypeOptions) {
 		o.withoutSimulation = true
 	}
 }
 
-// TypeWithSigner 為消息提供自定義簽名者名稱
+// TypeWithSigner provides a custom signer name for the message
 func TypeWithSigner(signer string) AddTypeOption {
 	return func(o *addTypeOptions) {
 		o.signer = signer
 	}
 }
 
-// AddType 將新類型添加到腳手架應用程序。
-// 如果未給出列表、映射或單例，則為沒有任何額外內容的干類型（如存儲層、模型、CLI 等）
-// 將被腳手架。
-// 如果沒有給出模塊，該類型將在應用程序的默認模塊中搭建。
+// AddType adds a new type to a scaffolded app.
+// if non of the list, map or singleton given, a dry type without anything extra (like a storage layer, models, CLI etc.)
+// will be scaffolded.
+// if no module is given, the type will be scaffolded inside the app's default module.
 func (s Scaffolder) AddType(
 	ctx context.Context,
 	cacheStorage cache.Storage,
@@ -125,7 +125,7 @@ func (s Scaffolder) AddType(
 	kind AddTypeKind,
 	options ...AddTypeOption,
 ) (sm xgenny.SourceModification, err error) {
-	// 應用選項。
+	// apply options.
 	o := newAddTypeOptions(s.modpath.Package)
 	for _, apply := range append(options, AddTypeOption(kind)) {
 		apply(&o)
@@ -151,7 +151,7 @@ func (s Scaffolder) AddType(
 		signer = o.signer
 	}
 
-	// 檢查並解析提供的字段
+	// Check and parse provided fields
 	if err := checkCustomTypes(ctx, s.path, moduleName, o.fields); err != nil {
 		return sm, err
 	}
@@ -186,7 +186,7 @@ func (s Scaffolder) AddType(
 		}
 		gens []*genny.Generator
 	)
-	// 檢查並支持 MsgServer 約定
+	// Check and support MsgServer convention
 	gens, err = supportMsgServer(
 		gens,
 		tracer,
@@ -223,7 +223,7 @@ func (s Scaffolder) AddType(
 		return sm, err
 	}
 
-	// 根據模型創建類型生成器
+	// create the type generator depending on the model
 	switch {
 	case o.isList:
 		g, err = list.NewStargate(tracer, opts)
@@ -238,7 +238,7 @@ func (s Scaffolder) AddType(
 		return sm, err
 	}
 
-	// 運行生成
+	// run the generation
 	gens = append(gens, g)
 	sm, err = xgenny.RunWithValidation(tracer, gens...)
 	if err != nil {
@@ -248,7 +248,7 @@ func (s Scaffolder) AddType(
 	return sm, finish(cacheStorage, opts.AppPath, s.modpath.RawPath)
 }
 
-// 如果名稱被禁止作為字段名稱，則 checkForbiddenTypeIndex 返回 true
+// checkForbiddenTypeIndex returns true if the name is forbidden as a field name
 func checkForbiddenTypeIndex(name string) error {
 	fieldSplit := strings.Split(name, datatype.Separator)
 	if len(fieldSplit) > 1 {
@@ -261,7 +261,7 @@ func checkForbiddenTypeIndex(name string) error {
 	return checkForbiddenTypeField(name)
 }
 
-// 如果名稱被禁止作為字段名稱，則 checkForbiddenTypeField 返回 true
+// checkForbiddenTypeField returns true if the name is forbidden as a field name
 func checkForbiddenTypeField(name string) error {
 	mfName, err := multiformatname.NewName(name)
 	if err != nil {
@@ -274,28 +274,28 @@ func checkForbiddenTypeField(name string) error {
 		"params",
 		"appendedvalue",
 		datatype.TypeCustom:
-		return fmt.Errorf("%s 由類型腳手架使用", name)
+		return fmt.Errorf("%s is used by type scaffolder", name)
 	}
 
 	return checkGoReservedWord(name)
 }
 
-//mapGenerator 返回地圖的模板生成器
+// mapGenerator returns the template generator for a map
 func mapGenerator(replacer placeholder.Replacer, opts *typed.Options, indexes []string) (*genny.Generator, error) {
-	//使用關聯類型解析索引
+	// Parse indexes with the associated type
 	parsedIndexes, err := field.ParseFields(indexes, checkForbiddenTypeIndex)
 	if err != nil {
 		return nil, err
 	}
 
-	// 索引和類型字段必須是不相交的
+	// Indexes and type fields must be disjoint
 	exists := make(map[string]struct{})
 	for _, name := range opts.Fields {
 		exists[name.Name.LowerCamel] = struct{}{}
 	}
 	for _, index := range parsedIndexes {
 		if _, ok := exists[index.Name.LowerCamel]; ok {
-			return nil, fmt.Errorf("%s 不能同時是索引和字段", index.Name.Original)
+			return nil, fmt.Errorf("%s cannot simultaneously be an index and a field", index.Name.Original)
 		}
 	}
 

@@ -6,7 +6,7 @@
         {
           "@type": "/cosmos.auth.v1beta1.BaseAccount",
           "account_number": "0",
-          "address": "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+          "address": "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
           "pub_key": null,
           "sequence": "0"
         }
@@ -22,11 +22,11 @@
     "bank": {
       "balances": [
         {
-          "address": "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+          "address": "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
           "coins": [
             {
               "amount": "95000000",
-              "denom": "bnkt"
+              "denom": "stake"
             }
           ]
         }
@@ -45,7 +45,7 @@
     "crisis": {
       "constant_fee": {
         "amount": "1000",
-        "denom": "bnkt"
+        "denom": "stake"
       }
     },
     "distribution": {
@@ -112,7 +112,7 @@
                   "max_rate": "0.200000000000000000",
                   "rate": "0.100000000000000000"
                 },
-                "delegator_address": "bnkt1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
+                "delegator_address": "cosmos1dd246yq6z5vzjz9gh8cff46pll75yyl8ygndsj",
                 "description": {
                   "details": "",
                   "identity": "",
@@ -125,10 +125,10 @@
                   "@type": "/cosmos.crypto.ed25519.PubKey",
                   "key": "aeQLCJOjXUyB7evOodI4mbrshIt3vhHGlycJDbUkaMs="
                 },
-                "validator_address": "bnktvaloper1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
+                "validator_address": "cosmosvaloper1dd246yq6z5vzjz9gh8cff46pll75yyl8pu8cup",
                 "value": {
                   "amount": "95000000",
-                  "denom": "bnkt"
+                  "denom": "stake"
                 }
               }
             ],
@@ -147,7 +147,7 @@
         "min_deposit": [
           {
             "amount": "10000000",
-            "denom": "bnkt"
+            "denom": "stake"
           }
         ]
       },
@@ -208,7 +208,7 @@
         "inflation_max": "0.200000000000000000",
         "inflation_min": "0.070000000000000000",
         "inflation_rate_change": "0.130000000000000000",
-        "mint_denom": "bnkt"
+        "mint_denom": "stake"
       }
     },
     "params": null,
@@ -229,7 +229,7 @@
       "last_total_power": "0",
       "last_validator_powers": [],
       "params": {
-        "bond_denom": "bnkt",
+        "bond_denom": "stake",
         "historical_entries": 10000,
         "max_entries": 7,
         "max_validators": 100,

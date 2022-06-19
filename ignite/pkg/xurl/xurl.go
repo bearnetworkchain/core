@@ -15,7 +15,7 @@ const (
 	schemeWS    = "ws"
 )
 
-// TCP 確保 URL 包含 TCP 方案。
+// TCP ensures that a URL contains a TCP scheme.
 func TCP(s string) (string, error) {
 	u, err := parseURL(s)
 	if err != nil {
@@ -27,7 +27,7 @@ func TCP(s string) (string, error) {
 	return u.String(), nil
 }
 
-// HTTP確保 URL 包含 HTTP 方案。
+// HTTP ensures that a URL contains an HTTP scheme.
 func HTTP(s string) (string, error) {
 	u, err := parseURL(s)
 	if err != nil {
@@ -39,7 +39,7 @@ func HTTP(s string) (string, error) {
 	return u.String(), nil
 }
 
-// HTTPS確保 URL 包含 HTTPS 方案。
+// HTTPS ensures that a URL contains an HTTPS scheme.
 func HTTPS(s string) (string, error) {
 	u, err := parseURL(s)
 	if err != nil {
@@ -51,8 +51,8 @@ func HTTPS(s string) (string, error) {
 	return u.String(), nil
 }
 
-// 噹噹前方案不是 HTTP 時，MightHTTPS 確保 URL 包含 HTTPS 方案。
-// 當 URL 包含 HTTP 方案時，它不會被修改。
+// MightHTTPS ensures that a URL contains an HTTPS scheme when the current scheme is not HTTP.
+// When the URL contains an HTTP scheme it is not modified.
 func MightHTTPS(s string) (string, error) {
 	if strings.HasPrefix(strings.ToLower(s), "http://") {
 		return s, nil
@@ -61,7 +61,7 @@ func MightHTTPS(s string) (string, error) {
 	return HTTPS(s)
 }
 
-// WS 確保 URL 包含 WS 方案。
+// WS ensures that a URL contains a WS scheme.
 func WS(s string) (string, error) {
 	u, err := parseURL(s)
 	if err != nil {
@@ -73,7 +73,7 @@ func WS(s string) (string, error) {
 	return u.String(), nil
 }
 
-// HTTPEnsurePort 確保 url 具有適合連接類型的端口號。
+// HTTPEnsurePort ensures that url has a port number suits with the connection type.
 func HTTPEnsurePort(s string) string {
 	u, err := url.Parse(s)
 	if err != nil || u.Port() != "" {
@@ -91,7 +91,7 @@ func HTTPEnsurePort(s string) string {
 	return u.String()
 }
 
-//如果未指定，地址確保地址包含 localhost 作為主機。
+// Address ensures that address contains localhost as host if non specified.
 func Address(address string) string {
 	if strings.HasPrefix(address, ":") {
 		return "localhost" + address
@@ -108,10 +108,10 @@ func parseURL(s string) (*url.URL, error) {
 		return nil, errors.New("url is empty")
 	}
 
-// 處理 URI 是 IP:PORT 或 HOST:PORT 的情況
-// 沒有方案前綴，因為這種情況不能被 URL 解析。
-// 當 URI 沒有方案時，它被“url.Parse”解析為路徑
-// 將冒號放在路徑中，這是無效的。
+	// Handle the case where the URI is an IP:PORT or HOST:PORT
+	// without scheme prefix because that case can't be URL parsed.
+	// When the URI has not scheme it is parsed as a path by "url.Parse"
+	// placing the colon within the path, which is invalid.
 	if host, isAddrPort := addressPort(s); isAddrPort {
 		return &url.URL{Host: host}, nil
 	}
@@ -121,12 +121,12 @@ func parseURL(s string) (*url.URL, error) {
 }
 
 func addressPort(s string) (string, bool) {
-	// 檢查該值是否不包含 URI 路徑
+	// Check that the value doesn't contain a URI path
 	if strings.Index(s, "/") != -1 {
 		return "", false
 	}
 
-	// 使用網絡拆分功能支持 IPv6 地址
+	// Use the net split function to support IPv6 addresses
 	host, port, err := net.SplitHostPort(s)
 	if err != nil {
 		return "", false

@@ -7,28 +7,28 @@ import (
 	"github.com/blang/semver"
 )
 
-// Family 代表 Cosmos-SDK 的系列（命名版本）。
+// Family represents the family(named versions) of Cosmos-SDK.
 type Family string
 
 const (
-	// Launchpad 代表 Cosmos-SDK 的啟動板系列。
+	// Launchpad represents the launchpad family of Cosmos-SDK.
 	Launchpad Family = "launchpad"
 
-	// Stargate 代表 Cosmos-SDK 的 Stargate 系列。
+	// Stargate represents the stargate family of Cosmos-SDK.
 	Stargate Family = "stargate"
 )
 
 const prefix = "v"
 
-// Version 代表一系列 Cosmos SDK 版本。
+// Version represents a range of Cosmos SDK versions.
 type Version struct {
-	// 版本家族
+	// Family of the version
 	Family Family
 
-	// 版本是確切的 sdk 版本字符串。
+	// Version is the exact sdk version string.
 	Version string
 
-	// 語義是解析的版本。
+	// Semantic is the parsed version.
 	Semantic semver.Version
 }
 
@@ -40,14 +40,14 @@ var (
 )
 
 var (
-	// Versions 是已知的、已排序的 Cosmos-SDK 版本列表。
+	// Versions is a list of known, sorted Cosmos-SDK versions.
 	Versions = []Version{
 		MaxLaunchpadVersion,
 		StargateFortyVersion,
 		StargateFortyFourVersion,
 	}
 
-	// 最新是 Cosmos-SDK 的最新已知版本。
+	// Latest is the latest known version of the Cosmos-SDK.
 	Latest = Versions[len(Versions)-1]
 )
 
@@ -59,7 +59,7 @@ func newVersion(version string, family Family) Version {
 	}
 }
 
-// Parse 解析 Cosmos-SDK 版本。
+// Parse parses a Cosmos-SDK version.
 func Parse(version string) (v Version, err error) {
 	v.Version = version
 
@@ -75,22 +75,22 @@ func Parse(version string) (v Version, err error) {
 	return
 }
 
-// GTE 檢查 v 是否大於或等於版本。
+// GTE checks if v is greater than or equal to version.
 func (v Version) GTE(version Version) bool {
 	return v.Semantic.GTE(version.Semantic)
 }
 
-// LT 檢查 v 是否小於版本。
+// LT checks if v is less than version.
 func (v Version) LT(version Version) bool {
 	return v.Semantic.LT(version.Semantic)
 }
 
-// LTE 檢查 v 是否小於或等於版本。
+// LTE checks if v is less than or equal to version.
 func (v Version) LTE(version Version) bool {
 	return v.Semantic.LTE(version.Semantic)
 }
 
-// Is 檢查 v 是否等於版本。
+// Is checks if v is equal to version.
 func (v Version) Is(version Version) bool {
 	return v.Semantic.EQ(version.Semantic)
 }

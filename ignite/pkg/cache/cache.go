@@ -12,14 +12,14 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-var ErrorNotFound = errors.New("使用提供的鍵未找到任何值")
+var ErrorNotFound = errors.New("no value was found with the provided key")
 
-// 存儲是為了傳遞並由 New 函數使用（它提供命名空間和類型安全）
+// Storage is meant to be passed around and used by the New function (which provides namespacing and type-safety)
 type Storage struct {
 	storagePath string
 }
 
-// 緩存是一個命名空間和類型安全的鍵值存儲
+// Cache is a namespaced and type-safe key-value store
 type Cache[T any] struct {
 	storage   Storage
 	namespace string

@@ -9,7 +9,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
 )
 
-// 模擬運行鏈模擬。
+// Simulation run the chain simulation.
 func (r Runner) Simulation(
 	ctx context.Context,
 	appPath string,

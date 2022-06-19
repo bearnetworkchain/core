@@ -16,7 +16,7 @@ var (
 func newNetworkChainShowValidators() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "validators [launch-id]",
-		Short: "顯示熊網鏈的所有驗證者",
+		Short: "Show all validators of the chain",
 		Args:  cobra.ExactArgs(1),
 		RunE:  networkChainShowValidatorsHandler,
 	}
@@ -64,7 +64,7 @@ func networkChainShowValidatorsHandler(cmd *cobra.Command, args []string) error 
 		})
 	}
 	if len(validatorEntries) == 0 {
-		return session.Printf("%s %s\n", icons.Info, "找不到帳戶")
+		return session.Printf("%s %s\n", icons.Info, "no account found")
 	}
 
 	session.StopSpinner()

@@ -14,8 +14,8 @@ const supportVersion = "2"
 
 var configPath = os.ExpandEnv("$HOME/.ignite/relayer/config.yml")
 
-var ErrChainCannotBeFound = errors.New("Chain 找不到")
-var ErrPathCannotBeFound = errors.New("Path 找不到")
+var ErrChainCannotBeFound = errors.New("chain cannot be found")
+var ErrPathCannotBeFound = errors.New("path cannot be found")
 
 type Config struct {
 	Version string  `json:"version" yaml:"version"`
@@ -84,7 +84,7 @@ func Get() (Config, error) {
 		return c, err
 	}
 	if !reflect.DeepEqual(c, Config{}) && c.Version != supportVersion {
-		return c, fmt.Errorf("您的中繼器設置已過時。運行'rm %s' 並再次配置中繼器", configPath)
+		return c, fmt.Errorf("your relayer setup is outdated. run 'rm %s' and configure relayer again", configPath)
 	}
 	return c, nil
 }

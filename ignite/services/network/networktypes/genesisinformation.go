@@ -7,26 +7,26 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 )
 
-// GenesisInformation 代錶鍊構建創世的所有信息。
-// 這個結構通過地址來索引賬戶和驗證者以獲得更好的性能
+// GenesisInformation represents all information for a chain to construct the genesis.
+// This structure indexes accounts and validators by their address for better performance
 type GenesisInformation struct {
-// 確保對以下內容使用切片，因為切片是有序的。
-// 他們後來用來創建一個創世紀，所以，讓他們有序是很重要的
-// 能夠產生確定性的創世紀。
+	// make sure to use slices for the following because slices are ordered.
+	// they later used to create a Genesis so, having them ordered is important to
+	// be able to produce a deterministic Genesis.
 
 	GenesisAccounts   []GenesisAccount
 	VestingAccounts   []VestingAccount
 	GenesisValidators []GenesisValidator
 }
 
-//GenesisAccount 代表一個用於鏈創世的具有初始硬幣分配的帳戶
+// GenesisAccount represents an account with initial coin allocation for the chain for the chain genesis
 type GenesisAccount struct {
 	Address string
 	Coins   string
 }
 
-// VestingAccount 表示具有初始硬幣分配和鏈創世歸屬選項的歸屬賬戶
-// VestingAccount 目前僅支持延遲歸屬選項
+// VestingAccount represents a vesting account with initial coin allocation  and vesting option for the chain genesis
+// VestingAccount supports currently only delayed vesting option
 type VestingAccount struct {
 	Address      string
 	TotalBalance string
@@ -34,7 +34,7 @@ type VestingAccount struct {
 	EndTime      int64
 }
 
-// GenesisValidator 代表了一個創世驗證器，它與創世鏈中的一個 gentx 相關聯
+// GenesisValidator represents a genesis validator associated with a gentx in the chain genesis
 type GenesisValidator struct {
 	Address        string
 	Gentx          []byte
@@ -42,7 +42,7 @@ type GenesisValidator struct {
 	SelfDelegation sdk.Coin
 }
 
-// ToGenesisAccount 從 SPN 轉換創世賬戶
+// ToGenesisAccount converts genesis account from SPN
 func ToGenesisAccount(acc launchtypes.GenesisAccount) GenesisAccount {
 	return GenesisAccount{
 		Address: acc.Address,
@@ -50,11 +50,11 @@ func ToGenesisAccount(acc launchtypes.GenesisAccount) GenesisAccount {
 	}
 }
 
-// ToVestingAccount 從 SPN 轉換歸屬賬戶
+// ToVestingAccount converts vesting account from SPN
 func ToVestingAccount(acc launchtypes.VestingAccount) (VestingAccount, error) {
 	delayedVesting := acc.VestingOptions.GetDelayedVesting()
 	if delayedVesting == nil {
-		return VestingAccount{}, errors.New("僅支持延遲歸屬選項")
+		return VestingAccount{}, errors.New("only delayed vesting option is supported")
 	}
 
 	return VestingAccount{
@@ -65,7 +65,7 @@ func ToVestingAccount(acc launchtypes.VestingAccount) (VestingAccount, error) {
 	}, nil
 }
 
-// ToGenesisValidator 從 SPN 轉換創世驗證器
+// ToGenesisValidator converts genesis validator from SPN
 func ToGenesisValidator(val launchtypes.GenesisValidator) GenesisValidator {
 	return GenesisValidator{
 		Address:        val.Address,
@@ -75,7 +75,7 @@ func ToGenesisValidator(val launchtypes.GenesisValidator) GenesisValidator {
 	}
 }
 
-// NewGenesisInformation 初始化一個新的GenesisInformation
+// NewGenesisInformation initializes a new GenesisInformation
 func NewGenesisInformation(
 	genAccs []GenesisAccount,
 	vestingAccs []VestingAccount,
@@ -149,43 +149,43 @@ func (gi *GenesisInformation) RemoveGenesisValidator(address string) {
 	}
 }
 
-// ApplyRequest 將批准請求所隱含的更改應用於 genesisInformation
+// ApplyRequest applies to the genesisInformation the changes implied by the approval of a request
 func (gi GenesisInformation) ApplyRequest(request Request) (GenesisInformation, error) {
 	switch requestContent := request.Content.Content.(type) {
 	case *launchtypes.RequestContent_GenesisAccount:
-		// 創世紀中的新創世賬戶
+		// new genesis account in the genesis
 		ga := ToGenesisAccount(*requestContent.GenesisAccount)
 		genExist := gi.ContainsGenesisAccount(ga.Address)
 		vestingExist := gi.ContainsVestingAccount(ga.Address)
 		if genExist || vestingExist {
-			return gi, NewWrappedErrInvalidRequest(request.RequestID, "創世賬戶已經在創世文件中")
+			return gi, NewWrappedErrInvalidRequest(request.RequestID, "genesis account already in genesis")
 		}
 		gi.AddGenesisAccount(ga)
 
 	case *launchtypes.RequestContent_VestingAccount:
-		// 創世紀中的新歸屬賬戶
+		// new vesting account in the genesis
 		va, err := ToVestingAccount(*requestContent.VestingAccount)
 		if err != nil {
-// 我們不將此錯誤視為 errInvalidRequests
-// 因為如果我們不支持這種歸屬賬戶格式，就會發生這種情況
-// 但請求仍然正確
+			// we don't treat this error as errInvalidRequests
+			// because it can occur if we don't support this format of vesting account
+			// but the request is still correct
 			return gi, err
 		}
 
 		genExist := gi.ContainsGenesisAccount(va.Address)
 		vestingExist := gi.ContainsVestingAccount(va.Address)
 		if genExist || vestingExist {
-			return gi, NewWrappedErrInvalidRequest(request.RequestID, "歸屬賬戶已經在創世中")
+			return gi, NewWrappedErrInvalidRequest(request.RequestID, "vesting account already in genesis")
 		}
 		gi.AddVestingAccount(va)
 
 	case *launchtypes.RequestContent_AccountRemoval:
-	// 賬戶從創世中移除
+		// account removed from the genesis
 		ar := requestContent.AccountRemoval
 		genExist := gi.ContainsGenesisAccount(ar.Address)
 		vestingExist := gi.ContainsVestingAccount(ar.Address)
 		if !genExist && !vestingExist {
-			return gi, NewWrappedErrInvalidRequest(request.RequestID, "無法刪除帳戶，因為它不存在")
+			return gi, NewWrappedErrInvalidRequest(request.RequestID, "account can't be removed because it doesn't exist")
 		}
 		gi.RemoveGenesisAccount(ar.Address)
 		gi.RemoveVestingAccount(ar.Address)
@@ -194,15 +194,15 @@ func (gi GenesisInformation) ApplyRequest(request Request) (GenesisInformation, 
 		// new genesis validator in the genesis
 		gv := ToGenesisValidator(*requestContent.GenesisValidator)
 		if gi.ContainsGenesisValidator(gv.Address) {
-			return gi, NewWrappedErrInvalidRequest(request.RequestID, "創世驗證器已經在創世文件中")
+			return gi, NewWrappedErrInvalidRequest(request.RequestID, "genesis validator already in genesis")
 		}
 		gi.AddGenesisValidator(gv)
 
 	case *launchtypes.RequestContent_ValidatorRemoval:
-		//驗證者從創世中移除
+		// validator removed from the genesis
 		vr := requestContent.ValidatorRemoval
 		if !gi.ContainsGenesisValidator(vr.ValAddress) {
-			return gi, NewWrappedErrInvalidRequest(request.RequestID, "創世紀驗證器無法刪除，因為它不存在")
+			return gi, NewWrappedErrInvalidRequest(request.RequestID, "genesis validator can't be removed because it doesn't exist")
 		}
 	}
 

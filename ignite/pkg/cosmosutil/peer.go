@@ -8,9 +8,9 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/xurl"
 )
 
-// VerifyPeerFormat檢查對等地址格式是否有效
+// VerifyPeerFormat checks if the peer address format is valid
 func VerifyPeerFormat(peer launchtypes.Peer) bool {
-	// 檢查對等體的格式
+	// Check the format of the peer
 	switch conn := peer.Connection.(type) {
 	case *launchtypes.Peer_TcpAddress:
 		nodeHost := strings.Split(conn.TcpAddress, ":")

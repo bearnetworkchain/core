@@ -18,13 +18,13 @@ import (
 )
 
 var (
-	// ErrObjectNotFound當查詢返回未找到錯誤時返回。
-	ErrObjectNotFound = errors.New("未找到查詢對象")
+	// ErrObjectNotFound is returned when the query returns a not found error.
+	ErrObjectNotFound = errors.New("query object not found")
 )
 
-// ChainLaunch通過啟動 ID 從 Network 獲取鏈啟動。
+// ChainLaunch fetches the chain launch from Network by launch id.
 func (n Network) ChainLaunch(ctx context.Context, id uint64) (networktypes.ChainLaunch, error) {
-	n.ev.Send(events.New(events.StatusOngoing, "獲取鏈信息"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching chain information"))
 
 	res, err := n.launchQuery.
 		Chain(ctx,
@@ -39,22 +39,22 @@ func (n Network) ChainLaunch(ctx context.Context, id uint64) (networktypes.Chain
 	return networktypes.ToChainLaunch(res.Chain), nil
 }
 
-// ChainLaunchesWithReward 從 Network 獲取帶有獎勵的鏈啟動
+// ChainLaunchesWithReward fetches the chain launches with rewards from Network
 func (n Network) ChainLaunchesWithReward(ctx context.Context) ([]networktypes.ChainLaunch, error) {
 	g, ctx := errgroup.WithContext(ctx)
 
-	n.ev.Send(events.New(events.StatusOngoing, "獲取鏈信息"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching chains information"))
 	res, err := n.launchQuery.
 		ChainAll(ctx, &launchtypes.QueryAllChainRequest{})
 	if err != nil {
 		return nil, err
 	}
 
-	n.ev.Send(events.New(events.StatusOngoing, "獲取獎勵信息"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching reward information"))
 	var chainLaunches []networktypes.ChainLaunch
 	var mu sync.Mutex
 
-	// 解析獲取的鏈並獲取獎勵
+	// Parse fetched chains and fetch rewards
 	for _, chain := range res.Chain {
 		chain := chain
 		g.Go(func() error {
@@ -73,36 +73,36 @@ func (n Network) ChainLaunchesWithReward(ctx context.Context) ([]networktypes.Ch
 	if err := g.Wait(); err != nil {
 		return nil, err
 	}
-	// 按啟動 ID 對文件名進行排序
+	// sort filenames by launch id
 	sort.Slice(chainLaunches, func(i, j int) bool {
 		return chainLaunches[i].ID > chainLaunches[j].ID
 	})
 	return chainLaunches, nil
 }
 
-// GenesisInformation 返回所有信息以從鏈 ID 構造創世記
+// GenesisInformation returns all the information to construct the genesis from a chain ID
 func (n Network) GenesisInformation(ctx context.Context, launchID uint64) (gi networktypes.GenesisInformation, err error) {
 	genAccs, err := n.GenesisAccounts(ctx, launchID)
 	if err != nil {
-		return gi, errors.Wrap(err, "查詢創世賬戶時出錯")
+		return gi, errors.Wrap(err, "error querying genesis accounts")
 	}
 
 	vestingAccs, err := n.VestingAccounts(ctx, launchID)
 	if err != nil {
-		return gi, errors.Wrap(err, "查詢歸屬賬戶時出錯")
+		return gi, errors.Wrap(err, "error querying vesting accounts")
 	}
 
 	genVals, err := n.GenesisValidators(ctx, launchID)
 	if err != nil {
-		return gi, errors.Wrap(err, "查詢創世驗證器時出錯")
+		return gi, errors.Wrap(err, "error querying genesis validators")
 	}
 
 	return networktypes.NewGenesisInformation(genAccs, vestingAccs, genVals), nil
 }
 
-// GenesisAccounts返回從 SPN 啟動的已批准創世帳戶列表
+// GenesisAccounts returns the list of approved genesis accounts for a launch from SPN
 func (n Network) GenesisAccounts(ctx context.Context, launchID uint64) (genAccs []networktypes.GenesisAccount, err error) {
-	n.ev.Send(events.New(events.StatusOngoing, "獲取創世賬戶"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching genesis accounts"))
 	res, err := n.launchQuery.
 		GenesisAccountAll(ctx,
 			&launchtypes.QueryAllGenesisAccountRequest{
@@ -120,9 +120,9 @@ func (n Network) GenesisAccounts(ctx context.Context, launchID uint64) (genAccs 
 	return genAccs, nil
 }
 
-// VestingAccounts返回從 SPN 啟動的已批准創世歸屬賬戶列表
+// VestingAccounts returns the list of approved genesis vesting accounts for a launch from SPN
 func (n Network) VestingAccounts(ctx context.Context, launchID uint64) (vestingAccs []networktypes.VestingAccount, err error) {
-	n.ev.Send(events.New(events.StatusOngoing, "獲取創世歸屬賬戶"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching genesis vesting accounts"))
 	res, err := n.launchQuery.
 		VestingAccountAll(ctx,
 			&launchtypes.QueryAllVestingAccountRequest{
@@ -136,7 +136,7 @@ func (n Network) VestingAccounts(ctx context.Context, launchID uint64) (vestingA
 	for i, acc := range res.VestingAccount {
 		parsedAcc, err := networktypes.ToVestingAccount(acc)
 		if err != nil {
-			return vestingAccs, errors.Wrapf(err, "解析歸屬帳戶時出錯 %d", i)
+			return vestingAccs, errors.Wrapf(err, "error parsing vesting account %d", i)
 		}
 
 		vestingAccs = append(vestingAccs, parsedAcc)
@@ -145,9 +145,9 @@ func (n Network) VestingAccounts(ctx context.Context, launchID uint64) (vestingA
 	return vestingAccs, nil
 }
 
-// GenesisValidators返回從 SPN 啟動的已批准創世驗證者列表
+// GenesisValidators returns the list of approved genesis validators for a launch from SPN
 func (n Network) GenesisValidators(ctx context.Context, launchID uint64) (genVals []networktypes.GenesisValidator, err error) {
-	n.ev.Send(events.New(events.StatusOngoing, "獲取創世驗證者"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching genesis validators"))
 	res, err := n.launchQuery.
 		GenesisValidatorAll(ctx,
 			&launchtypes.QueryAllGenesisValidatorRequest{
@@ -165,9 +165,9 @@ func (n Network) GenesisValidators(ctx context.Context, launchID uint64) (genVal
 	return genVals, nil
 }
 
-// MainnetAccounts 返回從 SPN 啟動的活動主網帳戶列表
+// MainnetAccounts returns the list of campaign mainnet accounts for a launch from SPN
 func (n Network) MainnetAccounts(ctx context.Context, campaignID uint64) (genAccs []networktypes.MainnetAccount, err error) {
-	n.ev.Send(events.New(events.StatusOngoing, "獲取活動主網帳戶"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching campaign mainnet accounts"))
 	res, err := n.campaignQuery.
 		MainnetAccountAll(ctx,
 			&campaigntypes.QueryAllMainnetAccountRequest{
@@ -185,9 +185,9 @@ func (n Network) MainnetAccounts(ctx context.Context, campaignID uint64) (genAcc
 	return genAccs, nil
 }
 
-// MainnetVestingAccounts 返回從 SPN 啟動的活動主網歸屬賬戶列表
+// MainnetVestingAccounts returns the list of campaign mainnet vesting accounts for a launch from SPN
 func (n Network) MainnetVestingAccounts(ctx context.Context, campaignID uint64) (genAccs []networktypes.MainnetVestingAccount, err error) {
-	n.ev.Send(events.New(events.StatusOngoing, "獲取活動主網歸屬賬戶"))
+	n.ev.Send(events.New(events.StatusOngoing, "Fetching campaign mainnet vesting accounts"))
 	res, err := n.campaignQuery.
 		MainnetVestingAccountAll(ctx,
 			&campaigntypes.QueryAllMainnetVestingAccountRequest{
@@ -205,7 +205,7 @@ func (n Network) MainnetVestingAccounts(ctx context.Context, campaignID uint64) 
 	return genAccs, nil
 }
 
-// ChainReward通過啟動 id 從 SPN 獲取鏈獎勵
+// ChainReward fetches the chain reward from SPN by launch id
 func (n Network) ChainReward(ctx context.Context, launchID uint64) (rewardtypes.RewardPool, error) {
 	res, err := n.rewardQuery.
 		RewardPool(ctx,
@@ -222,7 +222,7 @@ func (n Network) ChainReward(ctx context.Context, launchID uint64) (rewardtypes.
 	return res.RewardPool, nil
 }
 
-// stakingParams 獲取質押模塊參數
+// stakingParams fetches the staking module params
 func (n Network) stakingParams(ctx context.Context) (stakingtypes.Params, error) {
 	res, err := n.stakingQuery.Params(ctx, &stakingtypes.QueryParamsRequest{})
 	if err != nil {
@@ -231,8 +231,8 @@ func (n Network) stakingParams(ctx context.Context) (stakingtypes.Params, error)
 	return res.Params, nil
 }
 
-// RewardsInfo 使用驗證器集獲取共識狀態，
-// 無限制時間，以及來自鏈獎勵的最後一個區塊高度。
+// RewardsInfo Fetches the consensus state with the validator set,
+// the unbounding time, and the last block height from chain rewards.
 func (n Network) RewardsInfo(
 	ctx context.Context,
 	launchID uint64,
@@ -265,7 +265,7 @@ func (n Network) RewardsInfo(
 	return
 }
 
-// ChainID 獲取網絡鏈 ID
+// ChainID fetches the network chain id
 func (n Network) ChainID(ctx context.Context) (string, error) {
 	status, err := n.cosmos.Status(ctx)
 	if err != nil {

@@ -13,11 +13,11 @@ import (
 
 var LaunchSummaryHeader = []string{"launch ID", "chain ID", "source", "campaign ID", "network", "reward"}
 
-// NewNetworkChainList 返回一個新命令來列出 Ignite 上所有已發布的鏈
+// NewNetworkChainList returns a new command to list all published chains on Ignite
 func NewNetworkChainList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list",
-		Short: "列出已發布的鏈",
+		Short: "List published chains",
 		Args:  cobra.NoArgs,
 		RunE:  networkChainListHandler,
 	}
@@ -46,12 +46,12 @@ func networkChainListHandler(cmd *cobra.Command, _ []string) error {
 	return renderLaunchSummaries(chainLaunches, session)
 }
 
-// renderLaunchSummaries 寫入提供的輸出，匯總啟動列表
+// renderLaunchSummaries writes into the provided out, the list of summarized launches
 func renderLaunchSummaries(chainLaunches []networktypes.ChainLaunch, session cliui.Session) error {
 	var launchEntries [][]string
 
 	for _, c := range chainLaunches {
-		campaign := "沒有活動"
+		campaign := "no campaign"
 		if c.CampaignID > 0 {
 			campaign = fmt.Sprintf("%d", c.CampaignID)
 		}

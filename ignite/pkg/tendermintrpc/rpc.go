@@ -16,17 +16,17 @@ const (
 	endpointStatus  = "/status"
 )
 
-// Client是一個 Tendermint RPC 客戶端。
+// Client is a Tendermint RPC client.
 type Client struct {
 	addr string
 }
 
-// New 創建一個新的 Tendermint RPC 客戶端。
+// New creates a new Tendermint RPC client.
 func New(addr string) Client {
 	return Client{addr: addr}
 }
 
-// NetInfo 代表網絡信息。
+// NetInfo represents Network Info.
 type NetInfo struct {
 	ConnectedPeers int
 }
@@ -35,7 +35,7 @@ func (c Client) url(endpoint string) string {
 	return fmt.Sprintf("%s%s", c.addr, endpoint)
 }
 
-// GetNetInfo 檢索網絡信息。
+// GetNetInfo retrieves network info.
 func (c Client) GetNetInfo(ctx context.Context) (NetInfo, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.url(endpointNetInfo), nil)
 	if err != nil {
@@ -66,12 +66,12 @@ func (c Client) GetNetInfo(ctx context.Context) (NetInfo, error) {
 	}, nil
 }
 
-// Genesis 代表創世紀。
+// Genesis represents Genesis.
 type Genesis struct {
 	ChainID string `json:"chain_id"`
 }
 
-// GetGenesis 檢索創世紀。
+// GetGenesis retrieves Genesis.
 func (c Client) GetGenesis(ctx context.Context) (Genesis, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.url(endpointGenesis), nil)
 	if err != nil {
@@ -101,12 +101,12 @@ func (c Client) GetGenesis(ctx context.Context) (Genesis, error) {
 	return out.Result.Genesis, nil
 }
 
-// NodeInfo 保存節點信息。
+// NodeInfo holds node info.
 type NodeInfo struct {
 	Network string
 }
 
-// Status 檢索節點狀態。
+// Status retrieves node Status.
 func (c Client) Status(ctx context.Context) (NodeInfo, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, c.url(endpointStatus), nil)
 	if err != nil {
@@ -141,7 +141,7 @@ func (c Client) Status(ctx context.Context) (NodeInfo, error) {
 
 	info = out.Result.NodeInfo
 
-	// 一些熊網鏈版本有不同的響應負載。
+	// some Stargate versions have a different response payload.
 	if info.Network == "" {
 		var out struct {
 			Result struct {

@@ -26,17 +26,17 @@ const (
 const prefix = "v"
 
 var (
-	// Version 是 Ignite CLI 的語義版本。
+	// Version is the semantic version of Ignite CLI.
 	Version = versionDev
 
-	// Date 是 Ignite CLI 的構建日期。
+	// Date is the build date of Ignite CLI.
 	Date = "-"
 
-	// Head 是當前分支的 HEAD。
+	// Head is the HEAD of the current branch.
 	Head = "-"
 )
 
-// CheckNext 檢查是否有新版本的 Ignite CLI。
+// CheckNext checks whether there is a new version of Ignite CLI.
 func CheckNext(ctx context.Context) (isAvailable bool, version string, err error) {
 	if Version == versionDev || Version == versionNightly {
 		return false, "", nil
@@ -70,7 +70,7 @@ func CheckNext(ctx context.Context) (isAvailable bool, version string, err error
 	return isAvailable, *latest.TagName, nil
 }
 
-//Long 生成詳細的版本信息。
+// Long generates a detailed version info.
 func Long(ctx context.Context) string {
 	var (
 		w = &tabwriter.Writer{}
@@ -96,7 +96,7 @@ func Long(ctx context.Context) string {
 	if err != nil {
 		panic(err)
 	}
-	write("你的GO版本", strings.TrimSpace(cmdOut.String()))
+	write("Your go version", strings.TrimSpace(cmdOut.String()))
 
 	unameCmd := "uname"
 	if xexec.IsCommandAvailable(unameCmd) {

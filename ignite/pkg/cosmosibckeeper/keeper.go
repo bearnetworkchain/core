@@ -8,7 +8,7 @@ import (
 	host "github.com/cosmos/ibc-go/v3/modules/core/24-host"
 )
 
-// Keeper定義 IBC Keeper
+// Keeper defines the IBC Keeper
 type Keeper struct {
 	portKey       []byte
 	storeKey      sdk.StoreKey
@@ -17,7 +17,7 @@ type Keeper struct {
 	ScopedKeeper  ScopedKeeper
 }
 
-// NewKeeper創建 IBC Keeper
+// NewKeeper create an IBC Keeper
 func NewKeeper(
 	portKey []byte,
 	storeKey sdk.StoreKey,
@@ -34,47 +34,47 @@ func NewKeeper(
 	}
 }
 
-// ChanCloseInit 為通道 Keeper 的函數定義了一個包裝函數
+// ChanCloseInit defines a wrapper function for the channel Keeper's function
 func (k Keeper) ChanCloseInit(ctx sdk.Context, portID, channelID string) error {
 	capName := host.ChannelCapabilityPath(portID, channelID)
 	chanCap, ok := k.ScopedKeeper.GetCapability(ctx, capName)
 	if !ok {
-		return sdkerrors.Wrapf(channeltypes.ErrChannelCapabilityNotFound, "不能檢索頻道: %s", capName)
+		return sdkerrors.Wrapf(channeltypes.ErrChannelCapabilityNotFound, "could not retrieve channel capability at: %s", capName)
 	}
 	return k.ChannelKeeper.ChanCloseInit(ctx, portID, channelID, chanCap)
 }
 
-// IsBound 檢查模塊是否已經綁定到所需的端口
+// IsBound checks if the module is already bound to the desired port
 func (k Keeper) IsBound(ctx sdk.Context, portID string) bool {
 	_, ok := k.ScopedKeeper.GetCapability(ctx, host.PortPath(portID))
 	return ok
 }
 
-// BindPort 為 ort Keeper 的函數定義了一個包裝函數
-// 為了將它暴露給模塊的 InitGenesis 函數
+// BindPort defines a wrapper function for the ort Keeper's function in
+// order to expose it to module's InitGenesis function
 func (k Keeper) BindPort(ctx sdk.Context, portID string) error {
 	cap := k.PortKeeper.BindPort(ctx, portID)
 	return k.ClaimCapability(ctx, cap, host.PortPath(portID))
 }
 
-// GetPort 返回模塊的端口 ID。用於 ExportGenesis
+// GetPort returns the portID for the module. Used in ExportGenesis
 func (k Keeper) GetPort(ctx sdk.Context) string {
 	store := ctx.KVStore(k.storeKey)
 	return string(store.Get(k.portKey))
 }
 
-// SetPort 設置模塊的 portID。用於 InitGenesis
+// SetPort sets the portID for the module. Used in InitGenesis
 func (k Keeper) SetPort(ctx sdk.Context, portID string) {
 	store := ctx.KVStore(k.storeKey)
 	store.Set(k.portKey, []byte(portID))
 }
 
-// AuthenticateCapability 包裝 scopedKeeper 的 AuthenticateCapability 函數
+// AuthenticateCapability wraps the scopedKeeper's AuthenticateCapability function
 func (k Keeper) AuthenticateCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) bool {
 	return k.ScopedKeeper.AuthenticateCapability(ctx, cap, name)
 }
 
-// ClaimCapability 允許可以聲明 IBC 模塊傳遞給它的功能的模塊
+// ClaimCapability allows the module that can claim a capability that IBC module passes to it
 func (k Keeper) ClaimCapability(ctx sdk.Context, cap *capabilitytypes.Capability, name string) error {
 	return k.ScopedKeeper.ClaimCapability(ctx, cap, name)
 }

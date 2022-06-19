@@ -1,4 +1,4 @@
-// Package goanalysis 提供靜態分析 Go 應用程序的工具集
+// Package goanalysis provides a toolset for statically analysing Go applications
 package goanalysis
 
 import (
@@ -16,11 +16,11 @@ const (
 )
 
 var (
-	// ErrMultipleMainPackagesFound 當發現多個主包而只期望一個時返回。
+	// ErrMultipleMainPackagesFound is returned when multiple main packages found while expecting only one.
 	ErrMultipleMainPackagesFound = errors.New("multiple main packages found")
 )
 
-// DiscoverMain 在 path 下找到主要的 Go 包。
+// DiscoverMain finds main Go packages under path.
 func DiscoverMain(path string) (pkgPaths []string, err error) {
 	uniquePaths := make(map[string]struct{})
 
@@ -53,7 +53,7 @@ func DiscoverMain(path string) (pkgPaths []string, err error) {
 	return pkgPaths, nil
 }
 
-// DiscoverOneMain 試圖在路徑下只找到一個主要的 Go 包。
+// DiscoverOneMain tries to find only one main Go package under path.
 func DiscoverOneMain(path string) (pkgPath string, err error) {
 	pkgPaths, err := DiscoverMain(path)
 	if err != nil {
@@ -62,7 +62,7 @@ func DiscoverOneMain(path string) (pkgPath string, err error) {
 
 	count := len(pkgPaths)
 	if count == 0 {
-		return "", errors.New("找不到主包")
+		return "", errors.New("main package cannot be found")
 	}
 	if count > 1 {
 		return "", ErrMultipleMainPackagesFound
@@ -71,8 +71,8 @@ func DiscoverOneMain(path string) (pkgPath string, err error) {
 	return pkgPaths[0], nil
 }
 
-// FindImportedPackages 在 Go 文件中查找導入的包並返回一個映射
-// 帶有包名，導入路徑對.
+// FindImportedPackages finds the imported packages in a Go file and returns a map
+// with package name, import path pair.
 func FindImportedPackages(name string) (map[string]string, error) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, name, nil, 0)
@@ -80,7 +80,7 @@ func FindImportedPackages(name string) (map[string]string, error) {
 		return nil, err
 	}
 
-	packages := make(map[string]string) // 名稱 -> 導入
+	packages := make(map[string]string) // name -> import
 	for _, imp := range f.Imports {
 		var importName string
 		if imp.Name != nil {

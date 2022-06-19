@@ -1,6 +1,6 @@
 package data
 
-// Binary 返回平台特定的插件二進製文件.
+// Binary returns the platform spesific plugin binary.
 func Binary() []byte {
 	return binary
 }

@@ -24,31 +24,31 @@ type generateOptions struct {
 	isOpenAPIEnabled bool
 }
 
-// 生成目標是從 proto 文件生成代碼的目標。
+// GenerateTarget is a target to generate code for from proto files.
 type GenerateTarget func(*generateOptions)
 
-// GenerateGo 可以生成鏈源代碼所需的基於 proto 的 Go 代碼。
+// GenerateGo enables generating proto based Go code needed for the chain's source code.
 func GenerateGo() GenerateTarget {
 	return func(o *generateOptions) {
 		o.isGoEnabled = true
 	}
 }
 
-// GenerateVuex 可以生成基於 proto 的 Vuex 存儲。
+// GenerateVuex enables generating proto based Vuex store.
 func GenerateVuex() GenerateTarget {
 	return func(o *generateOptions) {
 		o.isVuexEnabled = true
 	}
 }
 
-// GenerateDart 啟用生成 Dart 客戶端。
+// GenerateDart enables generating Dart client.
 func GenerateDart() GenerateTarget {
 	return func(o *generateOptions) {
 		o.isDartEnabled = true
 	}
 }
 
-// GenerateOpenAPI 可以為您的鏈生成 OpenAPI 規範。
+// GenerateOpenAPI enables generating OpenAPI spec for your chain.
 func GenerateOpenAPI() GenerateTarget {
 	return func(o *generateOptions) {
 		o.isOpenAPIEnabled = true
@@ -78,7 +78,7 @@ func (c *Chain) generateAll(ctx context.Context, cacheStorage cache.Storage) err
 	return c.Generate(ctx, cacheStorage, GenerateGo(), additionalTargets...)
 }
 
-// Generate 為給定的目標和附加目標從 proto 文件生成代碼。
+// Generate makes code generation from proto files for given target and additionalTargets.
 func (c *Chain) Generate(
 	ctx context.Context,
 	cacheStorage cache.Storage,
@@ -100,7 +100,7 @@ func (c *Chain) Generate(
 		return err
 	}
 
-	fmt.Fprintln(c.stdLog().out, "🛠️  構建原型...")
+	fmt.Fprintln(c.stdLog().out, "🛠️  Building proto...")
 
 	options := []cosmosgen.Option{
 		cosmosgen.IncludeDirs(conf.Build.Proto.ThirdPartyPaths),
@@ -112,7 +112,7 @@ func (c *Chain) Generate(
 
 	enableThirdPartyModuleCodegen := !c.protoBuiltAtLeastOnce && c.options.isThirdPartyModuleCodegenEnabled
 
-	// 如果啟用，也會生成 Vuex 代碼。
+	// generate Vuex code as well if it is enabled.
 	if targetOptions.isVuexEnabled {
 		vuexPath := conf.Client.Vuex.Path
 		if vuexPath == "" {

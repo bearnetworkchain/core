@@ -1,6 +1,6 @@
-// Package nodetime 提供一個單一的、獨立的 NodeJS 運行時可執行文件，其中包含
-// 幾個 NodeJS CLI 程序捆綁在其中，可以通過子命令訪問這些程序。
-// CLI 捆綁的程序是 Ignite CLI 需要的，可以根據需要添加更多。
+// Package nodetime provides a single, and standalone NodeJS runtime executable that contains
+// several NodeJS CLI programs bundled inside where those are reachable via subcommands.
+// the CLI bundled programs are the ones that needed by Ignite CLI and more can added as needed.
 package nodetime
 
 import (
@@ -14,28 +14,28 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/nodetime/data"
 )
 
-// 包含的 CLI 列表。
+// the list of CLIs included.
 const (
-	// CommandTSProto 是 https://github.com/stephenh/ts-proto。
+	// CommandTSProto is https://github.com/stephenh/ts-proto.
 	CommandTSProto CommandName = "ts-proto"
 
-	// CommandSTA 是 https://github.com/acacode/swagger-typescript-api。
+	// CommandSTA is https://github.com/acacode/swagger-typescript-api.
 	CommandSTA CommandName = "sta"
 
-	// CommandSwaggerCombine 是 https://www.npmjs.com/package/swagger-combine。
+	// CommandSwaggerCombine is https://www.npmjs.com/package/swagger-combine.
 	CommandSwaggerCombine CommandName = "swagger-combine"
 
-	// CommandIBCSetup 是 https://github.com/confio/ts-relayer/blob/main/spec/ibc-setup.md。
+	// CommandIBCSetup is https://github.com/confio/ts-relayer/blob/main/spec/ibc-setup.md.
 	CommandIBCSetup = "ibc-setup"
 
-	// CommandIBCRelayer 是 https://github.com/confio/ts-relayer/blob/main/spec/ibc-relayer.md。
+	// CommandIBCRelayer is https://github.com/confio/ts-relayer/blob/main/spec/ibc-relayer.md.
 	CommandIBCRelayer = "ibc-relayer"
 
-	// CommandXRelayer 是使用 confio 中繼器製作的 Ignite CLI 的中繼器包裝器。
+	// CommandXRelayer is a relayer wrapper for Ignite CLI made using the confio relayer.
 	CommandXRelayer = "xrelayer"
 )
 
-// CommandName 表示 nodetime 下的高級命令。
+// CommandName represents a high level command under nodetime.
 type CommandName string
 
 var (
@@ -43,10 +43,10 @@ var (
 	binary     []byte
 )
 
-// Binary 返回可執行文件的二進製字節。
+// Binary returns the binary bytes of the executable.
 func Binary() []byte {
 	onceBinary.Do(func() {
-		// 解壓二進製文件。
+		// untar the binary.
 		gzr, err := gzip.NewReader(bytes.NewReader(data.Binary()))
 		if err != nil {
 			panic(err)
@@ -67,7 +67,7 @@ func Binary() []byte {
 	return binary
 }
 
-// 命令設置 nodetime 二進製文件並返回執行 c 所需的命令。
+// Command setups the nodetime binary and returns the command needed to execute c.
 func Command(c CommandName) (command []string, cleanup func(), err error) {
 	cs := string(c)
 	path, cleanup, err := localfs.SaveBytesTemp(Binary(), cs, 0755)

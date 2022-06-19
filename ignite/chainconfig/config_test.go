@@ -99,11 +99,11 @@ validator:
   name: user1
   staked: "100000000stake"
 faucet:
-  host: "192.168.1.188:4600"
+  host: "0.0.0.0:4600"
 `
 	conf, err := Parse(strings.NewReader(confyml))
 	require.NoError(t, err)
-	require.Equal(t, "192.168.1.188:4600", FaucetHost(conf))
+	require.Equal(t, "0.0.0.0:4600", FaucetHost(conf))
 
 	confyml = `
 accounts:
@@ -132,7 +132,7 @@ validator:
   name: user1
   staked: "100000000stake"
 faucet:
-  host: "192.168.1.188:4600"
+  host: "0.0.0.0:4600"
   port: 4700
 `
 	conf, err = Parse(strings.NewReader(confyml))

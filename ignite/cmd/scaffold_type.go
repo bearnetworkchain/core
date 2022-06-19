@@ -6,11 +6,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// NewScaffoldType 返回一個新命令來構建類型。
+// NewScaffoldType returns a new command to scaffold a type.
 func NewScaffoldType() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "type NAME [field]...",
-		Short: "腳手架只有一個類型定義",
+		Short: "Scaffold only a type definition",
 		Args:  cobra.MinimumNArgs(1),
 		RunE:  scaffoldTypeHandler,
 	}

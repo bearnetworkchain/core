@@ -14,7 +14,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
-// 與組件腳手架相關的標誌
+// flags related to component scaffolding
 const (
 	flagModule       = "module"
 	flagNoMessage    = "no-message"
@@ -23,14 +23,14 @@ const (
 	flagDescription  = "desc"
 )
 
-// NewScaffold 返回一個命令，該命令對與腳手架相關的子命令進行分組。
+// NewScaffold returns a command that groups scaffolding related sub commands.
 func NewScaffold() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "scaffold [command]",
-		Short: "搭建新的區塊鏈、模塊、消息、查詢等",
-		Long: `腳手架命令創建和修改源代碼文件以添加功能.
+		Short: "Scaffold a new blockchain, module, message, query, and more",
+		Long: `Scaffold commands create and modify the source code files to add functionality.
 
-CRUD代表“創建、讀取、更新、刪除”.`,
+CRUD stands for "create, read, update, delete".`,
 		Aliases: []string{"s"},
 		Args:    cobra.ExactArgs(1),
 	}
@@ -86,7 +86,7 @@ func scaffoldType(
 		}
 	}
 
-	s := clispinner.New().SetText("努力創建中...")
+	s := clispinner.New().SetText("Scaffolding...")
 	defer s.Stop()
 
 	sc, err := newApp(appPath)
@@ -112,7 +112,7 @@ func scaffoldType(
 	}
 
 	fmt.Println(modificationsStr)
-	fmt.Printf("\n🎉 %s 添加. \n\n", typeName)
+	fmt.Printf("\n🎉 %s added. \n\n", typeName)
 
 	return nil
 }
@@ -138,7 +138,7 @@ func addGitChangesVerifier(cmd *cobra.Command) *cobra.Command {
 		if !getYes(cmd) && !changesCommitted {
 			var confirmed bool
 			prompt := &survey.Confirm{
-				Message: "您保存的項目更改尚未提交。要啟用恢復到當前狀態，請提交您保存的更改。是否要在不提交已保存更改的情況下繼續搭建腳手架",
+				Message: "Your saved project changes have not been committed. To enable reverting to your current state, commit your saved changes. Do you want to proceed with scaffolding without committing your saved changes",
 			}
 			if err := survey.AskOne(prompt, &confirmed); err != nil || !confirmed {
 				return errors.New("said no")
@@ -151,10 +151,10 @@ func addGitChangesVerifier(cmd *cobra.Command) *cobra.Command {
 
 func flagSetScaffoldType() *flag.FlagSet {
 	f := flag.NewFlagSet("", flag.ContinueOnError)
-	f.String(flagModule, "", "要添加到的模塊。默認是應用程序的主模塊")
-	f.Bool(flagNoMessage, false, "禁用 CRUD 交互消息腳手架")
-	f.Bool(flagNoSimulation, false, "禁用 CRUD 模擬腳手架")
-	f.String(flagSigner, "", "消息簽名者的標籤（默認：創建者）")
+	f.String(flagModule, "", "Module to add into. Default is app's main module")
+	f.Bool(flagNoMessage, false, "Disable CRUD interaction messages scaffolding")
+	f.Bool(flagNoSimulation, false, "Disable CRUD simulation scaffolding")
+	f.String(flagSigner, "", "Label for the message signer (default: creator)")
 	return f
 }
 

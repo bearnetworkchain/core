@@ -15,7 +15,7 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/events"
 )
 
-// 會話控制與用戶的命令行交互.
+// Session controls command line interaction with users.
 type Session struct {
 	ev       events.Bus
 	eventsWg *sync.WaitGroup
@@ -29,21 +29,21 @@ type Session struct {
 
 type Option func(s *Session)
 
-// WithOutput 設置會話的輸出流.
+// WithOutput sets output stream for a session.
 func WithOutput(output io.Writer) Option {
 	return func(s *Session) {
 		s.out = output
 	}
 }
 
-// WithInput 設置會話的輸入流。
+// WithInput sets input stream for a session.
 func WithInput(input io.Reader) Option {
 	return func(s *Session) {
 		s.in = input
 	}
 }
 
-// New 創建新會話。
+// New creates new Session.
 func New(options ...Option) Session {
 	wg := &sync.WaitGroup{}
 	session := Session{
@@ -62,22 +62,22 @@ func New(options ...Option) Session {
 	return session
 }
 
-// StopSpinner 返回會話的事件總線。
+// StopSpinner returns session's event bus.
 func (s Session) EventBus() events.Bus {
 	return s.ev
 }
 
-// StartSpinner 啟動微調器。
+// StartSpinner starts spinner.
 func (s Session) StartSpinner(text string) {
 	s.spinner.SetText(text).Start()
 }
 
-// StopSpinner 停止微調器。
+// StopSpinner stops spinner.
 func (s Session) StopSpinner() {
 	s.spinner.Stop()
 }
 
-// PauseSpinner 暫停微調器，返回恢復函數以再次啟動暫停的微調器。
+// PauseSpinner pauses spinner, returns resume function to start paused spinner again.
 func (s Session) PauseSpinner() (mightResume func()) {
 	isActive := s.spinner.IsActive()
 	f := func() {
@@ -89,7 +89,7 @@ func (s Session) PauseSpinner() (mightResume func()) {
 	return f
 }
 
-// Printf 打印格式化的任意消息。
+// Printf prints formatted arbitrary message.
 func (s Session) Printf(format string, a ...interface{}) error {
 	s.Wait()
 	defer s.PauseSpinner()()
@@ -97,7 +97,7 @@ func (s Session) Printf(format string, a ...interface{}) error {
 	return err
 }
 
-// Println 打印帶有換行符的任意消息。
+// Println prints arbitrary message with line break.
 func (s Session) Println(messages ...interface{}) error {
 	s.Wait()
 	defer s.PauseSpinner()()
@@ -105,12 +105,12 @@ func (s Session) Println(messages ...interface{}) error {
 	return err
 }
 
-// PrintSaidNo 在確認提示中給出了通知否定的打印消息
+// PrintSaidNo prints message informing negative was given in a confirmation prompt
 func (s Session) PrintSaidNo() error {
 	return s.Println("said no")
 }
 
-// Println 打印任意消息
+// Println prints arbitrary message
 func (s Session) Print(messages ...interface{}) error {
 	s.Wait()
 	defer s.PauseSpinner()()
@@ -118,14 +118,14 @@ func (s Session) Print(messages ...interface{}) error {
 	return err
 }
 
-// Ask 在終端提問並收集答案。
+// Ask asks questions in the terminal and collect answers.
 func (s Session) Ask(questions ...cliquiz.Question) error {
 	s.Wait()
 	defer s.PauseSpinner()()
 	return cliquiz.Ask(questions...)
 }
 
-// AskConfirm 在終端中詢問是/否問題。
+// AskConfirm asks yes/no question in the terminal.
 func (s Session) AskConfirm(message string) error {
 	s.Wait()
 	defer s.PauseSpinner()()
@@ -137,26 +137,26 @@ func (s Session) AskConfirm(message string) error {
 	return err
 }
 
-// PrintTable 打印表格數據。
+// PrintTable prints table data.
 func (s Session) PrintTable(header []string, entries ...[]string) error {
 	s.Wait()
 	defer s.PauseSpinner()()
 	return entrywriter.MustWrite(s.out, header, entries...)
 }
 
-// Wait 阻塞，直到處理完所有排隊的事件。
+// Wait blocks until all queued events are handled.
 func (s Session) Wait() {
 	s.eventsWg.Wait()
 }
 
-// Cleanup 確保微調器停止並且打印循環正確退出。
+// Cleanup ensure spinner is stopped and printLoop exited correctly.
 func (s Session) Cleanup() {
 	s.StopSpinner()
 	s.ev.Shutdown()
 	s.printLoopWg.Wait()
 }
 
-// printLoop 處理事件。
+// printLoop handles events.
 func (s Session) printLoop() {
 	for event := range s.ev.Events() {
 		switch event.Status {

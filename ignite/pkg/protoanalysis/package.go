@@ -16,34 +16,34 @@ func (p Packages) Files() Files {
 	return files
 }
 
-// 包代表一個proto pkg。
+// Package represents a proto pkg.
 type Package struct {
-	// 原型 pkg 的名稱。
+	// Name of the proto pkg.
 	Name string
 
-	// fs 中包的路徑。
+	// Path of the package in the fs.
 	Path string
 
-	// Files 是包中 .proto 文件的列表。
+	// Files is a list of .proto files in the package.
 	Files Files
 
-	// GoImportName 是 proto 包的 go 包名。
+	// GoImportName is the go package name of proto package.
 	GoImportName string
 
-	// Messages 是包中定義的原始消息列表。
+	// Messages is a list of proto messages defined in the package.
 	Messages []Message
 
-	// Services 是 RPC 服務的列表。
+	// Services is a list of RPC services.
 	Services []Service
 }
 
 type Files []File
 
 type File struct {
-	//文件的路徑。
+	// Path of the file.
 	Path string
 
-	//Dependencies 是此包中導入的 .proto 文件的列表。
+	// Dependencies is a list of imported .proto files in this package.
 	Dependencies []string
 }
 
@@ -55,68 +55,68 @@ func (f Files) Paths() []string {
 	return paths
 }
 
-// MessageByName 在 Package 中按其名稱查找消息。
+// MessageByName finds a message by its name inside Package.
 func (p Package) MessageByName(name string) (Message, error) {
 	for _, message := range p.Messages {
 		if message.Name == name {
 			return message, nil
 		}
 	}
-	return Message{}, errors.New("未找到消息")
+	return Message{}, errors.New("no message found")
 }
 
-// GoImportPath 檢索 Go 導入路徑。
+// GoImportPath retrieves the Go import path.
 func (p Package) GoImportPath() string {
 	return strings.Split(p.GoImportName, ";")[0]
 }
 
-// Message 表示原始消息。
+// Message represents a proto message.
 type Message struct {
-	// 消息的名稱。
+	// Name of the message.
 	Name string
 
-	//定義消息的文件的路徑。
+	// Path of the file where message is defined at.
 	Path string
 
-// HighestFieldNumber 是消息字段中最高的字段號
-// 這允許在寫入 proto 消息時確定新的字段編號
+	// HighestFieldNumber is the highest field number among fields of the message
+	// This allows to determine new field number when writing to proto message
 	HighestFieldNumber int
 }
 
-//服務是一個 RPC 服務。
+// Service is an RPC service.
 type Service struct {
-	//服務的名稱。
+	// Name of the services.
 	Name string
 
-	//RPC 是服務的 RPC 函數列表。
+	// RPC is a list of RPC funcs of the service.
 	RPCFuncs []RPCFunc
 }
 
-//RPCFunc 是一個 RPC 函數。
+// RPCFunc is an RPC func.
 type RPCFunc struct {
-	// RPC 函數的名稱。
+	// Name of the RPC func.
 	Name string
 
-	// RequestType 是 RPC 函數的請求類型。
+	// RequestType is the request type of RPC func.
 	RequestType string
 
-	// ReturnsType 是 RPC 函數的響應類型。
+	// ReturnsType is the response type of RPC func.
 	ReturnsType string
 
-// HTTPRules 保存有關 RPC 函數的 http 規則的信息。
-// 規格：
-//   https://github.com/googleapis/googleapis/blob/master/google/api/http.proto.
+	// HTTPRules keeps info about http rules of an RPC func.
+	// spec:
+	//   https://github.com/googleapis/googleapis/blob/master/google/api/http.proto.
 	HTTPRules []HTTPRule
 }
 
-//HTTPRule 保存有關 RPC 函數的已配置 http 規則的信息。
+// HTTPRule keeps info about a configured http rule of an RPC func.
 type HTTPRule struct {
-	// Params 是在 http 端點本身中定義的參數列表。
+	// Params is a list of parameters defined in the http endpoint itself.
 	Params []string
 
-	//HasQuery 指示是否有請求查詢。
+	// HasQuery indicates if there is a request query.
 	HasQuery bool
 
-	// HasBody 指示是否存在請求有效負載。
+	// HasBody indicates if there is a request payload.
 	HasBody bool
 }

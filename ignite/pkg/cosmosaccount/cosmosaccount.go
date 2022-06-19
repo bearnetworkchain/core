@@ -15,41 +15,41 @@ import (
 )
 
 const (
-	// KeyringServiceName 用於 OS 後端的密鑰環名稱。
-	KeyringServiceName = "bearnetwork"
+	// KeyringServiceName used for the name of keyring in OS backend.
+	KeyringServiceName = "starport"
 
-	// DefaultAccount 是默認帳戶的名稱。
+	// DefaultAccount is the name of the default account.
 	DefaultAccount = "default"
 )
 
-// KeyringHome 用於存儲賬戶相關數據。
+// KeyringHome used to store account related data.
 var KeyringHome = os.ExpandEnv("$HOME/.ignite/accounts")
 
 var (
-	ErrAccountExists = errors.New("賬戶已存在")
+	ErrAccountExists = errors.New("account already exists")
 )
 
 const (
-	AccountPrefixCosmos = "bnkt"
+	AccountPrefixCosmos = "cosmos"
 )
 
-// KeyringBackend 是存儲密鑰的後端.
+// KeyringBackend is the backend for where keys are stored.
 type KeyringBackend string
 
 const (
-// KeyringTest 是測試密鑰環後端。使用此後端，您的密鑰將是
-// 存儲在您應用的數據目錄下，
+	// KeyringTest is the test keyring backend. With this backend, your keys will be
+	// stored under your app's data dir,
 	KeyringTest KeyringBackend = "test"
 
-// KeyringOS 是操作系統密鑰環後端。使用此後端，您的密鑰將是
-// 存儲在操作系統的安全密鑰環中。
+	// KeyringOS is the OS keyring backend. with this backend, your keys will be
+	// stored in your operating system's secured keyring.
 	KeyringOS KeyringBackend = "os"
 
-// KeyringMemory 在內存中密鑰環後端，您的密鑰將存儲在應用程序內存中。
+	// KeyringMemory is in memory keyring backend, your keys will be stored in application memory.
 	KeyringMemory KeyringBackend = "memory"
 )
 
-// 帳戶註冊。
+// Registry for accounts.
 type Registry struct {
 	homePath           string
 	keyringServiceName string
@@ -58,7 +58,7 @@ type Registry struct {
 	Keyring keyring.Keyring
 }
 
-//選項配置您的註冊表。
+// Option configures your registry.
 type Option func(*Registry)
 
 func WithHome(path string) Option {
@@ -79,7 +79,7 @@ func WithKeyringBackend(backend KeyringBackend) Option {
 	}
 }
 
-// New 創建一個新的註冊表來管理帳戶。
+// New creates a new registry to manage accounts.
 func New(options ...Option) (Registry, error) {
 	r := Registry{
 		keyringServiceName: sdktypes.KeyringServiceName(),
@@ -118,16 +118,16 @@ func NewInMemory(options ...Option) (Registry, error) {
 	)
 }
 
-// Account 代表 Cosmos SDK 帳戶。
+// Account represents an Cosmos SDK account.
 type Account struct {
-	// 帳戶名稱。
+	// Name of the account.
 	Name string
 
-	// Info 包含有關該帳戶的附加信息。
+	// Info holds additional info about the account.
 	Info keyring.Info
 }
 
-// Address 從給定的前綴返回帳戶的地址。
+// Address returns the address of the account from given prefix.
 func (a Account) Address(accPrefix string) string {
 	if accPrefix == "" {
 		accPrefix = AccountPrefixCosmos
@@ -136,7 +136,7 @@ func (a Account) Address(accPrefix string) string {
 	return toBench32(accPrefix, a.Info.GetPubKey().Address())
 }
 
-// PubKey 返回帳戶的公鑰。
+// PubKey returns a public key for account.
 func (a Account) PubKey() string {
 	return a.Info.GetPubKey().String()
 }
@@ -149,7 +149,7 @@ func toBench32(prefix string, addr []byte) string {
 	return bech32Addr
 }
 
-// EnsureDefaultAccount 確保默認帳戶存在。
+// EnsureDefaultAccount ensures that default account exists.
 func (r Registry) EnsureDefaultAccount() error {
 	_, err := r.GetByName(DefaultAccount)
 
@@ -162,7 +162,7 @@ func (r Registry) EnsureDefaultAccount() error {
 	return err
 }
 
-// Create 使用名稱創建一個新帳戶。
+// Create creates a new account with name.
 func (r Registry) Create(name string) (acc Account, mnemonic string, err error) {
 	acc, err = r.GetByName(name)
 	if err == nil {
@@ -199,8 +199,8 @@ func (r Registry) Create(name string) (acc Account, mnemonic string, err error) 
 	return acc, mnemonic, nil
 }
 
-// Import 導入具有名稱、密碼和秘密的現有帳戶，其中秘密可以是助記符或私鑰。
-
+// Import imports an existing account with name and passphrase and secret where secret can be a
+// mnemonic or a private key.
 func (r Registry) Import(name, secret, passphrase string) (Account, error) {
 	_, err := r.GetByName(name)
 	if err == nil {
@@ -227,8 +227,7 @@ func (r Registry) Import(name, secret, passphrase string) (Account, error) {
 	return r.GetByName(name)
 }
 
-// Export 將帳戶導出為私鑰。
-
+// Export exports an account as a private key.
 func (r Registry) Export(name, passphrase string) (key string, err error) {
 	if _, err = r.GetByName(name); err != nil {
 		return "", err
@@ -238,8 +237,7 @@ func (r Registry) Export(name, passphrase string) (key string, err error) {
 
 }
 
-// ExportHex 將帳戶導出為十六進制的私鑰。
-
+// ExportHex exports an account as a private key in hex.
 func (r Registry) ExportHex(name, passphrase string) (hex string, err error) {
 	if _, err = r.GetByName(name); err != nil {
 		return "", err
@@ -248,8 +246,7 @@ func (r Registry) ExportHex(name, passphrase string) (hex string, err error) {
 	return keyring.NewUnsafe(r.Keyring).UnsafeExportPrivKeyHex(name)
 }
 
-// GetByName 按其名稱返回一個帳戶。
-
+// GetByName returns an account by its name.
 func (r Registry) GetByName(name string) (Account, error) {
 	info, err := r.Keyring.Key(name)
 	if errors.Is(err, dkeyring.ErrKeyNotFound) || errors.Is(err, sdkerrors.ErrKeyNotFound) {
@@ -267,8 +264,7 @@ func (r Registry) GetByName(name string) (Account, error) {
 	return acc, nil
 }
 
-// List 列出所有帳戶。
-
+// List lists all accounts.
 func (r Registry) List() ([]Account, error) {
 	info, err := r.Keyring.List()
 	if err != nil {
@@ -287,8 +283,7 @@ func (r Registry) List() ([]Account, error) {
 	return accounts, nil
 }
 
-// DeleteByName 按名稱刪除帳戶。
-
+// DeleteByName deletes an account by name.
 func (r Registry) DeleteByName(name string) error {
 	err := r.Keyring.Delete(name)
 	if err == dkeyring.ErrKeyNotFound {
@@ -311,5 +306,5 @@ type AccountDoesNotExistError struct {
 }
 
 func (e *AccountDoesNotExistError) Error() string {
-	return fmt.Sprintf("帳戶 %q 不存在", e.Name)
+	return fmt.Sprintf("account %q does not exist", e.Name)
 }

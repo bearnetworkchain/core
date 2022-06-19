@@ -8,9 +8,9 @@ import (
 )
 
 var (
-	ErrInternal       = errors.New("內部錯誤")
-	ErrInvalidRequest = errors.New("無效的請求")
-	ErrNotFound       = errors.New("未找到")
+	ErrInternal       = errors.New("internal error")
+	ErrInvalidRequest = errors.New("invalid request")
+	ErrNotFound       = errors.New("not found")
 )
 
 func Unwrap(err error) error {

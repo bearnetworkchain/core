@@ -10,11 +10,11 @@ import (
 	"github.com/ignite-hq/cli/ignite/services/chain"
 )
 
-// NewChainFaucet 創建一個新的水龍頭命令來向賬戶發送硬幣。
+// NewChainFaucet creates a new faucet command to send coins to accounts.
 func NewChainFaucet() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "faucet [address] [coin<,...>]",
-		Short: "將硬幣發送到帳戶",
+		Short: "Send coins to an account",
 		Args:  cobra.ExactArgs(2),
 		RunE:  chainFaucetHandler,
 	}
@@ -47,17 +47,17 @@ func chainFaucetHandler(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	// 解析提供的硬幣
+	// parse provided coins
 	parsedCoins, err := sdk.ParseCoinsNormalized(coins)
 	if err != nil {
 		return err
 	}
 
-	// 從水龍頭執行轉移
+	// perform transfer from faucet
 	if err := faucet.Transfer(cmd.Context(), toAddress, parsedCoins); err != nil {
 		return err
 	}
 
-	fmt.Println("📨 發送的硬幣.")
+	fmt.Println("📨 Coins sent.")
 	return nil
 }

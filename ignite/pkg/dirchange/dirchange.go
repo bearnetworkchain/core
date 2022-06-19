@@ -10,25 +10,25 @@ import (
 	"github.com/ignite-hq/cli/ignite/pkg/cache"
 )
 
-var ErrNoFile = errors.New("指定路徑中沒有文件")
+var ErrNoFile = errors.New("no file in specified paths")
 
-// SaveDirChecksum 將提供的路徑（目錄或文件）的 md5 校驗和保存在提供的緩存中
-// 如果 checksumSavePath 目錄不存在，則創建它
-// 路徑是相對於 workdir 的，如果 workdir 為空字符串路徑是絕對路徑
+// SaveDirChecksum saves the md5 checksum of the provided paths (directories or files) in the provided cache
+// If checksumSavePath directory doesn't exist, it is created
+// paths are relative to workdir, if workdir is empty string paths are absolute
 func SaveDirChecksum(checksumCache cache.Cache[[]byte], cacheKey string, workdir string, paths ...string) error {
 	checksum, err := ChecksumFromPaths(workdir, paths...)
 	if err != nil {
 		return err
 	}
 
-	// 保存校驗和
+	// save checksum
 	return checksumCache.Put(cacheKey, checksum)
 }
 
-// HasDirChecksumChanged 計算提供的路徑（目錄或文件）的 md5 校驗和
-// 並將其與當前緩存的校驗和進行比較
-// 如果校驗和不存在，則返回 true
-// 路徑是相對於 workdir 的，如果 workdir 為空字符串路徑是絕對路徑
+// HasDirChecksumChanged computes the md5 checksum of the provided paths (directories or files)
+// and compare it with the current cached checksum
+// Return true if the checksum doesn't exist yet
+// paths are relative to workdir, if workdir is empty string paths are absolute
 func HasDirChecksumChanged(checksumCache cache.Cache[[]byte], cacheKey string, workdir string, paths ...string) (bool, error) {
 	savedChecksum, err := checksumCache.Get(cacheKey)
 	if err == cache.ErrorNotFound {
@@ -38,40 +38,40 @@ func HasDirChecksumChanged(checksumCache cache.Cache[[]byte], cacheKey string, w
 		return false, err
 	}
 
-	// 計算校驗和
+	// Compute checksum
 	checksum, err := ChecksumFromPaths(workdir, paths...)
 	if errors.Is(err, ErrNoFile) {
-		// 沒有文件就無法保存校驗和
-		// 因此，如果沒有找到文件，這意味著這些文件已被刪除，則目錄已更改
+		// Checksum cannot be saved with no file
+		// Therefore if no file are found, this means these have been delete, then the directory has been changed
 		return true, nil
 	} else if err != nil {
 		return false, err
 	}
 
-	// 比較校驗和
+	// Compare checksums
 	if bytes.Equal(checksum, savedChecksum) {
 		return false, nil
 	}
 
-	// 校驗和已更改
+	// The checksum has changed
 	return true, nil
 }
 
-// ChecksumFromPaths 根據提供的路徑計算 md5 校驗和
-// 路徑是相對於 workdir 的，如果 workdir 為空字符串路徑是絕對路徑
+// ChecksumFromPaths computes the md5 checksum from the provided paths
+// paths are relative to workdir, if workdir is empty string paths are absolute
 func ChecksumFromPaths(workdir string, paths ...string) ([]byte, error) {
 	hash := md5.New()
 
-	// 如果不存在文件，則無法計算哈希
+	// Can't compute hash if no file present
 	noFile := true
 
-	// 讀取文件
+	// read files
 	for _, path := range paths {
 		if !filepath.IsAbs(path) {
 			path = filepath.Join(workdir, path)
 		}
 
-		// 不存在的路徑被忽略
+		// non-existent paths are ignored
 		if _, err := os.Stat(path); os.IsNotExist(err) {
 			continue
 		} else if err != nil {
@@ -83,14 +83,14 @@ func ChecksumFromPaths(workdir string, paths ...string) ([]byte, error) {
 				return err
 			}
 
-			// 忽略目錄
+			// ignore directory
 			if info.IsDir() {
 				return nil
 			}
 
 			noFile = false
 
-			// 寫入文件內容
+			// write file content
 			content, err := os.ReadFile(subPath)
 			if err != nil {
 				return err
@@ -112,6 +112,6 @@ func ChecksumFromPaths(workdir string, paths ...string) ([]byte, error) {
 		return []byte{}, ErrNoFile
 	}
 
-	// 計算校驗和
+	// compute checksum
 	return hash.Sum(nil), nil
 }

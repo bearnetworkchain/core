@@ -12,11 +12,11 @@ import (
 )
 
 var (
-	//go:嵌入模板/*
+	//go:embed templates/*
 	templates embed.FS
 
-	templateJSClient  = newTemplateWriter("js")         // js 包裝客戶端.
-	templateVuexRoot  = newTemplateWriter("vuex/root")  // vuex 存儲裝載機.
+	templateJSClient  = newTemplateWriter("js")         // js wrapper client.
+	templateVuexRoot  = newTemplateWriter("vuex/root")  // vuex store loader.
 	templateVuexStore = newTemplateWriter("vuex/store") // vuex store.
 
 )
@@ -25,8 +25,8 @@ type templateWriter struct {
 	templateDir string
 }
 
-// tpl 為模板返回一個 func 駐留在 templatePath 以初始化文本模板
-// 使用給定的 protoPath。
+// tpl returns a func for template residing at templatePath to initialize a text template
+// with given protoPath.
 func newTemplateWriter(templateDir string) templateWriter {
 	return templateWriter{
 		templateDir,
@@ -63,7 +63,7 @@ func (t templateWriter) Write(destDir, protoPath string, data interface{}) error
 		"replace": strings.ReplaceAll,
 	}
 
-	// 渲染和編寫模板。
+	// render and write the template.
 	write := func(path string) error {
 		tpl := template.
 			Must(

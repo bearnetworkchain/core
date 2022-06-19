@@ -11,7 +11,7 @@ import (
 )
 
 type (
-	//Request 表示 SPN 上一條鏈的啟動請求
+	// Request represents the launch Request of a chain on SPN
 	Request struct {
 		LaunchID  uint64                     `json:"LaunchID"`
 		RequestID uint64                     `json:"RequestID"`
@@ -22,7 +22,7 @@ type (
 	}
 )
 
-// ToRequest 從 SPN 轉換一個請求數據並返回一個 Request 對象
+// ToRequest converts a request data from SPN and returns a Request object
 func ToRequest(request launchtypes.Request) Request {
 
 	return Request{
@@ -35,7 +35,7 @@ func ToRequest(request launchtypes.Request) Request {
 	}
 }
 
-// VerifyRequest 從其內容中驗證請求的有效性（靜態檢查）
+// VerifyRequest verifies the validity of the request from its content (static check)
 func VerifyRequest(request Request) error {
 	req, ok := request.Content.Content.(*launchtypes.RequestContent_GenesisValidator)
 	if ok {
@@ -48,9 +48,9 @@ func VerifyRequest(request Request) error {
 	return nil
 }
 
-// VerifyAddValidatorRequest 驗證驗證器請求參數
+// VerifyAddValidatorRequest verify the validator request parameters
 func VerifyAddValidatorRequest(req *launchtypes.RequestContent_GenesisValidator) error {
-	// 如果這是一個添加驗證器請求
+	// If this is an add validator request
 	var (
 		peer           = req.GenesisValidator.Peer
 		valAddress     = req.GenesisValidator.Address
@@ -61,48 +61,48 @@ func VerifyAddValidatorRequest(req *launchtypes.RequestContent_GenesisValidator)
 	// Check values inside the gentx are correct
 	info, _, err := cosmosutil.ParseGentx(req.GenesisValidator.GenTx)
 	if err != nil {
-		return fmt.Errorf("無法解析 gentx %s", err.Error())
+		return fmt.Errorf("cannot parse gentx %s", err.Error())
 	}
 
-	// 將從 gentx 獲取的地址前綴更改為 SPN 上使用的地址前綴
-	// 因為 SPN 上的所有鏈上存儲地址都使用 SPN 前綴
+	// Change the address prefix fetched from the gentx to the one used on SPN
+	// Because all on-chain stored address on SPN uses the SPN prefix
 	spnFetchedAddress, err := cosmosutil.ChangeAddressPrefix(info.DelegatorAddress, SPN)
 	if err != nil {
 		return err
 	}
 
-	//檢查驗證者地址
+	// Check validator address
 	if valAddress != spnFetchedAddress {
 		return fmt.Errorf(
-			"驗證者地址 %s 與 gentx 內部的不匹配 %s",
+			"the validator address %s doesn't match the one inside the gentx %s",
 			valAddress,
 			spnFetchedAddress,
 		)
 	}
 
-	// 檢查驗證者地址
+	// Check validator address
 	if !info.PubKey.Equals(ed25519.PubKey(consPubKey)) {
 		return fmt.Errorf(
-			"共識公鑰 %s 與 gentx 內部的不匹配 %s",
+			"the consensus pub key %s doesn't match the one inside the gentx %s",
 			ed25519.PubKey(consPubKey).String(),
 			info.PubKey.String(),
 		)
 	}
 
-	// 檢查自我委託
+	// Check self delegation
 	if selfDelegation.Denom != info.SelfDelegation.Denom ||
 		!selfDelegation.IsEqual(info.SelfDelegation) {
 		return fmt.Errorf(
-			"自我委託 %s 與 gentx 內部的不匹配 %s",
+			"the self delegation %s doesn't match the one inside the gentx %s",
 			selfDelegation.String(),
 			info.SelfDelegation.String(),
 		)
 	}
 
-	//檢查對等體的格式
+	// Check the format of the peer
 	if !cosmosutil.VerifyPeerFormat(peer) {
 		return fmt.Errorf(
-			"對等地址 %s 與對等格式不匹配 <host>:<port>",
+			"the peer address %s doesn't match the peer format <host>:<port>",
 			peer.String(),
 		)
 	}

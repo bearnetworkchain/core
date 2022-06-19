@@ -17,11 +17,11 @@ var CampaignSummaryHeader = []string{
 	"mainnet id",
 }
 
-// NewNetworkCampaignList 返回一個新命令以列出 Ignite 上所有已發布的活動。
+// NewNetworkCampaignList returns a new command to list all published campaigns on Ignite.
 func NewNetworkCampaignList() *cobra.Command {
 	c := &cobra.Command{
 		Use:   "list",
-		Short: "列出已發布的活動",
+		Short: "List published campaigns",
 		Args:  cobra.NoArgs,
 		RunE:  networkCampaignListHandler,
 	}
@@ -49,7 +49,7 @@ func networkCampaignListHandler(cmd *cobra.Command, _ []string) error {
 	return renderCampaignSummaries(campaigns, session)
 }
 
-//renderCampaignSummaries 寫入提供的總結活動列表
+// renderCampaignSummaries writes into the provided out, the list of summarized campaigns
 func renderCampaignSummaries(campaigns []networktypes.Campaign, session cliui.Session) error {
 	var campaignEntries [][]string
 

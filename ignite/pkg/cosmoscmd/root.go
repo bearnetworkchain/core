@@ -34,7 +34,7 @@ import (
 )
 
 type (
-	// AppBuilder is a method that allows to build an app
+	// AppBuilder 是一種允許構建應用程序的方法
 	AppBuilder func(
 		logger log.Logger,
 		db dbm.DB,
@@ -48,13 +48,13 @@ type (
 		baseAppOptions ...func(*baseapp.BaseApp),
 	) App
 
-	// App represents a Cosmos SDK application that can be run as a server and with an exportable state
+	// App 代表一個 Cosmos SDK 應用程序，可以作為服務器運行並具有可導出狀態
 	App interface {
 		servertypes.Application
 		ExportableApp
 	}
 
-	// ExportableApp represents an app with an exportable state
+	// ExportableApp 表示具有可導出狀態的應用程序
 	ExportableApp interface {
 		ExportAppStateAndValidators(
 			forZeroHeight bool,
@@ -63,17 +63,17 @@ type (
 		LoadHeight(height int64) error
 	}
 
-	// appCreator is an app creator
+	// appCreator 是應用程序創建者
 	appCreator struct {
 		encodingConfig EncodingConfig
 		buildApp       AppBuilder
 	}
 )
 
-// Option configures root command option.
+// 選項配置根命令選項。
 type Option func(*rootOptions)
 
-// scaffoldingOptions keeps set of options to apply scaffolding.
+// 腳手架選項保留一組應用腳手架的選項。
 type rootOptions struct {
 	addSubCmds         []*cobra.Command
 	startCmdCustomizer func(*cobra.Command)
@@ -92,28 +92,28 @@ func (s *rootOptions) apply(options ...Option) {
 	}
 }
 
-// AddSubCmd adds sub commands.
+// AddSubCmd 添加子命令。
 func AddSubCmd(cmd ...*cobra.Command) Option {
 	return func(o *rootOptions) {
 		o.addSubCmds = append(o.addSubCmds, cmd...)
 	}
 }
 
-// CustomizeStartCmd accepts a handler to customize the start command.
+// CustomizeStartCmd 接受一個處理程序來自定義啟動命令。
 func CustomizeStartCmd(h func(startCmd *cobra.Command)) Option {
 	return func(o *rootOptions) {
 		o.startCmdCustomizer = h
 	}
 }
 
-// WithEnvPrefix accepts a new prefix for environment variables.
+// WithEnvPrefix 接受環境變量的新前綴。
 func WithEnvPrefix(envPrefix string) Option {
 	return func(o *rootOptions) {
 		o.envPrefix = envPrefix
 	}
 }
 
-// NewRootCmd creates a new root command for a Cosmos SDK application
+// NewRootCmd 為 Cosmos SDK 應用程序創建一個新的根命令
 func NewRootCmd(
 	appName,
 	accountAddressPrefix,
@@ -125,7 +125,7 @@ func NewRootCmd(
 ) (*cobra.Command, EncodingConfig) {
 	rootOptions := newRootOptions(options...)
 
-	// Set config for prefixes
+	// 為前綴設置配置
 	SetPrefixes(accountAddressPrefix)
 
 	encodingConfig := MakeEncodingConfig(moduleBasics)
@@ -142,7 +142,7 @@ func NewRootCmd(
 
 	rootCmd := &cobra.Command{
 		Use:   appName + "d",
-		Short: "Stargate CosmosHub App",
+		Short: "Stargate BearNetwork App",
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
 			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
@@ -183,7 +183,7 @@ func NewRootCmd(
 	)
 	overwriteFlagDefaults(rootCmd, map[string]string{
 		flags.FlagChainID:        defaultChainID,
-		flags.FlagKeyringBackend: "test",
+		flags.FlagKeyringBackend: "bear_network_chain_id_01",
 	})
 
 	return rootCmd, encodingConfig
@@ -219,7 +219,7 @@ func initRootCmd(
 		buildApp,
 	}
 
-	// add server commands
+	// 添加服務器命令
 	server.AddCommands(
 		rootCmd,
 		defaultNodeHome,
@@ -234,7 +234,7 @@ func initRootCmd(
 		},
 	)
 
-	// add keybase, auxiliary RPC, query, and tx child commands
+	// 添加 keybase、輔助 RPC、查詢和 tx 子命令
 	rootCmd.AddCommand(
 		rpc.StatusCommand(),
 		queryCommand(moduleBasics),
@@ -242,18 +242,18 @@ func initRootCmd(
 		keys.Commands(defaultNodeHome),
 	)
 
-	// add user given sub commands.
+	// 添加用戶給定的子命令。
 	for _, cmd := range options.addSubCmds {
 		rootCmd.AddCommand(cmd)
 	}
 }
 
-// queryCommand returns the sub-command to send queries to the app
+// queryCommand 返回子命令以向應用程序發送查詢
 func queryCommand(moduleBasics module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "query",
 		Aliases:                    []string{"q"},
-		Short:                      "Querying subcommands",
+		Short:                      "查詢子命令",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
@@ -268,7 +268,7 @@ func queryCommand(moduleBasics module.BasicManager) *cobra.Command {
 	)
 
 	moduleBasics.AddQueryCommands(cmd)
-	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
+	cmd.PersistentFlags().String(flags.FlagChainID, "", "網絡 chain ID")
 
 	return cmd
 }
@@ -277,7 +277,7 @@ func queryCommand(moduleBasics module.BasicManager) *cobra.Command {
 func txCommand(moduleBasics module.BasicManager) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:                        "tx",
-		Short:                      "Transactions subcommands",
+		Short:                      "事務子命令",
 		DisableFlagParsing:         true,
 		SuggestionsMinimumDistance: 2,
 		RunE:                       client.ValidateCmd,
@@ -295,7 +295,7 @@ func txCommand(moduleBasics module.BasicManager) *cobra.Command {
 	)
 
 	moduleBasics.AddTxCommands(cmd)
-	cmd.PersistentFlags().String(flags.FlagChainID, "", "The network chain ID")
+	cmd.PersistentFlags().String(flags.FlagChainID, "", "網絡 chain ID")
 
 	return cmd
 }
@@ -320,7 +320,7 @@ func overwriteFlagDefaults(c *cobra.Command, defaults map[string]string) {
 	}
 }
 
-// newApp creates a new Cosmos SDK app
+// newApp 創建一個新的 Cosmos SDK 應用
 func (a appCreator) newApp(
 	logger log.Logger,
 	db dbm.DB,
@@ -377,7 +377,7 @@ func (a appCreator) newApp(
 	)
 }
 
-// appExport creates a new simapp (optionally at a given height)
+// appExport 創建一個新的 simapp（可選在給定高度）
 func (a appCreator) appExport(
 	logger log.Logger,
 	db dbm.DB,
@@ -392,14 +392,14 @@ func (a appCreator) appExport(
 
 	homePath, ok := appOpts.Get(flags.FlagHome).(string)
 	if !ok || homePath == "" {
-		return servertypes.ExportedApp{}, errors.New("application home not set")
+		return servertypes.ExportedApp{}, errors.New("應用程序主頁未設置")
 	}
 
 	exportableApp = a.buildApp(
 		logger,
 		db,
 		traceStore,
-		height == -1, // -1: no height provided
+		height == -1, // -1: 沒有提供高度
 		map[int64]bool{},
 		homePath,
 		uint(1),
@@ -416,17 +416,17 @@ func (a appCreator) appExport(
 	return exportableApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
 }
 
-// initAppConfig helps to override default appConfig template and configs.
-// return "", nil if no custom configuration is required for the application.
+// initAppConfig 有助於覆蓋默認的 appConfig 模板和配置。
+// 如果應用程序不需要自定義配置，則返回 ""，nil。
 func initAppConfig() (string, interface{}) {
-	// The following code snippet is just for reference.
+	// 以下代碼片段僅供參考。
 
-	// WASMConfig defines configuration for the wasm module.
+	// WASMConfig 定義了 wasm 模塊的配置。
 	type WASMConfig struct {
-		// This is the maximum sdk gas (wasm and storage) that we allow for any x/wasm "smart" queries
+		// 這是我們允許任何 x/wasm“智能”查詢的最大 sdk gas（wasm 和存儲）
 		QueryGasLimit uint64 `mapstructure:"query_gas_limit"`
 
-		// Address defines the gRPC-web server to listen on
+		// 地址定義了要監聽的 gRPC-web 服務器
 		LruSize uint64 `mapstructure:"lru_size"`
 	}
 
@@ -436,22 +436,20 @@ func initAppConfig() (string, interface{}) {
 		WASM WASMConfig `mapstructure:"wasm"`
 	}
 
-	// Optionally allow the chain developer to overwrite the SDK's default
-	// server config.
+	// 可選地允許鏈開發者覆蓋 SDK 的默認值
+	// 服務器配置。
 	srvCfg := serverconfig.DefaultConfig()
-	// The SDK's default minimum gas price is set to "" (empty value) inside
-	// app.toml. If left empty by validators, the node will halt on startup.
-	// However, the chain developer can set a default app.toml value for their
-	// validators here.
-	//
-	// In summary:
-	// - if you leave srvCfg.MinGasPrices = "", all validators MUST tweak their
-	//   own app.toml config,
-	// - if you set srvCfg.MinGasPrices non-empty, validators CAN tweak their
-	//   own app.toml to override, or use this default value.
-	//
-	// In simapp, we set the min gas prices to 0.
-	srvCfg.MinGasPrices = "0stake"
+// SDK默認的最低gas價格設置為""（空值）裡面
+// app.toml.如果驗證器留空，節點將在啟動時停止。
+// 但是，鏈開發者可以為其設置一個默認的 app.toml 值
+// 這裡的驗證器。
+//
+// 總之：
+// - 如果你離開 srvCfg.MinGasPrices = ""，所有驗證者必須調整他們的
+// 自己的 app.toml 配置，如果你設置 srvCfg.MinGasPrices 非空，驗證者可以調整他們的
+// 擁有 app.toml 來覆蓋，或者使用這個默認值。在 simapp 中，我們將最低 gas 價格設置為 0。
+
+	srvCfg.MinGasPrices = "0ubnkt"
 
 	customAppConfig := CustomAppConfig{
 		Config: *srvCfg,
@@ -463,10 +461,10 @@ func initAppConfig() (string, interface{}) {
 
 	customAppTemplate := serverconfig.DefaultConfigTemplate + `
 [wasm]
-# This is the maximum sdk gas (wasm and storage) that we allow for any x/wasm "smart" queries
+# 這是我們允許任何 x/wasm“智能”查詢的最大 sdk gas（wasm 和存儲）
 query_gas_limit = 300000
-# This is the number of wasm vm instances we keep cached in memory for speed-up
-# Warning: this is currently unstable and may lead to crashes, best to keep for 0 unless testing locally
+# 這是我們為了加速而緩存在內存中的 wasm vm 實例的數量
+# 警告：目前不穩定，可能會導致崩潰，除非在本地測試，否則最好保持為 0
 lru_size = 0`
 
 	return customAppTemplate, customAppConfig

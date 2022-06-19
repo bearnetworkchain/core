@@ -29,7 +29,7 @@ func generateOpenAPISpec(g *generator) error {
 		conf     = swaggercombine.Config{
 			Swagger: "2.0",
 			Info: swaggercombine.Info{
-				Title: "HTTP API Console",
+				Title: "熊網鏈API",
 			},
 		}
 	)

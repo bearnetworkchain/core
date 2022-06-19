@@ -447,7 +447,7 @@ func initAppConfig() (string, interface{}) {
 // 總之：
 // - 如果你離開 srvCfg.MinGasPrices = ""，所有驗證者必須調整他們的
 // 自己的 app.toml 配置，如果你設置 srvCfg.MinGasPrices 非空，驗證者可以調整他們的
-// 擁有 app.toml 來覆蓋，或者使用這個默認值。在 simapp 中，我們將最低 gas 價格設置為 0。
+// 擁有app.toml來覆蓋，或者使用這個默認值。在simapp中，我們將最低gas價格設置為 0。
 
 	srvCfg.MinGasPrices = "0ubnkt"
 

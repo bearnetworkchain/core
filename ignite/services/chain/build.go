@@ -11,15 +11,15 @@ import (
 	"github.com/docker/docker/pkg/archive"
 	"github.com/pkg/errors"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cache"
-	"github.com/bearnetworkchain/core/ignite/pkg/checksum"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
-	"github.com/bearnetworkchain/core/ignite/pkg/dirchange"
-	"github.com/bearnetworkchain/core/ignite/pkg/goanalysis"
-	"github.com/bearnetworkchain/core/ignite/pkg/gocmd"
-	"github.com/bearnetworkchain/core/ignite/pkg/xstrings"
+	"github.com/ignite-hq/cli/ignite/pkg/cache"
+	"github.com/ignite-hq/cli/ignite/pkg/checksum"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/dirchange"
+	"github.com/ignite-hq/cli/ignite/pkg/goanalysis"
+	"github.com/ignite-hq/cli/ignite/pkg/gocmd"
+	"github.com/ignite-hq/cli/ignite/pkg/xstrings"
 )
 
 const (

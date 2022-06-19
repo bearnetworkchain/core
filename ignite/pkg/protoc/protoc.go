@@ -8,11 +8,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
-	"github.com/bearnetworkchain/core/ignite/pkg/localfs"
-	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
-	"github.com/bearnetworkchain/core/ignite/pkg/protoc/data"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/localfs"
+	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
+	"github.com/ignite-hq/cli/ignite/pkg/protoc/data"
 )
 
 // Option配置 生成配置。

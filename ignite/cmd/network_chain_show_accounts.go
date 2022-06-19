@@ -5,9 +5,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui/icons"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui/icons"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
 )
 
 var (

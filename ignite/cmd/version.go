@@ -5,7 +5,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/version"
+	"github.com/ignite-hq/cli/ignite/version"
 )
 
 // NewVersion 創建一個新版本命令來顯示 Ignite CLI 版本。

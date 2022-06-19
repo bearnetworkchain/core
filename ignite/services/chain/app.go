@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodulepath"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
 )
 
 // 應用保存有關鏈的信息。

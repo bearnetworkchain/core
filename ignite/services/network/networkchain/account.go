@@ -6,10 +6,10 @@ import (
 	"os"
 	"path/filepath"
 
-	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
-	"github.com/bearnetworkchain/core/ignite/pkg/randstr"
-	"github.com/bearnetworkchain/core/ignite/services/chain"
+	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
+	"github.com/ignite-hq/cli/ignite/pkg/randstr"
+	"github.com/ignite-hq/cli/ignite/services/chain"
 )
 
 const (

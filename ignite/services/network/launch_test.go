@@ -10,9 +10,9 @@ import (
 	"github.com/stretchr/testify/require"
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/xtime"
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
-	"github.com/bearnetworkchain/core/ignite/services/network/testutil"
+	"github.com/ignite-hq/cli/ignite/pkg/xtime"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/services/network/testutil"
 )
 
 const (

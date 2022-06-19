@@ -5,8 +5,8 @@ import (
 	"context"
 	"path/filepath"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
-	"github.com/bearnetworkchain/core/ignite/pkg/nodetime"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
+	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
 )
 
 // Generate 從位於 specPath 的 OpenAPI 規範生成客戶端代碼和 TS 類型到 outPath。

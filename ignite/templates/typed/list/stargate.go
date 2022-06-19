@@ -9,10 +9,10 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodulepath"
-	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
-	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
-	"github.com/bearnetworkchain/core/ignite/templates/typed"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
+	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
+	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
+	"github.com/ignite-hq/cli/ignite/templates/typed"
 )
 
 var (

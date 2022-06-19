@@ -9,11 +9,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui/clispinner"
-	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
-	"github.com/bearnetworkchain/core/ignite/pkg/validation"
-	"github.com/bearnetworkchain/core/ignite/services/scaffolder"
-	modulecreate "github.com/bearnetworkchain/core/ignite/templates/module/create"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui/clispinner"
+	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
+	"github.com/ignite-hq/cli/ignite/pkg/validation"
+	"github.com/ignite-hq/cli/ignite/services/scaffolder"
+	modulecreate "github.com/ignite-hq/cli/ignite/templates/module/create"
 )
 
 const (
@@ -149,7 +149,7 @@ func scaffoldModuleHandler(cmd *cobra.Command, args []string) error {
 
 // 在之前搭建的應用程序中，gov keeper 定義在腳手架模塊 keeper 定義的下方
 // 因此，如果是這種情況，我們必須警告用戶手動移動定義
-// https://github.com/bearnetworkchain/core/issues/818#issuecomment-865736052
+// https://github.com/ignite-hq/cli/issues/818#issuecomment-865736052
 const govWarning = `⚠️ 如果您的應用程序是使用 Ignite CLI 0.16.x 或更低版本搭建的
 請確保您的模塊管理員定義是在 gov 模塊管理員定義之後定義的 app/app.go:
 

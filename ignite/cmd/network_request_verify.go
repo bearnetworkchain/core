@@ -6,13 +6,13 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cache"
-	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui/icons"
-	"github.com/bearnetworkchain/core/ignite/pkg/numbers"
-	"github.com/bearnetworkchain/core/ignite/services/network"
-	"github.com/bearnetworkchain/core/ignite/services/network/networkchain"
+	"github.com/ignite-hq/cli/ignite/pkg/cache"
+	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui/icons"
+	"github.com/ignite-hq/cli/ignite/pkg/numbers"
+	"github.com/ignite-hq/cli/ignite/services/network"
+	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
 )
 
 // NewNetworkRequestVerify 驗證請求並模擬鏈。

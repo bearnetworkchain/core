@@ -7,7 +7,7 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	spntypes "github.com/tendermint/spn/pkg/types"
 
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
 // Node是節點構建器。

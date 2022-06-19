@@ -3,11 +3,11 @@ package ignitecmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
-	"github.com/bearnetworkchain/core/ignite/pkg/yaml"
-	"github.com/bearnetworkchain/core/ignite/services/network"
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
+	"github.com/ignite-hq/cli/ignite/pkg/yaml"
+	"github.com/ignite-hq/cli/ignite/services/network"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
 func newNetworkChainShowInfo() *cobra.Command {

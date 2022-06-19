@@ -10,8 +10,8 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
 )
 
 // ExitError 是 exec.ExitError 的別名

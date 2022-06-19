@@ -7,8 +7,8 @@ import (
 	"go/parser"
 	"go/token"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis"
-	"github.com/bearnetworkchain/core/ignite/pkg/goanalysis"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis"
+	"github.com/ignite-hq/cli/ignite/pkg/goanalysis"
 )
 
 var appImplementation = []string{

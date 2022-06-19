@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/nodetime"
+	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
 )
 
 const pluginName = "protoc-gen-ts_proto"

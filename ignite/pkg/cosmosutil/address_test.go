@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
 )
 
 func TestChangePrefix(t *testing.T) {

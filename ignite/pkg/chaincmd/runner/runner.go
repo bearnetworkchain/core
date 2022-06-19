@@ -10,11 +10,11 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/pkg/errors"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
-	"github.com/bearnetworkchain/core/ignite/pkg/lineprefixer"
-	"github.com/bearnetworkchain/core/ignite/pkg/truncatedbuffer"
+	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/lineprefixer"
+	"github.com/ignite-hq/cli/ignite/pkg/truncatedbuffer"
 )
 
 // Runner 提供對區塊鏈命令的高級訪問。

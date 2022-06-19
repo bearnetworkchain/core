@@ -9,8 +9,8 @@ import (
 
 	"golang.org/x/sync/errgroup"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
-	"github.com/bearnetworkchain/core/ignite/pkg/goenv"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/goenv"
 )
 
 // Runner 是運行命令的對象

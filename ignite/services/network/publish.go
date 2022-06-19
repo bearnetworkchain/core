@@ -9,10 +9,10 @@ import (
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 	profiletypes "github.com/tendermint/spn/x/profile/types"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmoserror"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosutil"
-	"github.com/bearnetworkchain/core/ignite/pkg/events"
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmoserror"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosutil"
+	"github.com/ignite-hq/cli/ignite/pkg/events"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
 // publishOptions 保存有關如何創建鏈的信息。

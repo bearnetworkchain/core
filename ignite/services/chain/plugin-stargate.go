@@ -9,11 +9,11 @@ import (
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
 	"github.com/pelletier/go-toml"
 
-	"github.com/bearnetworkchain/core/ignite/chainconfig"
-	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
-	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
-	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
+	"github.com/ignite-hq/cli/ignite/chainconfig"
+	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
+	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
+	"github.com/ignite-hq/cli/ignite/pkg/xurl"
 )
 
 type stargatePlugin struct {

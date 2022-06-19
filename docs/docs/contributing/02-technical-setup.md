@@ -25,7 +25,7 @@ Click the GitHub icon in the sidebar for GitHub integration and follow the promp
 
 ## Clone the repos that you work in
 
-- Fork or clone the <https://github.com/bearnetworkchain/core/> repository.
+- Fork or clone the <https://github.com/ignite-hq/cli/> repository.
 
 Internal Ignite users have different permissions. If you're not sure, fork the repo.
 

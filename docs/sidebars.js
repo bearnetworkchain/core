@@ -25,7 +25,7 @@ const sidebars = {
         {
           type: "link",
           label: "Ignite CLI on Github",
-          href: "https://github.com/bearnetworkchain/core",
+          href: "https://github.com/ignite-hq/cli",
         },
         {
           type: "link",

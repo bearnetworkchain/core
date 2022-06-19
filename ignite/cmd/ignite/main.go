@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"os"
 
-	ignitecmd "github.com/bearnetworkchain/core/ignite/cmd"
-	"github.com/bearnetworkchain/core/ignite/pkg/clictx"
-	"github.com/bearnetworkchain/core/ignite/pkg/validation"
+	ignitecmd "github.com/ignite-hq/cli/ignite/cmd"
+	"github.com/ignite-hq/cli/ignite/pkg/clictx"
+	"github.com/ignite-hq/cli/ignite/pkg/validation"
 )
 
 func main() {

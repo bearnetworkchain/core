@@ -9,11 +9,11 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/tendermint/spn/pkg/chainid"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui/icons"
-	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
-	"github.com/bearnetworkchain/core/ignite/services/network"
-	"github.com/bearnetworkchain/core/ignite/services/network/networkchain"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui/icons"
+	"github.com/ignite-hq/cli/ignite/pkg/xurl"
+	"github.com/ignite-hq/cli/ignite/services/network"
+	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
 )
 
 const (

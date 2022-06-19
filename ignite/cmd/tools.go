@@ -6,10 +6,10 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
-	"github.com/bearnetworkchain/core/ignite/pkg/nodetime"
-	"github.com/bearnetworkchain/core/ignite/pkg/protoc"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
+	"github.com/ignite-hq/cli/ignite/pkg/protoc"
 )
 
 // NewTools 返回一個命令，其中各種工具（二進製文件）作為子命令附加

@@ -3,8 +3,8 @@ package modulecreate
 import (
 	"fmt"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/xstrings"
-	"github.com/bearnetworkchain/core/ignite/templates/field"
+	"github.com/ignite-hq/cli/ignite/pkg/xstrings"
+	"github.com/ignite-hq/cli/ignite/templates/field"
 )
 
 // CreateOptions represents the options to scaffold a Cosmos SDK module

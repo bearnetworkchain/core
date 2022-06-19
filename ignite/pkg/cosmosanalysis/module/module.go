@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/app"
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodule"
-	"github.com/bearnetworkchain/core/ignite/pkg/protoanalysis"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/app"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodule"
+	"github.com/ignite-hq/cli/ignite/pkg/protoanalysis"
 )
 
 // Msgs 是一個模塊導入路徑-SDK 消息對。

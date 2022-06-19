@@ -5,12 +5,12 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui/cliquiz"
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui/entrywriter"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
-	"github.com/bearnetworkchain/core/ignite/pkg/relayer"
-	relayerconfig "github.com/bearnetworkchain/core/ignite/pkg/relayer/config"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui/cliquiz"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui/entrywriter"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
+	"github.com/ignite-hq/cli/ignite/pkg/relayer"
+	relayerconfig "github.com/ignite-hq/cli/ignite/pkg/relayer/config"
 )
 
 const (

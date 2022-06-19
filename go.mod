@@ -1,4 +1,4 @@
-module github.com/bearnetworkchain/core
+module github.com/ignite-hq/cli
 
 go 1.18
 

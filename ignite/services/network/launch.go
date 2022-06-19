@@ -7,9 +7,9 @@ import (
 
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/events"
-	"github.com/bearnetworkchain/core/ignite/pkg/xtime"
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/pkg/events"
+	"github.com/ignite-hq/cli/ignite/pkg/xtime"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
 // LaunchParams 從 SPN 獲取鏈啟動模塊參數

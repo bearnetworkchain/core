@@ -6,14 +6,14 @@ import (
 
 	"github.com/gobuffalo/genny"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cache"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
-	"github.com/bearnetworkchain/core/ignite/pkg/gocmd"
-	"github.com/bearnetworkchain/core/ignite/pkg/multiformatname"
-	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
-	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
-	"github.com/bearnetworkchain/core/ignite/templates/ibc"
+	"github.com/ignite-hq/cli/ignite/pkg/cache"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/gocmd"
+	"github.com/ignite-hq/cli/ignite/pkg/multiformatname"
+	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
+	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
+	"github.com/ignite-hq/cli/ignite/templates/ibc"
 )
 
 const (

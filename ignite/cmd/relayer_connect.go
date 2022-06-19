@@ -7,9 +7,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
-	"github.com/bearnetworkchain/core/ignite/pkg/relayer"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
+	"github.com/ignite-hq/cli/ignite/pkg/relayer"
 )
 
 // NewRelayerConnect 返回一個新的中繼器連接命令以鏈接所有或部分中繼器路徑並啟動

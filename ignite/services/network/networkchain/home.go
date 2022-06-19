@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
 // ChainHome 從 SPN 返回用於鏈的默認主目錄。

@@ -16,7 +16,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
 
-	ignitecmd "github.com/bearnetworkchain/core/ignite/cmd"
+	ignitecmd "github.com/ignite-hq/cli/ignite/cmd"
 )
 
 const head = `---

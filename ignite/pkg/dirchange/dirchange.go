@@ -7,7 +7,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cache"
+	"github.com/ignite-hq/cli/ignite/pkg/cache"
 )
 
 var ErrNoFile = errors.New("指定路徑中沒有文件")

@@ -10,14 +10,14 @@ import (
 	"github.com/gookit/color"
 	"github.com/tendermint/spn/pkg/chainid"
 
-	"github.com/bearnetworkchain/core/ignite/chainconfig"
-	sperrors "github.com/bearnetworkchain/core/ignite/errors"
-	"github.com/bearnetworkchain/core/ignite/pkg/chaincmd"
-	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
-	"github.com/bearnetworkchain/core/ignite/pkg/confile"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosver"
-	"github.com/bearnetworkchain/core/ignite/pkg/repoversion"
-	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
+	"github.com/ignite-hq/cli/ignite/chainconfig"
+	sperrors "github.com/ignite-hq/cli/ignite/errors"
+	"github.com/ignite-hq/cli/ignite/pkg/chaincmd"
+	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
+	"github.com/ignite-hq/cli/ignite/pkg/confile"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosver"
+	"github.com/ignite-hq/cli/ignite/pkg/repoversion"
+	"github.com/ignite-hq/cli/ignite/pkg/xurl"
 )
 
 var (

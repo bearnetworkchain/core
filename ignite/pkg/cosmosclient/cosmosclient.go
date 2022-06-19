@@ -37,8 +37,8 @@ import (
 	ctypes "github.com/tendermint/tendermint/rpc/core/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosfaucet"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosfaucet"
 )
 
 // FaucetTransferEnsureDuration 是當水龍頭傳輸時 BroadcastTx 將等待的持續時間

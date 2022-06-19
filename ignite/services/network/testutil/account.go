@@ -5,7 +5,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
 )
 
 const (

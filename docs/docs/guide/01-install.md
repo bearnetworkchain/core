@@ -5,7 +5,7 @@ description: Steps to install Ignite CLI on your local computer.
 
 # Install Ignite CLI 
 
-You can run [Ignite CLI](https://github.com/bearnetworkchain/core) in a web-based Gitpod IDE or you can install Ignite CLI on your local computer.
+You can run [Ignite CLI](https://github.com/ignite-hq/cli) in a web-based Gitpod IDE or you can install Ignite CLI on your local computer.
 
 ## Prerequisites
 
@@ -87,14 +87,14 @@ To remove the current Ignite CLI installation:
 
 After all existing Ignite CLI installations are removed, follow the  [Installing Ignite CLI](#installing-ignite-cli) instructions.
 
-For details on version features and changes, see the [changelog.md](https://github.com/bearnetworkchain/core/blob/develop/changelog.md) in the repo.
+For details on version features and changes, see the [changelog.md](https://github.com/ignite-hq/cli/blob/develop/changelog.md) in the repo.
 
 ## Build from source
 
 To experiment with the source code, you can build from source:
 
 ```bash
-git clone https://github.com/bearnetworkchain/core --depth=1
+git clone https://github.com/ignite-hq/cli --depth=1
 cd cli && make install
 ```
 

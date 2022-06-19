@@ -8,7 +8,7 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/plushgen"
 
-	"github.com/bearnetworkchain/core/ignite/templates/field/plushhelpers"
+	"github.com/ignite-hq/cli/ignite/templates/field/plushhelpers"
 )
 
 var (

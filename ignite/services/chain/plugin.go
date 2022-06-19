@@ -3,8 +3,8 @@ package chain
 import (
 	"context"
 
-	"github.com/bearnetworkchain/core/ignite/chainconfig"
-	chaincmdrunner "github.com/bearnetworkchain/core/ignite/pkg/chaincmd/runner"
+	"github.com/ignite-hq/cli/ignite/chainconfig"
+	chaincmdrunner "github.com/ignite-hq/cli/ignite/pkg/chaincmd/runner"
 )
 
 // TODO 省略 Stargate 的 -cli 日誌消息。

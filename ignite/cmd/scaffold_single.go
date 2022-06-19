@@ -3,7 +3,7 @@ package ignitecmd
 import (
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/services/scaffolder"
+	"github.com/ignite-hq/cli/ignite/services/scaffolder"
 )
 
 // NewScaffoldSingle 返回一個新命令來搭建單例。

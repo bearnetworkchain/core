@@ -6,9 +6,9 @@ import (
 
 	gomodmodule "golang.org/x/mod/module"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cache"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/module"
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodulepath"
+	"github.com/ignite-hq/cli/ignite/pkg/cache"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/module"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
 )
 
 // generateOptions 用於配置代碼生成。

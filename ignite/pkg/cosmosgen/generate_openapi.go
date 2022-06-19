@@ -8,11 +8,11 @@ import (
 
 	"github.com/iancoleman/strcase"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cache"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosanalysis/module"
-	"github.com/bearnetworkchain/core/ignite/pkg/dirchange"
-	swaggercombine "github.com/bearnetworkchain/core/ignite/pkg/nodetime/programs/swagger-combine"
-	"github.com/bearnetworkchain/core/ignite/pkg/protoc"
+	"github.com/ignite-hq/cli/ignite/pkg/cache"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosanalysis/module"
+	"github.com/ignite-hq/cli/ignite/pkg/dirchange"
+	swaggercombine "github.com/ignite-hq/cli/ignite/pkg/nodetime/programs/swagger-combine"
+	"github.com/ignite-hq/cli/ignite/pkg/protoc"
 )
 
 var openAPIOut = []string{

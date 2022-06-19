@@ -16,7 +16,7 @@ import (
 	"golang.org/x/mod/module"
 	"golang.org/x/mod/semver"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodule"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodule"
 )
 
 //Path 表示 Go 模塊的路徑。
@@ -26,12 +26,12 @@ type Path struct {
 	RawPath string
 
 	// Root 是 Go 模塊的根目錄名。
-	// 例如：github.com/bearnetworkchain/core 的 cli。
+	// 例如：github.com/ignite-hq/cli 的 cli。
 	Root string
 
 	// Package是可以使用的Go模塊的默認包名
 	// 承載模塊的主要功能。
-	// 例如：github.com/bearnetworkchain/core 的 cli。
+	// 例如：github.com/ignite-hq/cli 的 cli。
 	Package string
 }
 

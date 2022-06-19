@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cliui"
-	"github.com/bearnetworkchain/core/ignite/pkg/yaml"
-	"github.com/bearnetworkchain/core/ignite/services/network"
+	"github.com/ignite-hq/cli/ignite/pkg/cliui"
+	"github.com/ignite-hq/cli/ignite/pkg/yaml"
+	"github.com/ignite-hq/cli/ignite/services/network"
 )
 
 // NewNetworkRequestShow 創建一個新的請求顯示命令來顯示

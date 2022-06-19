@@ -6,8 +6,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/step"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/step"
 )
 
 // IsOnGitpod 報告是否在 Gitpod 上運行。

@@ -1,7 +1,7 @@
 package cosmosver
 
 import (
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodule"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodule"
 )
 
 const (

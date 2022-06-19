@@ -8,13 +8,13 @@ import (
 	"github.com/gobuffalo/plush"
 	"github.com/gobuffalo/plushgen"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/gomodulepath"
-	"github.com/bearnetworkchain/core/ignite/pkg/placeholder"
-	"github.com/bearnetworkchain/core/ignite/pkg/xgenny"
-	"github.com/bearnetworkchain/core/ignite/pkg/xstrings"
-	"github.com/bearnetworkchain/core/ignite/templates/field/plushhelpers"
-	"github.com/bearnetworkchain/core/ignite/templates/module"
-	"github.com/bearnetworkchain/core/ignite/templates/typed"
+	"github.com/ignite-hq/cli/ignite/pkg/gomodulepath"
+	"github.com/ignite-hq/cli/ignite/pkg/placeholder"
+	"github.com/ignite-hq/cli/ignite/pkg/xgenny"
+	"github.com/ignite-hq/cli/ignite/pkg/xstrings"
+	"github.com/ignite-hq/cli/ignite/templates/field/plushhelpers"
+	"github.com/ignite-hq/cli/ignite/templates/module"
+	"github.com/ignite-hq/cli/ignite/templates/typed"
 )
 
 // NewIBC returns the generator to scaffold the implementation of the IBCModule interface inside a module

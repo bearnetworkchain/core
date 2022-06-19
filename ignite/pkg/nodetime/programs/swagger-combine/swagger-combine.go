@@ -7,8 +7,8 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cmdrunner/exec"
-	"github.com/bearnetworkchain/core/ignite/pkg/nodetime"
+	"github.com/ignite-hq/cli/ignite/pkg/cmdrunner/exec"
+	"github.com/ignite-hq/cli/ignite/pkg/nodetime"
 )
 
 //Config 代表 swagger-combine 配置。

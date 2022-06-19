@@ -5,7 +5,7 @@ import (
 
 	launchtypes "github.com/tendermint/spn/x/launch/types"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/xurl"
+	"github.com/ignite-hq/cli/ignite/pkg/xurl"
 )
 
 // VerifyPeerFormat檢查對等地址格式是否有效

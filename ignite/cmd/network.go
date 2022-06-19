@@ -5,13 +5,13 @@ import (
 	"github.com/spf13/cobra"
 	flag "github.com/spf13/pflag"
 
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosaccount"
-	"github.com/bearnetworkchain/core/ignite/pkg/cosmosclient"
-	"github.com/bearnetworkchain/core/ignite/pkg/events"
-	"github.com/bearnetworkchain/core/ignite/pkg/gitpod"
-	"github.com/bearnetworkchain/core/ignite/services/network"
-	"github.com/bearnetworkchain/core/ignite/services/network/networkchain"
-	"github.com/bearnetworkchain/core/ignite/services/network/networktypes"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosaccount"
+	"github.com/ignite-hq/cli/ignite/pkg/cosmosclient"
+	"github.com/ignite-hq/cli/ignite/pkg/events"
+	"github.com/ignite-hq/cli/ignite/pkg/gitpod"
+	"github.com/ignite-hq/cli/ignite/services/network"
+	"github.com/ignite-hq/cli/ignite/services/network/networkchain"
+	"github.com/ignite-hq/cli/ignite/services/network/networktypes"
 )
 
 var (

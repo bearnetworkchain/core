@@ -113,7 +113,7 @@ func WithEnvPrefix(envPrefix string) Option {
 	}
 }
 
-// NewRootCmd 為 Cosmos SDK 應用程序創建一個新的根命令
+// NewRootCmd 為 Cosmos SDK應用程序創建一個新的根命令
 func NewRootCmd(
 	appName,
 	accountAddressPrefix,

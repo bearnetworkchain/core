@@ -237,8 +237,8 @@ func TestWS(t *testing.T) {
 		},
 		{
 			name: "with localhost and port",
-			addr: "localhost:4500",
-			want: "ws://localhost:4500",
+			addr: "0.0.0.0:4500",
+			want: "ws://0.0.0.0:4500",
 		},
 		{
 			name:  "with invalid url",
@@ -299,8 +299,8 @@ func TestMightHTTPS(t *testing.T) {
 		},
 		{
 			name: "with localhost and port",
-			addr: "localhost:4500",
-			want: "https://localhost:4500",
+			addr: "0.0.0.0:4500",
+			want: "https://0.0.0.0:4500",
 		},
 		{
 			name:  "with invalid url",

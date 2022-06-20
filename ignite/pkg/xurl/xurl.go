@@ -54,7 +54,7 @@ func HTTPS(s string) (string, error) {
 // MightHTTPS ensures that a URL contains an HTTPS scheme when the current scheme is not HTTP.
 // When the URL contains an HTTP scheme it is not modified.
 func MightHTTPS(s string) (string, error) {
-	if strings.HasPrefix(strings.ToLower(s), "http://") {
+	if strings.HasPrefix(strings.ToLower(s), "https://") {
 		return s, nil
 	}
 
@@ -100,7 +100,7 @@ func Address(address string) string {
 }
 
 func IsHTTP(address string) bool {
-	return strings.HasPrefix(address, "http")
+	return strings.HasPrefix(address, "https")
 }
 
 func parseURL(s string) (*url.URL, error) {

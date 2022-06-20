@@ -29,7 +29,7 @@ interface SignAndBroadcastOptions {
   memo?: string
 }
 
-const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions = { addr: "http://localhost:26657" }) => {
+const txClient = async (wallet: OfflineSigner, { addr: addr }: TxClientOptions = { addr: "https://0.0.0.0:26657" }) => {
   if (!wallet) throw MissingWalletError;
   let client;
   if (addr) {
@@ -50,7 +50,7 @@ interface QueryClientOptions {
   addr: string
 }
 
-const queryClient = async ({ addr: addr }: QueryClientOptions = { addr: "http://localhost:1317" }) => {
+const queryClient = async ({ addr: addr }: QueryClientOptions = { addr: "https://0.0.0.0:1317" }) => {
   return new Api({ baseUrl: addr });
 };
 

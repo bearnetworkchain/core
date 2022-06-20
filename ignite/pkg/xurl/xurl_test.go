@@ -14,13 +14,13 @@ func TestHTTPEnsurePort(t *testing.T) {
 	}{
 		{
 			name: "http",
-			addr: "http://localhost",
-			want: "http://localhost:80",
+			addr: "http://0.0.0.0",
+			want: "http://0.0.0.0:80",
 		},
 		{
 			name: "https",
-			addr: "https://localhost",
-			want: "https://localhost:443",
+			addr: "https://0.0.0.0",
+			want: "https://0.0.0.0:443",
 		},
 		{
 			name: "custom",

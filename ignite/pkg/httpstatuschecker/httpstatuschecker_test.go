@@ -34,7 +34,7 @@ func TestCheckStatus(t *testing.T) {
 }
 
 func TestCheckServerUnreachable(t *testing.T) {
-	isAvailable, err := Check(context.Background(), "http://localhost:63257")
+	isAvailable, err := Check(context.Background(), "https://0.0.0.0:63257")
 	require.NoError(t, err)
 	require.False(t, isAvailable)
 }

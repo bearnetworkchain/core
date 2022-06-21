@@ -48,13 +48,13 @@ var FaucetTransferEnsureDuration = time.Second * 40
 var errCannotRetrieveFundsFromFaucet = errors.New("cannot retrieve funds from faucet")
 
 const (
-	defaultNodeAddress   = "http://localhost:26657"
+	defaultNodeAddress   = "http://0.0.0.0:26657"
 	defaultGasAdjustment = 1.0
 	defaultGasLimit      = 300000
 )
 
 const (
-	defaultFaucetAddress   = "http://localhost:4500"
+	defaultFaucetAddress   = "http://0.0.0.0:4500"
 	defaultFaucetDenom     = "token"
 	defaultFaucetMinAmount = 100
 )

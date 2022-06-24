@@ -2,6 +2,7 @@
 
 ![Bear Network](./assets/BearNetwork-01.jpg)
 
-[Bear Network](https://bearmetwork.net). 是一個一體化平台，可在主權和安全的區塊鏈上構建、啟動和維護任何加密應用程序。
+[Bear Network](https://bearmetwork.net). 熊網鏈是採用 Cosmos Sdk 與 Ignite Cli 所架構的區塊鏈。
 
-它是世界上使用最廣泛的區塊鏈應用程序框架 Cosmos SDK 的開發者友好界面。
+
+
